@@ -1114,7 +1114,7 @@ input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
 
       <div class="callout">
         <div class="c-lbl">The Fundamental Reality</div>
-        <p>All electromagnetic energy in a PCB transmission event travels in the <strong>dielectric material between conductors</strong> — not through the copper. The copper acts as a waveguide: the lowest-impedance boundary that steers the fields from source to load. Voltage is the integral of the E-field over distance. Current is electron movement driven by that field.</p>
+        <p>All electromagnetic energy in a PCB transmission event travels in the <strong>dielectric material between conductors</strong> — not through the copper. The copper acts as a waveguide: the lowest-impedance boundary that steers the fields from source to load. Voltage is the integral of the E-field over distance. What we call current is the boundary condition response of the conductor surface to the electromagnetic field — not electrons being pushed through the copper from one end to the other.</p>
       </div>
 
       <div class="diagram">
@@ -1308,17 +1308,22 @@ input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
     <!-- ── PANEL 5: REFERENCE PLANES ── -->
     <div class="panel" id="panel-planes">
       <div class="s-head">
-        <div class="s-title">Reference Plane Design</div>
-        <div class="s-sub">How your reference plane configuration directly determines radiated emission performance</div>
+        <div class="s-title">Return Reference Planes (RRP)</div>
+        <div class="s-sub">The term, the physics, and why most engineers get this wrong</div>
       </div>
 
-      <p style="font-size:14px;color:var(--fg-2);margin-bottom:24px;line-height:1.7">The same signal trace above four different reference plane configurations produces four different EMI signatures. The configuration determines how tightly return current is channelled and how well fields are contained.</p>
+      <div class="callout">
+        <div class="c-lbl">Terminology — RRP</div>
+        <p>The correct term is <strong>Return Reference Plane (RRP)</strong> — not simply "ground plane." The name captures the two distinct roles the plane must perform simultaneously: it provides the <strong>return path</strong> for signal current, and it establishes the <strong>voltage reference</strong> for the signal. A plane that does not perform both roles correctly is not a proper RRP — it is a source of EMI.</p>
+      </div>
+
+      <p style="font-size:14px;color:var(--fg-2);margin-bottom:24px;line-height:1.7">The same signal trace above four different plane configurations produces four different EMI signatures. The configuration determines how tightly return current is channelled, how well fields are contained, and what impedance the return path presents at frequency.</p>
 
       <div class="plane-grid">
         <div class="plane-card">
           <div class="plane-head">
             <span class="p-badge pb-1">Best</span>
-            <span class="plane-name">Solid Reference Plane</span>
+            <span class="plane-name">Solid RRP — Adjacent to Signal</span>
           </div>
           <svg viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg" style="width:100%">
             <defs><marker id="pa" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#00FF94" opacity="0.75"/></marker></defs>
@@ -1333,44 +1338,37 @@ input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
             <line x1="168" y1="20" x2="168" y2="46" stroke="#00FF94" stroke-width="0.8" opacity="0.3" marker-end="url(#pa)"/>
             <line x1="80"  y1="20" x2="80"  y2="46" stroke="#00FF94" stroke-width="0.8" opacity="0.3" marker-end="url(#pa)"/>
             <rect x="20" y="48" width="220" height="14" rx="1" fill="#00FF94" opacity="0.15" stroke="#00FF94" stroke-width="1"/>
-            <text x="130" y="58" text-anchor="middle" fill="#00FF94" font-family="Poppins" font-size="8" font-weight="700">Solid Plane</text>
+            <text x="130" y="58" text-anchor="middle" fill="#00FF94" font-family="Poppins" font-size="8" font-weight="700">Solid RRP — No Splits</text>
           </svg>
-          <p>Uninterrupted copper provides continuous low-impedance return. Fields tightly contained. Return current flows directly under the trace. <strong>Always the target configuration.</strong></p>
+          <p>Solid, uninterrupted plane directly adjacent to the signal layer. Return current flows directly under the trace. Fields are maximally contained. This is the only configuration that correctly performs both RRP roles. <strong>Always the target.</strong></p>
         </div>
 
         <div class="plane-card">
           <div class="plane-head">
-            <span class="p-badge pb-2">Moderate</span>
-            <span class="plane-name">Crosshatch Plane</span>
+            <span class="p-badge pb-2">Conditional</span>
+            <span class="plane-name">Power Plane as RRP</span>
           </div>
           <svg viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg" style="width:100%">
             <defs><marker id="pb" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#f5a623" opacity="0.75"/></marker></defs>
             <rect x="80" y="4" width="100" height="12" rx="2" fill="#b87333" opacity="0.85"/>
             <text x="130" y="13.5" text-anchor="middle" fill="#0a0a0a" font-family="Poppins" font-size="8" font-weight="700">Trace</text>
             <rect x="20" y="18" width="220" height="28" fill="#181818" stroke="#242424" stroke-width="1" rx="1"/>
-            <line x1="100" y1="18" x2="90"  y2="46" stroke="#f5a623" stroke-width="1.2" opacity="0.55" marker-end="url(#pb)"/>
-            <line x1="120" y1="18" x2="114" y2="46" stroke="#f5a623" stroke-width="1.4" opacity="0.75" marker-end="url(#pb)"/>
-            <line x1="130" y1="18" x2="130" y2="46" stroke="#f5a623" stroke-width="1.8" opacity="0.9"  marker-end="url(#pb)"/>
-            <line x1="140" y1="18" x2="146" y2="46" stroke="#f5a623" stroke-width="1.4" opacity="0.75" marker-end="url(#pb)"/>
-            <line x1="160" y1="18" x2="170" y2="46" stroke="#f5a623" stroke-width="1.2" opacity="0.55" marker-end="url(#pb)"/>
-            <rect x="20" y="48" width="220" height="14" rx="1" fill="none" stroke="#f5a623" stroke-width="0.5" opacity="0.3"/>
-            <line x1="20" y1="54" x2="240" y2="54" stroke="#555" stroke-width="0.8"/>
-            <line x1="20" y1="60" x2="240" y2="60" stroke="#555" stroke-width="0.8"/>
-            <line x1="45" y1="48" x2="45" y2="62" stroke="#555" stroke-width="0.8"/>
-            <line x1="80" y1="48" x2="80" y2="62" stroke="#555" stroke-width="0.8"/>
-            <line x1="115" y1="48" x2="115" y2="62" stroke="#555" stroke-width="0.8"/>
-            <line x1="150" y1="48" x2="150" y2="62" stroke="#555" stroke-width="0.8"/>
-            <line x1="185" y1="48" x2="185" y2="62" stroke="#555" stroke-width="0.8"/>
-            <line x1="220" y1="48" x2="220" y2="62" stroke="#555" stroke-width="0.8"/>
-            <text x="130" y="58" text-anchor="middle" fill="#f5a623" font-family="Poppins" font-size="8" font-weight="700">Crosshatch Plane</text>
+            <line x1="130" y1="18" x2="130" y2="46" stroke="#f5a623" stroke-width="1.8" opacity="0.85" marker-end="url(#pb)"/>
+            <line x1="110" y1="18" x2="110" y2="46" stroke="#f5a623" stroke-width="1.2" opacity="0.6" marker-end="url(#pb)"/>
+            <line x1="150" y1="18" x2="150" y2="46" stroke="#f5a623" stroke-width="1.2" opacity="0.6" marker-end="url(#pb)"/>
+            <!-- Displacement current arrows going further down -->
+            <line x1="130" y1="48" x2="130" y2="62" stroke="#f5a623" stroke-width="1" opacity="0.5" stroke-dasharray="2,2" marker-end="url(#pb)"/>
+            <rect x="20" y="48" width="220" height="10" rx="1" fill="#f5a623" opacity="0.12" stroke="#f5a623" stroke-width="0.8"/>
+            <text x="130" y="56" text-anchor="middle" fill="#f5a623" font-family="Poppins" font-size="7.5" font-weight="700">Power Plane (3.3V / 5V)</text>
+            <text x="130" y="67" text-anchor="middle" fill="#f5a623" font-family="Poppins" font-size="7">↕ displacement current via interplane capacitance</text>
           </svg>
-          <p>Partial copper coverage provides an imperfect return path. Fields spread through voids. Used in flex circuits. Acceptable only where a solid plane is not feasible.</p>
+          <p>Common in 4-layer stackups. The power plane is DC-disconnected from ground — return current must couple through <strong>displacement current</strong> via interplane capacitance (C = εr × ε0 × A / d). Higher impedance than a ground RRP, particularly above the MHz range. Works only when power and ground planes are adjacent and the dielectric is thin.</p>
         </div>
 
         <div class="plane-card">
           <div class="plane-head">
             <span class="p-badge pb-3">Poor</span>
-            <span class="plane-name">Split Reference Plane</span>
+            <span class="plane-name">Split RRP</span>
           </div>
           <svg viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg" style="width:100%">
             <defs><marker id="pc" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#ff4d4d"/></marker></defs>
@@ -1385,28 +1383,37 @@ input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
             <text x="55" y="59" text-anchor="middle" fill="#aaa" font-family="Poppins" font-size="8">Plane A</text>
             <text x="195" y="59" text-anchor="middle" fill="#aaa" font-family="Poppins" font-size="8">Plane B</text>
           </svg>
-          <p>The gap forces return current around the split, creating a large radiating loop. <strong>Never route high-frequency signals across a plane split.</strong></p>
+          <p>A split creates a voltage difference between two metal areas — forming an antenna-like structure. Return current detours around the gap, creating a large radiating loop. <strong>Never route signals across a plane split.</strong> Splitting a plane to separate domains does not improve EMI — it causes it.</p>
         </div>
 
         <div class="plane-card">
           <div class="plane-head">
-            <span class="p-badge pb-4">Worst</span>
-            <span class="plane-name">No Reference Plane</span>
+            <span class="p-badge pb-4">Dangerous</span>
+            <span class="plane-name">Copper Pour ≠ RRP</span>
           </div>
           <svg viewBox="0 0 260 70" xmlns="http://www.w3.org/2000/svg" style="width:100%">
             <defs><marker id="pd" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><polygon points="0,0 6,3 0,6" fill="#ff4d4d" opacity="0.45"/></marker></defs>
             <rect x="80" y="8" width="100" height="12" rx="2" fill="#b87333" opacity="0.85"/>
             <text x="130" y="17.5" text-anchor="middle" fill="#0a0a0a" font-family="Poppins" font-size="8" font-weight="700">Trace</text>
-            <line x1="130" y1="22" x2="50"  y2="60" stroke="#ff4d4d" stroke-width="1" opacity="0.3" marker-end="url(#pd)"/>
-            <line x1="130" y1="22" x2="85"  y2="64" stroke="#ff4d4d" stroke-width="1" opacity="0.4" marker-end="url(#pd)"/>
-            <line x1="130" y1="22" x2="118" y2="66" stroke="#ff4d4d" stroke-width="1" opacity="0.5" marker-end="url(#pd)"/>
-            <line x1="130" y1="22" x2="130" y2="68" stroke="#ff4d4d" stroke-width="1.5" opacity="0.6" marker-end="url(#pd)"/>
-            <line x1="130" y1="22" x2="142" y2="66" stroke="#ff4d4d" stroke-width="1" opacity="0.5" marker-end="url(#pd)"/>
-            <line x1="130" y1="22" x2="175" y2="64" stroke="#ff4d4d" stroke-width="1" opacity="0.4" marker-end="url(#pd)"/>
-            <line x1="130" y1="22" x2="210" y2="60" stroke="#ff4d4d" stroke-width="1" opacity="0.3" marker-end="url(#pd)"/>
+            <!-- Irregular copper pour patches -->
+            <rect x="20" y="44" width="60" height="12" rx="1" fill="#333" opacity="0.8"/>
+            <rect x="90" y="48" width="40" height="10" rx="1" fill="#333" opacity="0.8"/>
+            <rect x="145" y="44" width="55" height="12" rx="1" fill="#333" opacity="0.8"/>
+            <rect x="210" y="50" width="30" height="8" rx="1" fill="#333" opacity="0.6"/>
+            <line x1="130" y1="22" x2="50"  y2="60" stroke="#ff4d4d" stroke-width="1" opacity="0.35" marker-end="url(#pd)"/>
+            <line x1="130" y1="22" x2="130" y2="58" stroke="#ff4d4d" stroke-width="1" opacity="0.45" marker-end="url(#pd)"/>
+            <line x1="130" y1="22" x2="200" y2="58" stroke="#ff4d4d" stroke-width="1" opacity="0.35" marker-end="url(#pd)"/>
+            <text x="130" y="72" text-anchor="middle" fill="#ff4d4d" font-family="Poppins" font-size="8">Fragmented — antenna structures, not containment</text>
           </svg>
-          <p>Fields expand in all directions searching for a return conductor. Maximum loop area, maximum inductance, maximum EMI radiation. Only acceptable for very low-frequency, low-speed designs.</p>
+          <p>Adding copper pour is not the same as a proper RRP. Fragmented, unconnected copper patches create antenna-like structures that introduce additional common-mode noise rather than containing it. <strong>A copper pour must be solid, continuous, and properly stitched to act as an RRP.</strong></p>
         </div>
+      </div>
+
+      <div class="div"></div>
+
+      <div class="callout danger">
+        <div class="c-lbl">Via Layer Transitions — RRP Continuity</div>
+        <p>It is not enough to ensure a signal trace sits over a continuous RRP on one layer. When a signal transitions between layers through a via, <strong>the RRP must remain continuous throughout that transition</strong>. A missing return reference at a via creates a field leakage point — an open door for radiated emissions. Stitching vias placed adjacent to signal vias close this loop and restore RRP continuity through the layer transition.</p>
       </div>
 
       <div class="div"></div>
@@ -1414,29 +1421,29 @@ input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
 
       <div class="callout">
         <div class="c-lbl">The Proximity Rule</div>
-        <p><strong>Proximity — not conductor size — is the primary determinant of inductance.</strong> To halve inductance by widening a trace alone, you would need to increase width by 50×. Moving the conductors 2× closer achieves the same reduction with no width change.</p>
+        <p><strong>Proximity — not conductor size — is the primary determinant of inductance.</strong> To halve inductance by widening a trace alone, you would need to increase width by 50×. Moving the conductors 2× closer achieves the same reduction with no width change. Every stack-up decision about plane-to-signal spacing is a direct inductance control decision.</p>
       </div>
 
       <div class="card-grid">
         <div class="card">
           <div class="card-tag">Stack-up</div>
-          <h3>Signal Layers Adjacent to Planes</h3>
-          <p>Route critical distributed-length signals on layers directly adjacent to a reference plane. Thinner dielectric means tighter coupling, lower inductance, and better field containment.</p>
+          <h3>Signal Layers Adjacent to RRP</h3>
+          <p>Route critical distributed-length signals on layers directly adjacent to a solid RRP. Thinner dielectric means tighter coupling, lower inductance, better field containment, and less voltage drop in the return path.</p>
         </div>
         <div class="card">
           <div class="card-tag">Decoupling</div>
           <h3>Side-by-Side Via Placement</h3>
-          <p>Place decoupling cap vias side-by-side — not at opposite pad ends. Closer via spacing means smaller current loop and lower inductance. Route as close to the IC supply pin as geometry allows.</p>
+          <p>Place decoupling cap vias side-by-side — not at opposite pad ends. Closer spacing means smaller current loop and lower inductance. Route as close to the IC supply pin as geometry allows.</p>
         </div>
         <div class="card">
-          <div class="card-tag">Layer Selection</div>
-          <h3>Inner vs Outer for Critical Signals</h3>
-          <p>Route distributed-length high-frequency signals on inner layers (stripline) for better field containment. Use outer layers only when the trace is short enough to be a lumped element.</p>
+          <div class="card-tag">Layer Transitions</div>
+          <h3>Stitching Vias at Every Layer Change</h3>
+          <p>Every time a signal changes layers, place return stitching vias immediately adjacent to the signal via. This restores the RRP path and prevents field leakage at the transition point — one of the most common EMC failure modes.</p>
         </div>
         <div class="card">
           <div class="card-tag">App Notes</div>
           <h3>Verify Before Implementing</h3>
-          <p>IC application note layouts should be assumed incorrect until verified against first principles. App note authors understand circuit theory — not always PCB layout physics. Always check against return current and field behaviour.</p>
+          <p>IC application note layouts should be assumed incorrect until verified against first principles. They understand circuit theory — not always PCB layout physics. Always check every recommendation against return current behaviour and RRP continuity.</p>
         </div>
       </div>
     </div>
@@ -1610,16 +1617,46 @@ function updateSkin(val) {
 
 // ── QUIZ ──
 const QS = [
-  {q:"What is the primary factor determining whether a trace behaves as a lumped or distributed element?",o:["Clock frequency","Trace width","Signal rise time (edge rate)","Supply voltage"],a:2,fb:"Rise time — not clock frequency — determines lumped vs. distributed behaviour. A 500 kHz clock with fast-edge ICs can cause EMI failures; a 100 MHz board with controlled edges may pass cleanly."},
-  {q:"At what propagation-time-to-rise-time ratio do reflections and EMI problems begin?",o:["t_prop > t_rise","t_prop > ½ t_rise","t_prop > ¼ t_rise","t_prop > ⅛ t_rise"],a:2,fb:"Problems begin when propagation time exceeds ¼ of the rise time. Beyond this, energy travels as a wave and creates reflections at every impedance discontinuity."},
-  {q:"Where does electromagnetic energy travel in a PCB microstrip transmission line?",o:["Through the copper trace","Through the reference plane copper","In the dielectric between trace and plane","On the surface of the copper only"],a:2,fb:"All energy travels in the dielectric (FR4) between trace and reference plane. Copper acts as a waveguide boundary — the lowest-impedance path that steers the fields."},
-  {q:"At high frequencies, where does return current flow on a solid reference plane?",o:["Along the nearest ground via","Directly under the signal trace","Across the shortest physical path on the plane","Uniformly across the entire plane"],a:1,fb:"Above audio frequencies, return current concentrates directly under the trace — simultaneously the path of minimum inductance and maximum capacitance, making it the lowest-impedance path."},
-  {q:"Outer layer (microstrip) traces in FR4 propagate approximately how much faster than inner layer (stripline) traces?",o:["~15% slower — must be shorter when time-matching","~15% faster — must be longer when time-matching","Identical — only trace width matters","Faster on inner layers due to confinement"],a:1,fb:"Outer layer traces propagate ~15% faster because part of the field travels through air (lower εr). For timing-matched buses, outer traces must be ~15% longer than inner traces to achieve equal propagation time."},
-  {q:"What is the most effective way to reduce inductance of a decoupling capacitor via pair?",o:["Use larger diameter vias","Place vias at the ends of the cap pads","Place vias side-by-side as close as possible, near the IC pin","Space vias evenly at the four pad corners"],a:2,fb:"Inductance is dominated by proximity. The closer the forward and return conductors, the smaller the magnetic field volume and the lower the inductance. Side-by-side vias near the IC pin minimise loop area."},
-  {q:"A plane split under a high-frequency signal trace will:",o:["Have no effect below 1 GHz","Improve EMI by separating domains","Force return current around the split, creating a large radiating loop","Reduce crosstalk to adjacent signals"],a:2,fb:"Any gap forces high-frequency return current to route around it, dramatically increasing loop area. A large current loop is an efficient antenna — a leading cause of EMI failures on mixed-signal boards."},
-  {q:"The maximum frequency content of a digital signal for EMI purposes is:",o:["10 × clock frequency","0.5 / rise_time","1 / (π × rise_time)","clock_frequency × rise_time"],a:1,fb:"f_max = 0.5 / t_rise defines the upper frequency boundary of significant harmonic energy. The PDN must maintain low impedance from the fundamental clock frequency up to this value."},
-  {q:"Why does increasing trace width have limited effect on inductance compared to reducing conductor separation?",o:["Wider traces have higher resistance","Inductance is dominated by magnetic field volume, which depends on proximity not size","Trace width affects only capacitance","Wider traces alter the board dielectric constant"],a:1,fb:"Inductance depends on the volume of the magnetic field. Moving conductors closer together shrinks the field volume dramatically. To halve inductance by width alone would require a 50× increase in trace width."},
-  {q:"A 200 kHz product begins failing EMI after a pin-compatible IC replacement. The most likely root cause is:",o:["Higher supply current draw","Higher operating voltage","Faster rise times — previously lumped traces are now distributed","Incompatible package stackup"],a:2,fb:"Classic die-shrink scenario. A pin-compatible replacement may have faster edge rates. Traces that were lumped-elements become distributed elements with the new part — causing reflections and EMI at the same clock frequency."}
+  // Q1: correct → index 3
+  {q:"What is the primary factor determining whether a trace behaves as a lumped or distributed element?",
+   o:["Clock frequency","Trace width","Supply voltage","Signal rise time (edge rate)"],
+   a:3,fb:"Rise time — not clock frequency — determines lumped vs. distributed behaviour. A 500 kHz clock with fast-edge ICs can cause EMI failures; a 100 MHz board with controlled edges may pass cleanly."},
+  // Q2: correct → index 0
+  {q:"At what propagation-time-to-rise-time ratio do reflections and EMI problems begin?",
+   o:["t_prop > ¼ t_rise","t_prop > t_rise","t_prop > ⅛ t_rise","t_prop > ½ t_rise"],
+   a:0,fb:"Problems begin when propagation time exceeds ¼ of the rise time. Beyond this, energy travels as a wave and creates reflections at every impedance discontinuity."},
+  // Q3: correct → index 1
+  {q:"Where does electromagnetic energy travel in a PCB microstrip transmission line?",
+   o:["Through the copper trace","In the dielectric between trace and plane","On the surface of the copper only","Through the reference plane copper"],
+   a:1,fb:"All energy travels in the dielectric (FR4) between trace and reference plane. Copper acts as a waveguide boundary. What we measure as current is the boundary condition response of the conductor surface to the field — not electrons being pushed through the copper."},
+  // Q4: correct → index 3
+  {q:"At high frequencies, where does return current flow on a solid Return Reference Plane (RRP)?",
+   o:["Across the shortest physical path on the plane","Along the nearest ground via","Uniformly across the entire plane","Directly under the signal trace"],
+   a:3,fb:"Above audio frequencies, return current concentrates directly under the trace — simultaneously the path of minimum inductance and maximum capacitance, making it the lowest-impedance path."},
+  // Q5: correct → index 2
+  {q:"Outer layer (microstrip) traces in FR4 propagate approximately how much faster than inner layer (stripline) traces?",
+   o:["Identical — only trace width matters","Faster on inner layers due to field confinement","~15% faster — outer traces must be longer when time-matching","~15% slower — outer traces must be shorter when time-matching"],
+   a:2,fb:"Outer layer traces propagate ~15% faster because part of the field travels through air (lower εr). For timing-matched buses, outer traces must be ~15% longer than inner traces to achieve equal propagation time."},
+  // Q6: correct → index 0
+  {q:"What is the most effective way to reduce inductance of a decoupling capacitor via pair?",
+   o:["Place vias side-by-side as close as possible, near the IC pin","Use larger diameter vias","Space vias evenly at the four pad corners","Place vias at the ends of the cap pads"],
+   a:0,fb:"Inductance is dominated by proximity. The closer the forward and return conductors, the smaller the magnetic field volume and the lower the inductance. Side-by-side vias near the IC pin minimise loop area."},
+  // Q7: correct → index 3
+  {q:"A split in a Return Reference Plane (RRP) under a high-frequency signal trace will:",
+   o:["Have no effect below 1 GHz","Reduce crosstalk to adjacent signals","Improve EMI by separating analog and digital domains","Force return current around the split, creating a large radiating loop"],
+   a:3,fb:"Any gap forces high-frequency return current to route around it, dramatically increasing loop area. A large current loop is an efficient antenna. Splitting a plane to separate domains does not improve EMI — it causes it."},
+  // Q8: correct → index 2
+  {q:"The maximum frequency content of a digital signal for EMI purposes is:",
+   o:["10 × clock frequency","1 / (π × rise_time)","0.5 / rise_time","clock_frequency × rise_time"],
+   a:2,fb:"f_max = 0.5 / t_rise defines the upper frequency boundary of significant harmonic energy. The PDN must maintain low impedance from the fundamental clock frequency up to this value."},
+  // Q9: correct → index 3
+  {q:"Why does increasing trace width have limited effect on inductance compared to reducing conductor separation?",
+   o:["Trace width only affects capacitance","Wider traces have higher resistance that dominates","Wider traces alter the board dielectric constant","Inductance is dominated by magnetic field volume, which depends on proximity not conductor size"],
+   a:3,fb:"Inductance depends on the volume of the magnetic field. Moving conductors closer together shrinks the field volume dramatically. To halve inductance by width alone would require a 50× increase in trace width."},
+  // Q10: correct → index 1
+  {q:"A 200 kHz product begins failing EMI after a pin-compatible IC replacement. The most likely root cause is:",
+   o:["Higher supply current draw","Faster rise times — previously lumped traces are now distributed","Incompatible package stackup","Higher operating voltage"],
+   a:1,fb:"Classic die-shrink scenario. A pin-compatible replacement may have faster edge rates. Traces that were lumped-elements become distributed elements with the new part — causing reflections and EMI at the same clock frequency."}
 ];
 
 let answered = new Array(QS.length).fill(null);
