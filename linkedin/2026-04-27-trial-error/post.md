@@ -3,35 +3,38 @@
 **Date:** 2026-04-27
 **Avatar:** B — Head of Development / Engineering Director
 **Topic:** Multiple EMC test attempts normalised as trial and error
-**Status:** Draft
+**Angle:** #8 — What first-pass certification actually looks like
+**Status:** Draft (v2 — updated to match email TL;DR insight)
 
 ---
 
-**Subject / Hook:** Everyone calls it trial and error. The lab calls it another invoice.
+**Hook:** Everyone calls it trial and error. The lab calls it another invoice.
 
 ---
 
 ## Post
 
-Somewhere around attempt number three, teams stop calling it failure.
+Somewhere around the third failed EMC test, teams stop calling it failure.
 
 They call it "trial and error" instead.
 
-That's a language shift worth paying attention to.
+That reframe is expensive — because it turns a planning failure into an accepted part of the process.
 
-Each failed EMC test at an accredited lab costs money — lab fees, engineering time, travel, and usually a product revision nobody planned for. At €40–80K per cycle, four attempts isn't a methodology. It's a planning gap paid for in instalments.
+The teams that pass on the first attempt don't have better engineers. They have three things the others don't:
 
-Why does it keep happening? Not because EMC is inherently unpredictable. It's because most products arrive at the test chamber without ever having had a real EMC review. The lab becomes the first one.
+1. EMC constraints in the project plan before architecture is frozen — not filters added post-layout
+2. A pre-compliance scan on the first prototype — before layout is locked
+3. Someone accountable for EMC from week one — not called in after the first failure
 
-At that point, you're debugging under the worst possible conditions: mechanical is frozen, the launch date is somewhere on the internet, and every fix requires undoing decisions made six months ago.
+None of these are technically difficult. They're planning decisions.
 
-Move the review earlier and the number of attempts drops. Not because you got lucky — because the failure modes get caught when they're still cheap to fix.
+The reason most teams don't do them isn't ignorance. It's that nobody put them in the schedule.
 
-If you're heading into certification this year and the plan is still "we'll figure it out at the lab," that's worth reconsidering before you book the slot. Link in the first comment.
+If certification is coming up and none of those three are in your plan yet, that's the thing worth fixing first. Link in the first comment.
 
 #EMC #HardwareEngineering #PCBDesign #Electronics #EMI
 
 ---
 
 ## First Comment
-If you're preparing for EMC certification and want to reduce the risk of multiple attempts, the EMC Design Audit covers this before you're in a room you can't afford to fail. Details here: fresuelectronics.com/emc-audit
+The EMC Design Audit covers exactly this — a full review of your design and where the real risk is, before you're in a room you can't afford to fail. fresuelectronics.com/emc-audit
