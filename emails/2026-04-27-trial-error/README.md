@@ -3,7 +3,7 @@
 **Date:** 2026-04-27
 **Avatar:** B — Head of Development / Engineering Director
 **Topic:** Multiple EMC test attempts normalised as "trial and error"
-**Status:** Draft
+**Status:** Sent ✓ — 2026-04-27
 
 ---
 
