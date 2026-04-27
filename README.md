@@ -1,46 +1,34 @@
-# Fresu Electronics — Artifacts Library
+# Fresu Electronics — Content Archive
 
-Private central repository for all interactive HTML artifacts created by Fresu Electronics.
+Organised archive of all content produced for Fresu Electronics by Claude.
 
 ## Structure
 
 ```
-fresu-artifacts/
-├── emc-fundamentals/          # PCB EMC Fundamentals Interactive Guide
-├── top-10-pcb-mistakes/       # Reference to public repo
-├── [future-artifact]/
-└── README.md
+emails/
+  YYYY-MM-DD-slug/
+    README.md          ← metadata: subject, preview, avatar, status, notes
+    email-XX-slug.html ← Kit-ready HTML
+
+linkedin/
+  YYYY-MM-DD-slug/
+    post.md            ← full post text + hook + first comment
+
+articles/
+  YYYY-MM-DD-slug/
+    README.md
+    article.html       ← published to blog.fresuelectronics.com
 ```
 
-## Usage
+## Content Log
 
-Each artifact folder contains:
-- `index.html` — the standalone artifact (single-file, self-contained)
-- `README.md` — description, topic, target audience, creation date
+| Date | Type | Slug | Avatar | Status |
+|------|------|------|--------|--------|
+| 2026 | Email | budgeted-for-testing | B | Sent ✓ |
+| 2026-04-27 | Email | trial-error | B | Draft |
+| 2026-04-27 | LinkedIn | trial-error | B | Draft |
 
-## Fetching an artifact
-
-```python
-import requests, base64
-
-TOKEN = "your_token"
-REPO  = "dariofresu/fresu-artifacts"
-headers = {"Authorization": f"token {TOKEN}"}
-
-def fetch_artifact(path):
-    r = requests.get(f"https://api.github.com/repos/{REPO}/contents/{path}", headers=headers)
-    if r.status_code == 200:
-        return base64.b64decode(r.json()['content']).decode('utf-8')
-    return None
-
-html = fetch_artifact("emc-fundamentals/index.html")
-```
-
-## Artifacts Index
-
-| Artifact | Folder | Topic | Status |
-|----------|--------|-------|--------|
-| EMC Fundamentals Guide | `emc-fundamentals/` | PCB EMC design principles, calculators, quiz | ✅ Active |
-
----
-*Fresu Electronics — fresuelectronics.com*
+## Rules
+- Every piece of content is saved here before or immediately after publishing
+- README.md in each folder logs: subject/hook, avatar, status, and any lessons learned
+- Lessons that affect future content are also logged in the relevant skill in Claude-Skills repo
