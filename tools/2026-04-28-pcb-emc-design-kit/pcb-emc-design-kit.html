@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCB EMC Design Kit — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:           #0a0a0a;
+  --surface:      #111111;
+  --surface-2:    #181818;
+  --border:       #242424;
+  --border-light: #1a1a1a;
+  --fg:           #ffffff;
+  --fg-secondary: #e8edf5;
+  --label:        #a0aab8;
+  --label-dim:    #6b7d8f;
+  --accent:       #00FF94;
+  --accent-dim:   rgba(0,255,148,0.10);
+  --accent-hover: #00e085;
+  --wrong:        #ff4d4d;
+  --wrong-dim:    rgba(255,77,77,0.08);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.75;
+  -webkit-font-smoothing: antialiased;
+}
+
+body { min-height: 100vh; }
+.shell { max-width: 900px; margin: 0 auto; padding: 0 48px 80px; }
+
+/* HEADER */
+.hdr { padding: 52px 0 32px; border-bottom: 1px solid var(--border); margin-bottom: 0; }
+.kicker { font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; display: block; }
+.hdr h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.02em; color: var(--fg); margin-bottom: 14px; line-height: 1.15; }
+.hdr h1 em { color: var(--accent); font-style: normal; }
+.hdr-sub { font-size: 15px; color: var(--fg-secondary); max-width: 580px; line-height: 1.75; margin-bottom: 20px; }
+.hdr-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+.hdr-tag { font-size: 11px; font-weight: 500; padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); color: var(--label); letter-spacing: 0.04em; }
+
+/* TABS */
+.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 36px; }
+.tab {
+  background: none; border: none; border-bottom: 2px solid transparent;
+  padding: 14px 24px; margin-bottom: -1px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+  letter-spacing: 0.04em; color: var(--label); cursor: pointer;
+  transition: color 0.15s; min-height: 44px;
+}
+.tab:hover { color: var(--fg); }
+.tab.on { color: var(--accent); border-bottom-color: var(--accent); }
+.pane { display: none; }
+.pane.on { display: block; }
+
+/* SECTION LABEL */
+.sec-lbl {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 16px; margin-top: 40px;
+  display: flex; align-items: center; gap: 14px;
+}
+.sec-lbl:first-child { margin-top: 0; }
+.sec-lbl::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* RULES GRID */
+.rules { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.rule {
+  padding: 16px 18px 15px; border: 1px solid var(--border); border-radius: 4px;
+  background: var(--surface); position: relative; overflow: hidden; transition: border-color 0.15s;
+}
+.rule:hover { border-color: var(--label-dim); }
+.rule::before { content: ''; position: absolute; top: 0; left: 0; width: 3px; height: 100%; }
+.rule.critical::before { background: var(--wrong); }
+.rule.warning::before  { background: var(--label); }
+.rule.info::before     { background: var(--accent); }
+.rule-n { font-size: 10px; font-weight: 600; color: var(--label-dim); margin-bottom: 8px; letter-spacing: 0.08em; }
+.rule-t { font-size: 13px; color: var(--fg-secondary); line-height: 1.65; margin-bottom: 12px; }
+.badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 9px; border-radius: 4px; letter-spacing: 0.08em; border: 1px solid; }
+.b-critical { background: var(--wrong-dim); color: var(--wrong); border-color: rgba(255,77,77,0.2); }
+.b-warning  { background: rgba(160,170,184,0.08); color: var(--label); border-color: rgba(160,170,184,0.2); }
+.b-info     { background: var(--accent-dim); color: var(--accent); border-color: rgba(0,255,148,0.2); }
+
+/* FREQUENCY TABLE */
+.ftable-wrap { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.ftable { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ftable th {
+  text-align: left; padding: 11px 16px; font-size: 10px; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase; color: var(--label);
+  background: var(--surface-2); border-bottom: 1px solid var(--border);
+}
+.ftable td { padding: 13px 16px; border-bottom: 1px solid var(--border); color: var(--fg-secondary); vertical-align: top; line-height: 1.5; }
+.ftable tr:last-child td { border-bottom: none; }
+.ftable tbody tr:hover td { background: var(--surface); }
+.mono { font-family: 'Poppins', monospace; font-size: 12px; font-weight: 600; color: var(--fg); }
+.c-ok     { color: var(--accent); font-weight: 600; }
+.c-warn   { color: var(--label); font-weight: 600; }
+.c-danger { color: var(--wrong); font-weight: 600; }
+
+/* TERMS */
+.terms { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.term { padding: 16px 18px; border: 1px solid var(--border); border-radius: 4px; background: var(--surface); transition: border-color 0.15s; }
+.term:hover { border-color: var(--label-dim); }
+.term-n { font-size: 12px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.term-d { font-size: 13px; color: var(--label); line-height: 1.65; }
+
+/* CHECKLIST */
+.score-bar {
+  display: flex; align-items: center; gap: 18px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 4px; padding: 18px 22px; margin-bottom: 32px;
+}
+.score-num { font-size: 28px; font-weight: 800; color: var(--fg); white-space: nowrap; }
+.score-num span { color: var(--accent); }
+.prog-wrap { flex: 1; height: 4px; background: var(--border); border-radius: 2px; }
+.prog-fill { height: 100%; border-radius: 2px; background: var(--accent); width: 0%; transition: width 0.4s cubic-bezier(0.22,1,0.36,1); }
+.score-pct { font-size: 13px; font-weight: 600; color: var(--label); white-space: nowrap; }
+.tier-hdr { display: flex; align-items: center; gap: 12px; margin: 28px 0 12px; }
+.tier-pill { font-size: 10px; font-weight: 700; padding: 4px 12px; border-radius: 20px; letter-spacing: 0.06em; border: 1px solid; }
+.t1-pill { background: var(--wrong-dim); color: var(--wrong); border-color: rgba(255,77,77,0.2); }
+.t2-pill { background: rgba(160,170,184,0.08); color: var(--label); border-color: rgba(160,170,184,0.2); }
+.tier-nm { font-size: 14px; font-weight: 600; color: var(--fg); }
+.tier-ct { font-size: 12px; font-weight: 500; color: var(--label-dim); margin-left: auto; }
+.cl-list { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.chk {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 14px 18px; border-bottom: 1px solid var(--border);
+  cursor: pointer; transition: background 0.12s; min-height: 44px;
+}
+.chk:last-child { border-bottom: none; }
+.chk:hover { background: var(--surface-2); }
+.chk input[type=checkbox] { margin-top: 3px; flex-shrink: 0; cursor: pointer; accent-color: var(--accent); width: 16px; height: 16px; }
+.chk-body { flex: 1; min-width: 0; }
+.chk-t { font-size: 13px; color: var(--fg); line-height: 1.6; font-weight: 500; }
+.chk-sub { font-size: 12px; color: var(--label); margin-top: 4px; line-height: 1.6; }
+.chk.done .chk-t { color: var(--label-dim); text-decoration: line-through; }
+
+/* QUIZ */
+.q-prog { display: flex; align-items: center; gap: 7px; margin-bottom: 24px; flex-wrap: wrap; }
+.qdot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); transition: background 0.2s; flex-shrink: 0; }
+.qdot.active { background: var(--fg); }
+.qdot.done   { background: var(--accent); }
+.qdot.wrong  { background: var(--wrong); }
+.q-lbl { font-size: 12px; font-weight: 500; color: var(--label); margin-left: 6px; }
+.qcard { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 26px 26px 22px; margin-bottom: 16px; }
+.qn { font-size: 10px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.qtxt { font-size: 17px; font-weight: 600; color: var(--fg); line-height: 1.6; margin-bottom: 22px; letter-spacing: -0.01em; }
+.opts { display: flex; flex-direction: column; gap: 10px; }
+.opt {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 13px 16px; border: 1px solid var(--border); border-radius: 4px;
+  cursor: pointer; background: var(--surface-2); transition: all 0.15s; user-select: none; min-height: 44px;
+}
+.opt:hover:not(.locked)  { border-color: var(--label-dim); background: var(--bg); }
+.opt.sel     { border-color: rgba(0,255,148,0.4); background: var(--accent-dim); }
+.opt.correct { border-color: rgba(0,255,148,0.5); background: var(--accent-dim); }
+.opt.wrong   { border-color: rgba(255,77,77,0.4); background: var(--wrong-dim); }
+.opt-l { font-size: 11px; font-weight: 700; color: var(--label); flex-shrink: 0; padding-top: 1px; min-width: 16px; letter-spacing: 0.04em; }
+.opt.correct .opt-l { color: var(--accent); }
+.opt.wrong   .opt-l { color: var(--wrong); }
+.opt-t { font-size: 13px; color: var(--fg-secondary); line-height: 1.6; }
+.fb { font-size: 13px; line-height: 1.7; padding: 14px 16px; border-radius: 4px; margin-top: 14px; border-left: 3px solid; }
+.fb-ok { background: var(--accent-dim); color: var(--fg-secondary); border-color: var(--accent); }
+.fb-no { background: var(--wrong-dim); color: var(--fg-secondary); border-color: var(--wrong); }
+.fb strong { color: var(--fg); font-weight: 700; }
+.qnav { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; }
+
+/* BUTTONS */
+.btn {
+  padding: 12px 24px; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border);
+  background: var(--surface-2); color: var(--label);
+  transition: all 0.15s; letter-spacing: 0.04em; min-height: 44px;
+}
+.btn:hover:not(:disabled) { background: var(--surface); color: var(--fg); border-color: var(--label-dim); }
+.btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-p { background: var(--accent); color: #0a0a0a; border-color: var(--accent); font-weight: 700; }
+.btn-p:hover:not(:disabled) { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+/* RESULT */
+.result { text-align: center; padding: 48px 20px 28px; }
+.res-score { font-size: 72px; font-weight: 800; color: var(--accent); margin-bottom: 8px; letter-spacing: -0.03em; line-height: 1; }
+.res-denom { font-size: 16px; color: var(--label); margin-bottom: 28px; font-weight: 500; }
+.res-dots { display: flex; gap: 8px; justify-content: center; margin-bottom: 28px; }
+.res-dots .qdot { width: 10px; height: 10px; }
+.res-tier { font-size: 18px; font-weight: 700; margin-bottom: 14px; }
+.res-tier.ok  { color: var(--accent); }
+.res-tier.mid { color: var(--label); }
+.res-tier.low { color: var(--wrong); }
+.res-msg { font-size: 14px; color: var(--label); max-width: 440px; margin: 0 auto 32px; line-height: 1.75; }
+
+/* FOOTER */
+.footer { margin-top: 60px; padding-top: 22px; border-top: 1px solid var(--border-light); display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.footer-brand { font-size: 13px; font-weight: 600; color: var(--label-dim); }
+.footer-brand em { color: var(--accent); font-style: normal; }
+.footer-right { display: flex; align-items: center; gap: 20px; }
+.footer-link { font-size: 12px; color: var(--label-dim); text-decoration: none; font-weight: 500; transition: color 0.15s; }
+.footer-link:hover { color: var(--accent); }
+
+/* MOBILE */
+@media (max-width: 768px) {
+  .shell { padding: 0 24px 60px; }
+  .hdr { padding: 36px 0 28px; }
+  .hdr h1 { font-size: clamp(22px, 7vw, 32px); }
+  .rules { grid-template-columns: 1fr; }
+  .terms { grid-template-columns: 1fr; }
+  .ftable th:nth-child(3), .ftable td:nth-child(3) { display: none; }
+  .tab { padding: 12px 16px; font-size: 12px; }
+  .score-bar { flex-wrap: wrap; gap: 12px; }
+  .score-num { font-size: 22px; }
+  .qcard { padding: 20px 18px 18px; }
+  .qtxt { font-size: 15px; }
+  .footer { flex-direction: column; align-items: flex-start; gap: 12px; }
+}
+
+@media (max-width: 390px) {
+  .shell { padding: 0 20px 60px; }
+  .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tab { white-space: nowrap; }
+  .ftable-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .footer { padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+}
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <header class="hdr">
+    <span class="kicker">Fresu Electronics · PCB Design Mastery Series</span>
+    <h1>PCB EMC <em>Design Kit</em></h1>
+    <p class="hdr-sub">A field-theory-first reference for designing boards that pass EMC testing — built from the PCB Design Mastery lecture series. Covers golden rules, pre/post-layout checklist, and a knowledge self-assessment.</p>
+    <div class="hdr-tags">
+      <span class="hdr-tag">RRP-first approach</span>
+      <span class="hdr-tag">Return current behaviour</span>
+      <span class="hdr-tag">Layer transitions</span>
+      <span class="hdr-tag">Stitching vias</span>
+      <span class="hdr-tag">Skin effect</span>
+      <span class="hdr-tag">Crosstalk</span>
+      <span class="hdr-tag">EMC test readiness</span>
+    </div>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab on" onclick="switchTab(this,'cs')">Cheatsheet</button>
+    <button class="tab" onclick="switchTab(this,'cl')">Checklist</button>
+    <button class="tab" onclick="switchTab(this,'qa')">Self-Assessment</button>
+  </nav>
+
+  <!-- CHEATSHEET -->
+  <div class="pane on" id="pane-cs">
+    <div class="sec-lbl">10 Golden Rules</div>
+    <div class="rules" id="rules-grid"></div>
+    <div class="sec-lbl">Return Current Behaviour by Frequency</div>
+    <div class="ftable-wrap">
+      <table class="ftable">
+        <thead><tr><th>Frequency Range</th><th>Return Path Behaviour</th><th>Governed By</th><th>EMC Risk</th></tr></thead>
+        <tbody>
+          <tr><td><span class="mono">DC – 1 kHz</span></td><td>Spreads across entire RRP — fully distributed</td><td>Least resistance (R)</td><td class="c-ok">Low</td></tr>
+          <tr><td><span class="mono">1 kHz – 10 MHz</span></td><td>Transitional — spreading narrows progressively</td><td>Mixed R + jωL</td><td class="c-warn">Moderate</td></tr>
+          <tr><td><span class="mono">&gt; 10 MHz</span></td><td>Tightly coupled directly beneath trace (skin effect)</td><td>Least inductance (L)</td><td class="c-danger">High if RRP absent</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="sec-lbl">Key Terminology</div>
+    <div class="terms" id="terms-grid"></div>
+    <footer class="footer">
+      <span class="footer-brand">Fresu <em>Electronics</em></span>
+      <div class="footer-right">
+        <a href="https://www.fresuelectronics.com" class="footer-link">Website →</a>
+        <a href="https://www.fresuelectronics.com/trainings" class="footer-link">Courses →</a>
+        <a href="https://www.youtube.com/@dario_fresu" class="footer-link">YouTube →</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="pane" id="pane-cl">
+    <div class="score-bar">
+      <div class="score-num" id="score-txt"><span>0</span> / 0</div>
+      <div class="prog-wrap"><div class="prog-fill" id="prog-fill"></div></div>
+      <div class="score-pct" id="score-pct">0% complete</div>
+    </div>
+    <div id="cl-body"></div>
+    <footer class="footer">
+      <span class="footer-brand">Fresu <em>Electronics</em> · PCB EMC Design Kit</span>
+      <button class="btn" onclick="resetChecklist()">Reset all</button>
+    </footer>
+  </div>
+
+  <!-- ASSESSMENT -->
+  <div class="pane" id="pane-qa">
+    <div class="q-prog" id="q-dots"></div>
+    <div id="quiz-body"></div>
+    <div class="qnav">
+      <button class="btn" id="btn-back" onclick="quizBack()" disabled>← Back</button>
+      <button class="btn btn-p" id="btn-next" onclick="quizNext()" disabled>Submit →</button>
+    </div>
+    <footer class="footer" style="margin-top:40px">
+      <span class="footer-brand">Fresu <em>Electronics</em> · PCB EMC Design Kit</span>
+    </footer>
+  </div>
+
+</div>
+<script>
+const RULES=[
+  {n:'01',t:'Keep the RRP (Return Reference Plane) adjacent to every signal layer in the stackup.',tag:'critical'},
+  {n:'02',t:'Never split, cut, route traces through, or void the Return Reference Plane.',tag:'critical'},
+  {n:'03',t:'Place a return via adjacent to every signal via at each layer transition.',tag:'critical'},
+  {n:'04',t:'Use stitching vias to connect adjacent same-potential RRP layers and maintain an equipotential surface.',tag:'critical'},
+  {n:'05',t:'At high frequency, return current follows the path of least inductance — not least resistance. Design for this.',tag:'info'},
+  {n:'06',t:'Digital signals carry broadband harmonics. Design the layout for the highest significant harmonic, not just the fundamental.',tag:'info'},
+  {n:'07',t:'Physically separate analog and digital circuits on the board — but never split their shared RRP beneath them.',tag:'warning'},
+  {n:'08',t:'Energy propagates in the EM fields between trace and RRP — not inside the conductor. Think in fields, not electrons.',tag:'info'},
+  {n:'09',t:'Never remove the RRP under DC/DC converters, inductors, or switching elements. This is a top EMC test failure cause.',tag:'critical'},
+  {n:'10',t:'Use "Return Reference Plane" — not "ground". It is a return path and field reference, not a current sink.',tag:'warning'},
+];
+const TERMS=[
+  {n:'RRP — Return Reference Plane',d:'Provides the return current path back to source and the electric field reference for signal traces. Not a "ground" — it is a return path.'},
+  {n:'Stitching Via',d:'Via connecting adjacent same-potential RRP layers to maintain a continuous equipotential surface, especially important at high frequency.'},
+  {n:'Return Via',d:'Via placed immediately adjacent to a signal via at each layer transition to give the return current a controlled, low-impedance path.'},
+  {n:'Displacement Current',d:'Current completing loops through capacitive coupling when two planes are not DC-connected — introduces impedance, voltage drops, and noise.'},
+  {n:'Skin Effect',d:'At high frequency, current concentrates at the conductor surface. Return current follows directly under the trace — the path of least inductance.'},
+  {n:'Crosstalk',d:'Unwanted EM coupling between adjacent signal paths. Increases with frequency, amplitude, and proximity. Worst between high-speed digital and sensitive analog lines.'},
+  {n:'Ground Bounce',d:'Voltage noise on the reference plane caused by impedance in the return current path during fast switching events.'},
+  {n:'Loop Area',d:'The area enclosed by a signal trace and its return current path. Minimising loop area is the most effective way to reduce radiated emission.'},
+];
+const TIER1=[
+  {t:'At least one continuous, unbroken, solid RRP layer present in the stackup',why:'Without an RRP the signal has no controlled return path — electric fields spread uncontrolled and couple into adjacent structures and cables.'},
+  {t:'Every signal layer has an adjacent RRP immediately above or below in the stackup',why:'Adjacency confines the electric field to the dielectric between trace and plane — keeping loop area and radiated emission minimal.'},
+  {t:'RRP is homogeneous: no splits, cuts, large voids, or routing tracks breaking the plane',why:'Any discontinuity creates a slot antenna and forces return current into parasitic paths with large loop areas.'},
+  {t:'No signal traces are routed over a split or gap in the RRP',why:'Crossing a gap breaks the return current path — fields expand outward, loop area grows, and noise couples into adjacent circuits.'},
+  {t:'Stitching vias connect adjacent same-potential RRP layers at regular intervals',why:'Without stitching, RRP layers can differ in potential at high frequency — the gap between them radiates like a slot antenna.'},
+  {t:'A return via is placed adjacent to every signal via at each layer transition',why:'Return current must change layers with the signal. Without a return via it detours across the board, dramatically increasing loop area and emission.'},
+  {t:'RRP retained under DC/DC converter inductors and all switching elements — never removed',why:'Removing the RRP under converters is one of the most common causes of radiated EMC test failures — this one rule alone prevents many board re-spins.'},
+  {t:'Decoupling capacitors have their own dedicated RRP and power vias — not shared with neighbours',why:'Shared vias add loop inductance to the decoupling path, severely reducing filter effectiveness at high frequency.'},
+  {t:'No track stubs, dangling nets, or floating conductors anywhere in the layout',why:'Unused traces and floating conductors act as antennas, radiating harmonics coupled from nearby switching signals.'},
+];
+const TIER2=[
+  {t:'All high-speed traces routed over a continuous RRP with no plane splits in their path',why:'Guaranteed return current containment — enforces the least-inductance return path at all frequencies above 10 MHz.'},
+  {t:'Analog and digital sections physically separated on the board (shared RRP remains intact below)',why:'High-frequency digital harmonics couple into sensitive analog lines via EM fields — separation reduces this without breaking return paths.'},
+  {t:'EMI filters placed as close as possible to board edge or connector entry/exit points',why:'Filtering noise after it has already coupled onto the board is largely ineffective. Place filters at the system boundary.'},
+  {t:'Differential pairs used for all signals above 10 MHz that exit the board via connectors or cables',why:'Common-mode cancellation dramatically reduces cable radiation — cables are the most efficient unintended antennas on a system.'},
+  {t:'Track widths meet IPC-2221 minimums for current capacity on all power and return paths',why:'Under-rated traces add resistance to the return path, increasing voltage drop, thermal dissipation, and noise.'},
+  {t:'Bypass capacitors placed within 15 mm of the IC power pin they are decoupling',why:'Every extra millimetre of trace between cap and pin adds inductance — moving the cap away eliminates its benefit at high frequency.'},
+  {t:'Crystals and oscillators placed as close as possible to their IC clock pin',why:'Long clock traces are efficient antennas at the oscillator frequency and its harmonics — a very common radiated emission failure mode.'},
+  {t:'No 90° bends on high-speed signal traces — use 45° or curved routing instead',why:'90° corners create impedance discontinuities that generate reflections and add harmonic content.'},
+  {t:'Stackup is symmetric around the centre layer (top half mirrors bottom half)',why:'Asymmetric stackups cause board warpage under thermal cycling, degrading controlled-impedance accuracy and solder joint reliability.'},
+];
+const QUESTIONS=[
+  {q:'What are the two primary functions of the Return Reference Plane (RRP)?',opts:['To provide earth ground and prevent galvanic corrosion on the board','To serve as the return current path back to source and the electric field reference for signal traces','To distribute power and provide distributed filtering across the board','To shield the board from external electromagnetic interference'],ans:1,fb:'<strong>Correct.</strong> The RRP earns its name for two reasons: it provides the return current path back to source (completing the current loop), and it provides the electric field reference for the signal trace. Understanding both functions changes how you approach every layout decision.',wrong:'<strong>Incorrect.</strong> The RRP is not a current sink — current never disappears into it. It provides the return current path back to source and acts as the electric field reference. This distinction changes every layout decision, especially for plane splits and layer transitions.'},
+  {q:'At frequencies above 10 MHz, the return current follows the path of least…',opts:['Resistance — it spreads across the widest available area of the reference plane','Voltage — it flows toward the lowest potential region of the plane','Inductance — it concentrates tightly and directly beneath the signal trace','Capacitance — it avoids regions of high permittivity in the dielectric'],ans:2,fb:'<strong>Correct.</strong> At high frequency, the skin effect and the principle of minimising loop area cause return current to concentrate directly beneath the trace — the path of least inductance, not resistance. This fundamental shift from DC behaviour occurs around 1–10 MHz.',wrong:'<strong>Incorrect.</strong> At high frequency, inductance — not resistance — governs the return current path. The skin effect causes current to concentrate directly beneath the trace. The transition from resistance-dominated to inductance-dominated behaviour happens around 1–10 MHz.'},
+  {q:'What happens to the electromagnetic fields when the RRP is removed from near the signal trace?',opts:['Nothing significant — the signal propagates normally without a reference plane','Signal speed increases because the effective dielectric constant is lower','Fields become uncontained and expand outward — coupling into adjacent structures and growing the current loop area','The signal becomes cleaner because there is less capacitive loading on the trace'],ans:2,fb:'<strong>Correct.</strong> Without an adjacent RRP, electric fields are no longer contained in the dielectric. They spread outward and couple into adjacent traces, components, and cables. The return current must also find a longer path, growing the magnetic field loop and increasing radiated emission.',wrong:'<strong>Incorrect.</strong> Without an RRP, the electric fields expand outward and become uncontained. The return current must take a longer parasitic path — dramatically increasing loop area and radiated emission.'},
+  {q:'A 10 MHz square-wave digital signal should be treated in layout as though it were…',opts:['A single 10 MHz sine wave with no harmonic content','A DC signal with occasional transitions — essentially low frequency','A broadband signal containing 10 MHz and harmonics at 20, 30, 40 MHz and well beyond','A low-frequency signal because its edge rate is slow compared to microwave RF'],ans:2,fb:'<strong>Correct.</strong> By Fourier analysis, any square or sharp-edged signal decomposes into a fundamental plus harmonics at integer multiples. The faster the edge rate, the higher the energy in upper harmonics. Always design for the highest significant harmonic, not just the fundamental.',wrong:'<strong>Incorrect.</strong> A square wave at 10 MHz contains harmonics at 20, 30, 40 MHz and beyond. The faster the edge rate, the higher the energy in those harmonics. Even "low frequency" digital signals must be treated with high-frequency layout discipline.'},
+  {q:'Why must a return via be placed adjacent to every signal via at a layer transition?',opts:['To reduce PCB manufacturing cost by reusing existing drill tool sizes','To provide a low-impedance path for the return current when it must also change layers with the signal','To increase signal propagation speed through the via structure','To prevent thermal stress cracking in the via barrel during reflow soldering'],ans:1,fb:'<strong>Correct.</strong> The return current follows the signal everywhere — including through layer transitions. A return via provides the low-impedance transition path. Without it, the return current detours across the board, dramatically increasing loop area and emission.',wrong:'<strong>Incorrect.</strong> Without a return via, the return current cannot change layers alongside the signal. It must detour across the board — growing the current loop area and dramatically increasing radiated emission.'},
+  {q:'Why should you NEVER split the Return Reference Plane between analog and digital sections?',opts:['It significantly increases PCB manufacturing complexity and unit cost','A split RRP creates a slot antenna, breaks return current paths, and forces currents into large parasitic loops — causing far more EMC problems than it solves','It prevents correct placement of stitching vias near the split region','It directly violates IPC-2221 mixed-signal PCB design requirements'],ans:1,fb:'<strong>Correct.</strong> Splitting the RRP is widespread but harmful. The slot acts as an antenna. Return currents must still complete their loops — without a continuous RRP they find parasitic paths that form large radiating loops. The correct approach: one continuous RRP with physical separation of circuits above it.',wrong:'<strong>Incorrect.</strong> Splitting the RRP creates a slot antenna and forces return currents into uncontrolled parasitic loops — causing worse EMC problems than an unsplit plane. Maintain one continuous RRP and separate the circuits above it by physical distance.'},
+  {q:'What does the term "ground" fail to convey that "Return Reference Plane" communicates correctly?',opts:['"Ground" is a legacy term only valid for low-frequency circuits with no practical modern significance','"Ground" implies a current sink where current disappears, rather than a return path and electric field reference — leading to fundamental layout misunderstandings','"Ground" is applicable only to power electronics; RRP applies only to signal integrity','There is no practical difference — both terms describe the same physical conducting layer'],ans:1,fb:'<strong>Correct.</strong> "Ground" is commonly misused to imply a place where current terminates. Current never disappears — it returns to its source through the reference plane. Thinking of the plane as a return path (not a sink) fundamentally changes layout decisions.',wrong:'<strong>Incorrect.</strong> "Ground" misleadingly implies a place where current disappears. Current always returns to its source through the reference plane. Understanding the plane as a return path changes every layout decision — plane splits, layer transitions, via placement.'},
+  {q:'Two adjacent planes in a 4-layer stackup sit at different DC voltages (GND and +3.3 V). Why cannot stitching vias connect them?',opts:['Stitching vias only function correctly in stackups with 6 or more layers','Connecting two planes at different DC voltages with vias would create a direct short circuit between those supply rails','Stitching vias between different-voltage planes violate impedance matching requirements','There is no restriction — stitching vias work correctly between any two planes regardless of voltage'],ans:1,fb:'<strong>Correct.</strong> Stitching vias maintain equipotentiality between same-voltage planes. Connecting GND and +3.3 V with vias would short them together, destroying the power supply. Return current crossing between different-voltage planes must use displacement current — introducing impedance, drops, and noise.',wrong:'<strong>Incorrect.</strong> Stitching vias connect planes at the same potential. Connecting GND and +3.3 V with vias creates a direct short circuit. Return current crossing between different-voltage planes must rely on displacement current through capacitive coupling — introducing impedance and noise.'},
+];
+
+const rulesGrid=document.getElementById('rules-grid');
+RULES.forEach(r=>{
+  const el=document.createElement('div');
+  el.className=`rule ${r.tag}`;
+  el.innerHTML=`<div class="rule-n">RULE ${r.n}</div><div class="rule-t">${r.t}</div><span class="badge b-${r.tag}">${r.tag.toUpperCase()}</span>`;
+  rulesGrid.appendChild(el);
+});
+const termsGrid=document.getElementById('terms-grid');
+TERMS.forEach(t=>{
+  const el=document.createElement('div');
+  el.className='term';
+  el.innerHTML=`<div class="term-n">${t.n}</div><div class="term-d">${t.d}</div>`;
+  termsGrid.appendChild(el);
+});
+
+let checkState={},totalChk=0;
+function buildChecklist(){
+  const body=document.getElementById('cl-body');
+  function makeSection(items,pillCls,pillTxt,name,startId){
+    const wrap=document.createElement('div');
+    const hdr=document.createElement('div');
+    hdr.className='tier-hdr';
+    hdr.innerHTML=`<span class="tier-pill ${pillCls}">${pillTxt}</span><span class="tier-nm">${name}</span><span class="tier-ct" id="ct-s${startId}">0 / ${items.length} checked</span>`;
+    wrap.appendChild(hdr);
+    const list=document.createElement('div');
+    list.className='cl-list';
+    items.forEach((item,i)=>{
+      const id=startId+i;checkState[id]=false;totalChk++;
+      const row=document.createElement('label');
+      row.className='chk';row.id=`cr-${id}`;
+      row.innerHTML=`<input type="checkbox" onchange="toggleChk(${id},${startId},${items.length},this)"><div class="chk-body"><div class="chk-t">${item.t}</div><div class="chk-sub">${item.why}</div></div>`;
+      list.appendChild(row);
+    });
+    wrap.appendChild(list);body.appendChild(wrap);
+  }
+  makeSection(TIER1,'t1-pill','TIER 1 — CRITICAL','RRP Integrity, Return Vias & Plane Continuity',0);
+  makeSection(TIER2,'t2-pill','TIER 2 — WARNING','Routing, Placement & Separation',TIER1.length);
+  updateScore();
+}
+function toggleChk(id,startId,len,el){
+  checkState[id]=el.checked;
+  document.getElementById(`cr-${id}`).classList.toggle('done',el.checked);
+  const done=Object.keys(checkState).filter(k=>parseInt(k)>=startId&&parseInt(k)<startId+len&&checkState[k]).length;
+  document.getElementById(`ct-s${startId}`).textContent=done+' / '+len+' checked';
+  updateScore();
+}
+function updateScore(){
+  const done=Object.values(checkState).filter(Boolean).length;
+  const pct=totalChk?Math.round((done/totalChk)*100):0;
+  document.getElementById('score-txt').innerHTML=`<span>${done}</span> / ${totalChk}`;
+  document.getElementById('score-pct').textContent=pct+'% complete';
+  document.getElementById('prog-fill').style.width=pct+'%';
+}
+function resetChecklist(){
+  Object.keys(checkState).forEach(k=>{checkState[k]=false;});
+  document.querySelectorAll('.chk input[type=checkbox]').forEach(cb=>{cb.checked=false;});
+  document.querySelectorAll('.chk').forEach(r=>r.classList.remove('done'));
+  document.querySelectorAll('[id^="ct-s"]').forEach(ct=>{
+    const total=ct.textContent.split(' / ')[1].split(' ')[0];
+    ct.textContent='0 / '+total+' checked';
+  });
+  updateScore();
+}
+buildChecklist();
+
+let qIdx=0,answers=new Array(QUESTIONS.length).fill(null),submitted=new Array(QUESTIONS.length).fill(false);
+function buildDots(){
+  const dots=document.getElementById('q-dots');dots.innerHTML='';
+  QUESTIONS.forEach((_,i)=>{
+    const d=document.createElement('div');
+    let cls='qdot';
+    if(i===qIdx)cls+=' active';
+    else if(submitted[i])cls+=answers[i]===QUESTIONS[i].ans?' done':' wrong';
+    d.className=cls;dots.appendChild(d);
+  });
+  const lbl=document.createElement('span');
+  lbl.className='q-lbl';lbl.textContent='Question '+(qIdx+1)+' of '+QUESTIONS.length;
+  dots.appendChild(lbl);
+}
+function renderQuestion(){
+  if(qIdx>=QUESTIONS.length){renderResult();return;}
+  const q=QUESTIONS[qIdx];
+  const optsHtml=q.opts.map((o,i)=>{
+    let cls='opt';
+    if(submitted[qIdx]){cls+=' locked';if(i===q.ans)cls+=' correct';else if(i===answers[qIdx]&&answers[qIdx]!==q.ans)cls+=' wrong';}
+    else if(answers[qIdx]===i)cls+=' sel';
+    return`<div class="${cls}" onclick="selectOpt(${i})"><span class="opt-l">${String.fromCharCode(65+i)}</span><span class="opt-t">${o}</span></div>`;
+  }).join('');
+  let fbHtml='';
+  if(submitted[qIdx]){const ok=answers[qIdx]===q.ans;fbHtml=`<div class="fb ${ok?'fb-ok':'fb-no'}">${ok?q.fb:q.wrong}</div>`;}
+  document.getElementById('quiz-body').innerHTML=`<div class="qcard"><div class="qn">Q${qIdx+1} OF ${QUESTIONS.length}</div><div class="qtxt">${q.q}</div><div class="opts">${optsHtml}</div>${fbHtml}</div>`;
+  buildDots();
+  document.getElementById('btn-back').disabled=qIdx===0;
+  const nb=document.getElementById('btn-next');
+  if(!submitted[qIdx]){nb.textContent='Submit →';nb.disabled=answers[qIdx]===null;}
+  else if(qIdx===QUESTIONS.length-1){nb.textContent='View Results →';nb.disabled=false;}
+  else{nb.textContent='Next →';nb.disabled=false;}
+}
+function selectOpt(i){if(submitted[qIdx])return;answers[qIdx]=i;renderQuestion();}
+function quizNext(){
+  if(!submitted[qIdx]){submitted[qIdx]=true;renderQuestion();}
+  else if(qIdx<QUESTIONS.length-1){qIdx++;renderQuestion();}
+  else{renderResult();}
+}
+function quizBack(){if(qIdx>0){qIdx--;renderQuestion();}}
+function renderResult(){
+  const score=answers.reduce((s,a,i)=>s+(a===QUESTIONS[i].ans?1:0),0);
+  const pct=Math.round((score/QUESTIONS.length)*100);
+  let tier,tClass;
+  if(pct>=87){tier='Expert — you are thinking like an EMC engineer.';tClass='ok';}
+  else if(pct>=62){tier='Intermediate — solid fundamentals, review the gaps.';tClass='mid';}
+  else{tier='Beginner — revisit the cheatsheet and lecture series.';tClass='low';}
+  const dotsHtml=QUESTIONS.map((q,i)=>`<div class="qdot ${answers[i]===q.ans?'done':'wrong'}"></div>`).join('');
+  document.getElementById('quiz-body').innerHTML=`<div class="result"><div class="res-score">${score} / ${QUESTIONS.length}</div><div class="res-denom">${pct}% correct</div><div class="res-dots">${dotsHtml}</div><div class="res-tier ${tClass}">${tier}</div><div class="res-msg">Each dot represents one question — green is correct, red is incorrect. Return to the Cheatsheet and Checklist to reinforce any concepts you missed.</div><button class="btn btn-p" onclick="restartQuiz()">Retake Assessment</button></div>`;
+  document.getElementById('btn-back').style.display='none';
+  document.getElementById('btn-next').style.display='none';
+  document.getElementById('q-dots').innerHTML='';
+}
+function restartQuiz(){
+  qIdx=0;answers=new Array(QUESTIONS.length).fill(null);submitted=new Array(QUESTIONS.length).fill(false);
+  document.getElementById('btn-back').style.display='';document.getElementById('btn-next').style.display='';
+  renderQuestion();
+}
+renderQuestion();
+function switchTab(btn,id){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');document.getElementById('pane-'+id).classList.add('on');
+}
+</script>
+</body>
+</html>
