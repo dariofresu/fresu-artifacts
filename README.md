@@ -6,6 +6,11 @@ Every email, LinkedIn post, and article is saved here automatically.
 ## Structure
 
 ```
+tools/
+  YYYY-MM-DD-slug/
+    README.md
+    *.html                     ← standalone interactive tools
+
 emails/
   YYYY-MM-DD-slug/
     README.md                  ← subject, preview, avatar, status, notes
@@ -58,3 +63,4 @@ Goal: rotate through all 10 before repeating. Never repeat within 90 days (email
 - Update the Content Log and Angle Tracker with every new piece
 - Never repeat an angle within 90 days (email) or 30 days (LinkedIn)
 - Same angle = same root argument, even if framed differently
+| 2026-04-28 | Tool | PCB EMC Design Kit — Cheatsheet, Checklist, Self-Assessment | — | — | Published |
