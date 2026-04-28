@@ -64,4 +64,4 @@ Goal: rotate through all 10 before repeating. Never repeat within 90 days (email
 - Update the Content Log and Angle Tracker with every new piece
 - Never repeat an angle within 90 days (email) or 30 days (LinkedIn)
 - Same angle = same root argument, even if framed differently
-| 2026-04-28 | Tool | PCB EMC Design Kit — Cheatsheet, Checklist, Self-Assessment | — | — | Published |
+| 2026-04-28 | Tool | PCB EMC Design Kit — 7 tabs (cheatsheet, checklist, assessment, stackup, diagnostic, flashcards, print) | — | — | [Published](https://tool.fresuelectronics.com/pcb-emc-design-kit/) |
