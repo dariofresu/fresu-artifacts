@@ -35,6 +35,7 @@ articles/
 | 2026 | Email | You budgeted for testing. You didn't budget for failure. | B | #1 — Missing line in project plan | Sent ✓ |
 | 2026-04-27 | Email | 4–5 EMC test attempts is now considered normal. It shouldn't be. | B | #8 — What first-pass certification looks like | Sent ✓ |
 | 2026-04-27 | LinkedIn | Everyone calls it trial and error. The lab calls it another invoice. | B | #8 — What first-pass certification looks like | Draft |
+| 2026-04-28 | Email | Your EMC test failed. Now comes the harder conversation. | B | #2 — The CEO conversation after a failed test | Draft |
 
 ---
 
@@ -46,7 +47,7 @@ Goal: rotate through all 10 before repeating. Never repeat within 90 days (email
 | # | Angle | Last Email | Last LinkedIn |
 |---|-------|-----------|---------------|
 | 1 | The missing line in the project plan | 2026 (sent) | — |
-| 2 | The CEO conversation after a failed test | — | — |
+| 2 | The CEO conversation after a failed test | 2026-04-28 (draft) | — |
 | 3 | The cost nobody budgets for | — | — |
 | 4 | "We'll fix it in testing" | — | — |
 | 5 | The certification deadline no one plans around | — | — |
