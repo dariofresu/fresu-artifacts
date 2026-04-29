@@ -51,7 +51,7 @@ Goal: rotate through all 10 before repeating. Never repeat within 90 days (email
 | # | Angle | Last Email | Last LinkedIn |
 |---|-------|-----------|---------------|
 | 1 | The missing line in the project plan | 2026 (sent) | — |
-| 2 | The CEO conversation after a failed test | 2026-04-28 (draft) | — |
+| 2 | The CEO conversation after a failed test | 2026-04-28 | Sent |
 | 3 | The cost nobody budgets for | — | — |
 | 4 | "We'll fix it in testing" | — | — |
 | 5 | The certification deadline no one plans around | — | — |
