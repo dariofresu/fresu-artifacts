@@ -5,9 +5,9 @@
 | Date | 2026-04-28 |
 | Avatar | B |
 | Angle | #2 — The CEO conversation after a failed test |
-| Status | Draft |
-| Subject | Your EMC test failed. Now comes the harder conversation. |
-| Preview | The engineering problem is solvable. The business conversation that follows is harder to recover from. |
+| Status | Sent |
+| Subject used | Your EMC test failed. Now comes the harder conversation. |
+| Preview used | The question nobody wants to answer is why no one saw it coming. |
 
 ## Content summary
 Opens with the business consequence of EMC failure — not the technical fix, but the CEO conversation that follows. Argues that most engineering directors can handle the lab answer but struggle with "how did we not see this coming?" Callout block anchors the €40–80K cost figure. Contrast table separates unprepared teams from first-pass teams. Closes with a CTA framing the audit as preparation for the certification conversation — including the one with leadership.
