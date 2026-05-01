@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDN Design Mini-Course — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a; --surface:#111111; --surface-2:#181818;
+  --border:#2e2e2e; --fg:#ffffff; --fg-secondary:#e8edf5;
+  --label:#a0aab8; --accent:#00FF94; --accent-dim:rgba(0,255,148,0.09);
+  --sidebar-w:280px; --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:'Poppins','Helvetica Neue',Arial,sans-serif;font-size:15px;line-height:1.75;overflow-x:hidden}
+
+/* ─── OVERLAY (mobile) ───────────────────────────── */
+#overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:200;opacity:0;transition:opacity 300ms}
+#overlay.open{display:block;opacity:1}
+
+/* ─── SIDEBAR ────────────────────────────────────── */
+#sidebar{
+  position:fixed;left:0;top:0;bottom:0;
+  width:var(--sidebar-w);
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  z-index:300;
+  overflow-y:auto;
+}
+.sidebar-logo{
+  padding:24px 20px 20px;
+  border-bottom:1px solid var(--border);
+  flex-shrink:0;
+}
+.sidebar-logo img{height:28px;width:auto;display:block}
+.sidebar-course-label{
+  font-size:10px;font-weight:600;letter-spacing:0.14em;
+  text-transform:uppercase;color:var(--accent);margin-top:10px;
+}
+.sidebar-progress-wrap{padding:16px 20px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sidebar-progress-label{font-size:11px;color:var(--label);margin-bottom:8px}
+.progress-bar-track{height:3px;background:#333;border-radius:2px}
+.progress-bar-fill{height:3px;background:var(--accent);border-radius:2px;transition:width 400ms var(--ease);width:0%}
+.progress-pct{font-size:11px;color:var(--accent);font-weight:600;margin-top:6px}
+
+.sidebar-nav{flex:1;padding:12px 0}
+.nav-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 20px;cursor:pointer;
+  border-left:2px solid transparent;
+  transition:background 180ms, border-color 180ms;
+  min-height:44px;
+}
+.nav-item:hover{background:rgba(255,255,255,0.03)}
+.nav-item.active{background:var(--accent-dim);border-left-color:var(--accent)}
+.nav-item.done .nav-check{border-color:var(--accent);background:var(--accent)}
+.nav-item.done .nav-check::after{content:'✓';color:#0a0a0a;font-size:9px;font-weight:800}
+.nav-check{
+  width:20px;height:20px;border-radius:50%;
+  border:1.5px solid #444;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;transition:all 250ms;
+}
+.nav-item.active .nav-check{border-color:var(--accent)}
+.nav-text{flex:1}
+.nav-chapter{font-size:9px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--label)}
+.nav-item.active .nav-chapter{color:var(--accent)}
+.nav-title{font-size:13px;font-weight:500;color:var(--fg-secondary);line-height:1.3;margin-top:1px}
+.nav-item.active .nav-title{color:var(--fg);font-weight:600}
+
+/* ─── MAIN ───────────────────────────────────────── */
+#main{
+  margin-left:var(--sidebar-w);
+  min-height:100vh;
+  display:flex;flex-direction:column;
+}
+
+/* ─── TOP BAR ────────────────────────────────────── */
+#topbar{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,10,0.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 48px;
+  height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+#hamburger{display:none;background:none;border:none;cursor:pointer;padding:8px;color:var(--fg-secondary)}
+#hamburger svg{display:block}
+.topbar-chapter{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent)}
+.topbar-nav{display:flex;gap:8px}
+.topbar-btn{
+  background:none;border:1px solid var(--border);color:var(--fg-secondary);
+  font-family:'Poppins',sans-serif;font-size:12px;font-weight:500;
+  padding:7px 16px;border-radius:4px;cursor:pointer;
+  transition:all 180ms;min-height:36px;
+}
+.topbar-btn:hover{border-color:var(--accent);color:var(--accent)}
+.topbar-btn:disabled{opacity:0.3;cursor:not-allowed}
+.topbar-btn.primary{background:var(--accent);border-color:var(--accent);color:#0a0a0a;font-weight:700}
+.topbar-btn.primary:hover{background:#00e085;border-color:#00e085}
+
+/* ─── CONTENT AREA ───────────────────────────────── */
+#content{
+  flex:1;
+  max-width:760px;
+  margin:0 auto;
+  padding:56px 48px 80px;
+  width:100%;
+  animation:fade-up 500ms var(--ease) both;
+}
+@keyframes fade-up{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+.chapter-kicker{
+  font-size:10px;font-weight:600;letter-spacing:0.18em;
+  text-transform:uppercase;color:var(--accent);margin-bottom:14px;
+}
+h1{font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.1;margin-bottom:10px}
+h1 span{color:var(--accent)}
+.chapter-intro{font-size:16px;color:var(--fg-secondary);line-height:1.75;margin-bottom:36px;font-weight:300}
+
+h3{font-size:17px;font-weight:700;margin:36px 0 12px}
+p{color:var(--fg-secondary);line-height:1.8;margin-bottom:16px;font-size:15px}
+p strong{color:var(--fg);font-weight:600}
+
+/* formula */
+.formula{
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:6px;padding:20px 24px;margin:24px 0;
+  font-family:'Courier New',monospace;
+}
+.formula-lbl{font-family:'Poppins',sans-serif;font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--label);margin-bottom:8px}
+.formula-main{font-size:20px;font-weight:600;color:var(--fg);letter-spacing:0.02em}
+.formula-main .a{color:var(--accent)}
+.formula-note{font-family:'Poppins',sans-serif;font-size:12px;color:var(--label);margin-top:8px;line-height:1.6}
+
+/* callout */
+.callout{
+  background:var(--surface);border-left:3px solid var(--accent);
+  padding:18px 20px;border-radius:0 6px 6px 0;margin:24px 0;
+}
+.callout-lbl{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.callout p{font-size:14px;color:var(--fg);margin:0;line-height:1.7;font-weight:500}
+
+/* diagram */
+.diagram{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:28px;margin:28px 0;overflow:hidden;
+}
+.diagram-cap{font-size:11px;color:var(--label);text-align:center;margin-top:14px;font-style:italic}
+
+/* table */
+.data-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:13px}
+.data-table th{background:var(--surface-2);color:var(--fg);font-weight:600;text-align:left;padding:10px 14px;border-bottom:1px solid var(--border)}
+.data-table td{padding:9px 14px;border-bottom:1px solid #1e1e1e;color:var(--fg-secondary)}
+.data-table tr:last-child td{border-bottom:none}
+.data-table td.accent{color:var(--accent);font-weight:600}
+.data-table td.bad{color:#ff4d4d;font-weight:600}
+
+/* ─── QUIZ ───────────────────────────────────────── */
+.quiz{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:28px;margin-top:40px;
+}
+.quiz-header{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.quiz-badge{
+  background:var(--accent-dim);border:1px solid rgba(0,255,148,0.25);
+  color:var(--accent);font-size:10px;font-weight:700;letter-spacing:0.14em;
+  text-transform:uppercase;padding:4px 10px;border-radius:3px;
+}
+.quiz-title{font-size:16px;font-weight:700;color:var(--fg)}
+.quiz-question{font-size:15px;color:var(--fg);font-weight:600;margin-bottom:18px;line-height:1.5}
+.quiz-options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.quiz-option{
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:6px;padding:14px 18px;cursor:pointer;
+  transition:all 200ms;text-align:left;font-family:'Poppins',sans-serif;
+  font-size:14px;color:var(--fg-secondary);min-height:44px;width:100%;
+}
+.quiz-option:hover:not(:disabled){border-color:var(--accent);color:var(--fg)}
+.quiz-option.selected{border-color:var(--accent);background:var(--accent-dim);color:var(--fg)}
+.quiz-option.correct{border-color:var(--accent)!important;background:rgba(0,255,148,0.12)!important;color:var(--fg)!important}
+.quiz-option.wrong{border-color:#ff4d4d!important;background:rgba(255,77,77,0.08)!important;color:#ff4d4d!important}
+.quiz-btn{
+  background:var(--accent);border:none;color:#0a0a0a;
+  font-family:'Poppins',sans-serif;font-size:13px;font-weight:700;
+  padding:12px 24px;border-radius:4px;cursor:pointer;
+  letter-spacing:0.04em;text-transform:uppercase;
+  transition:background 180ms;min-height:44px;
+}
+.quiz-btn:hover{background:#00e085}
+.quiz-btn:disabled{opacity:0.4;cursor:not-allowed}
+.quiz-feedback{
+  display:none;margin-top:16px;padding:14px 18px;
+  border-radius:6px;font-size:14px;line-height:1.6;
+}
+.quiz-feedback.correct-fb{background:rgba(0,255,148,0.08);border:1px solid rgba(0,255,148,0.2);color:var(--fg)}
+.quiz-feedback.wrong-fb{background:rgba(255,77,77,0.07);border:1px solid rgba(255,77,77,0.2);color:var(--fg-secondary)}
+.quiz-feedback strong{color:var(--accent)}
+.quiz-feedback.wrong-fb strong{color:#ff4d4d}
+
+/* ─── COMPLETION SCREEN ──────────────────────────── */
+#completion{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:70vh;text-align:center;padding:48px}
+#completion.visible{display:flex}
+.completion-badge{
+  width:80px;height:80px;border-radius:50%;
+  background:var(--accent-dim);border:2px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  font-size:32px;margin-bottom:28px;
+  animation:pop-in 600ms var(--ease) both;
+}
+@keyframes pop-in{from{transform:scale(0.5);opacity:0}to{transform:scale(1);opacity:1}}
+#completion h2{font-size:32px;font-weight:800;margin-bottom:12px}
+#completion h2 span{color:var(--accent)}
+#completion p{font-size:16px;color:var(--fg-secondary);max-width:440px;margin-bottom:32px}
+.completion-actions{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cta-btn{
+  background:var(--accent);border:none;color:#0a0a0a;
+  font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;
+  padding:14px 28px;border-radius:4px;cursor:pointer;
+  letter-spacing:0.04em;text-transform:uppercase;
+  text-decoration:none;display:inline-block;min-height:48px;
+}
+.cta-btn.secondary{background:none;border:1px solid var(--accent);color:var(--accent)}
+
+/* ─── MOBILE ─────────────────────────────────────── */
+@media(max-width:768px){
+  #sidebar{transform:translateX(-100%);transition:transform 300ms var(--ease)}
+  #sidebar.open{transform:translateX(0)}
+  #main{margin-left:0}
+  #topbar{padding:0 16px}
+  #hamburger{display:flex}
+  #content{padding:40px 20px 64px}
+  .topbar-btn span{display:none}
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #sidebar{padding-bottom:env(safe-area-inset-bottom)}
+  #content{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- ═══════════════════════════════════ SIDEBAR -->
+<aside id="sidebar">
+  <div class="sidebar-logo">
+    <a href="https://www.fresuelectronics.com">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+    </a>
+    <div class="sidebar-course-label">PDN Design Mini-Course</div>
+  </div>
+  <div class="sidebar-progress-wrap">
+    <div class="sidebar-progress-label">Course progress</div>
+    <div class="progress-bar-track"><div class="progress-bar-fill" id="progressFill"></div></div>
+    <div class="progress-pct" id="progressPct">0% complete</div>
+  </div>
+  <nav class="sidebar-nav" id="sidebarNav"></nav>
+</aside>
+
+<!-- ═══════════════════════════════════ MAIN -->
+<div id="main">
+  <header id="topbar">
+    <div style="display:flex;align-items:center;gap:12px">
+      <button id="hamburger" onclick="toggleSidebar()" aria-label="Menu">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <rect y="4" width="20" height="1.5" rx="1" fill="currentColor"/>
+          <rect y="9.25" width="20" height="1.5" rx="1" fill="currentColor"/>
+          <rect y="14.5" width="20" height="1.5" rx="1" fill="currentColor"/>
+        </svg>
+      </button>
+      <span class="topbar-chapter" id="topbarLabel">Chapter 1</span>
+    </div>
+    <div class="topbar-nav">
+      <button class="topbar-btn" id="btnPrev" onclick="navigate(-1)"><span>← </span>Prev</button>
+      <button class="topbar-btn primary" id="btnNext" onclick="navigate(1)">Next <span>→</span></button>
+    </div>
+  </header>
+
+  <div id="content"></div>
+  <div id="completion">
+    <div class="completion-badge">⚡</div>
+    <h2>Course <span>Complete</span></h2>
+    <p>You've covered all eight principles of PDN design for high-speed PCBs. Apply these rules to your next board.</p>
+    <div class="completion-actions">
+      <a href="https://www.fresuelectronics.com/emc-audit" class="cta-btn">Get a Design Audit →</a>
+      <a href="https://blog.fresuelectronics.com" class="cta-btn secondary">Read More</a>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// COURSE DATA
+// ═══════════════════════════════════════════════════
+const chapters = [
+{
+  id:0, label:"Chapter 01", title:"Where Energy Actually Lives",
+  kicker:"Foundation",
+  intro:"Energy in a circuit doesn't live where most engineers are taught. Understanding this is the prerequisite to everything else in PDN design.",
+  content:`
+    <p>Most engineering curricula teach that voltage and current are the energy carriers in a circuit. This is a useful simplification — but it's incomplete. <strong>Energy in a circuit is stored and transported in the electric and magnetic fields</strong>, not in the electrons moving through copper conductors.</p>
+    <p>When a signal trace runs above a reference plane, the energy doesn't travel through the metal. It propagates through the <strong>dielectric space between the trace and the plane</strong> — the substrate material of the PCB. The copper trace and plane generate electron movement (current), but they are effectively the boundary conditions for the field that does the actual work.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 620 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+        <rect x="40" y="155" width="540" height="30" rx="3" fill="#1e1e1e" stroke="#3a3a3a"/>
+        <text x="310" y="174" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="11" font-weight="600">GROUND PLANE</text>
+        <rect x="40" y="65" width="540" height="86" fill="rgba(0,255,148,0.06)" stroke="rgba(0,255,148,0.2)" stroke-dasharray="4 3" stroke-width="1"/>
+        <text x="310" y="102" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="12" font-weight="700">⚡ Energy propagates here</text>
+        <text x="310" y="120" text-anchor="middle" fill="rgba(0,255,148,0.55)" font-family="Poppins,sans-serif" font-size="10">(PCB dielectric — NOT through the copper)</text>
+        <rect x="140" y="38" width="340" height="24" rx="3" fill="#2a2a2a" stroke="#4a4a4a"/>
+        <text x="310" y="54" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="10" font-weight="600">SIGNAL TRACE</text>
+        <defs><marker id="a1" markerWidth="5" markerHeight="5" refX="3" refY="2.5" orient="auto"><path d="M0,0 L0,5 L5,2.5Z" fill="#00FF94"/></marker></defs>
+        <line x1="60" y1="50" x2="130" y2="50" stroke="#00FF94" stroke-width="1.5" marker-end="url(#a1)"/>
+        <text x="56" y="46" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" text-anchor="end">I→</text>
+      </svg>
+      <div class="diagram-cap">Energy travels through the dielectric between trace and plane. Current in the trace and return current in the plane occur simultaneously.</div>
+    </div>
+    <p>This carries a direct consequence for power distribution: <strong>if your power plane is on layer 2 and your ground plane is on layer 5, power is not "on layer 2"</strong> — it is being delivered from the dielectric material between those two layers. Signals routed through that same dielectric space create interference with power delivery.</p>
+    <div class="callout"><div class="callout-lbl">Key principle</div><p>The fields — not the copper — carry the energy. Design for the fields, and the copper follows.</p></div>
+  `,
+  quiz:{
+    q:"Where does energy primarily propagate in a PCB transmission line?",
+    opts:["Through the copper trace","In the dielectric space between the trace and reference plane","Inside the IC package","Along the plane layer closest to the signal"],
+    correct:1,
+    feedback:{
+      ok:"Correct. Energy propagates through the dielectric between conductors. The copper boundaries guide the field, but the field itself travels through the substrate material.",
+      fail:"Not quite. Copper conducts electrons and generates the boundary conditions — but the energy is carried by the electromagnetic field in the dielectric space between trace and plane."
+    }
+  }
+},
+{
+  id:1, label:"Chapter 02", title:"Target Impedance",
+  kicker:"Design Constraint",
+  intro:"Every PDN design begins with a number. Before you place a single capacitor, you need to know what impedance you're targeting — and across which frequency range.",
+  content:`
+    <p>The goal of power distribution design is to maintain a <strong>low bus impedance</strong> across the full frequency range that the circuit operates in. The band starts at the clock frequency (the lowest important frequency) and extends to a maximum defined by signal rise time.</p>
+    <div class="formula">
+      <div class="formula-lbl">Maximum frequency of power bus</div>
+      <div class="formula-main"><span class="a">f<sub>max</sub></span> = 0.5 / t<sub>rise</sub></div>
+      <div class="formula-note">t<sub>rise</sub> in nanoseconds · f<sub>max</sub> in GHz<br>0.5 ns rise time → 1 GHz · 250 ps → 2 GHz · 50 ps → 10 GHz</div>
+    </div>
+    <p>Target impedance comes from your noise budget. It is the ratio of maximum tolerable noise voltage to maximum instantaneous current demand.</p>
+    <div class="formula">
+      <div class="formula-lbl">Target PDN impedance</div>
+      <div class="formula-main"><span class="a">Z<sub>target</sub></span> = V<sub>noise</sub> / I<sub>inst</sub></div>
+      <div class="formula-note">Example: 50 outputs × 40 mA = 2 A instantaneous current<br>With 100 mV noise budget: <strong>Z = 50 mΩ</strong><br>High-speed networking at 100 A: Z may need to be as low as 1 mΩ</div>
+    </div>
+    <h3>When Does the Current Actually Flow?</h3>
+    <p>All high-frequency instantaneous current is drawn <strong>during the rise time of output signals</strong> — the brief window when an output transitions from low to high. During this window, the IC pulls current through every active output simultaneously to charge the transmission lines. This is when PDN impedance determines noise performance.</p>
+    <div class="callout"><div class="callout-lbl">Design target</div><p>The PDN impedance must stay below Z<sub>target</sub> across the entire frequency band from f<sub>clock</sub> to f<sub>max</sub> = 0.5 / t<sub>rise</sub>. Outside this band, you have more latitude.</p></div>
+    <table class="data-table">
+      <tr><th>Rise Time</th><th>f<sub>max</sub></th><th>Typical application</th></tr>
+      <tr><td>4 ns</td><td>125 MHz</td><td class="accent">Simple microcontrollers</td></tr>
+      <tr><td>1 ns</td><td>500 MHz</td><td class="accent">Mid-speed processors</td></tr>
+      <tr><td>250 ps</td><td>2 GHz</td><td class="accent">High-speed processors</td></tr>
+      <tr><td>50 ps</td><td>10 GHz</td><td class="bad">Multi-gigabit systems</td></tr>
+    </table>
+  `,
+  quiz:{
+    q:"A processor has a rise time of 500 ps and 30 outputs each drawing 50 mA. Your noise budget is 75 mV. What is the target PDN impedance?",
+    opts:["25 mΩ","50 mΩ","75 mΩ","150 mΩ"],
+    correct:1,
+    feedback:{
+      ok:"Correct. Total instantaneous current = 30 × 50 mA = 1.5 A. Z = 75 mV / 1.5 A = 50 mΩ. The PDN must maintain this impedance from the clock frequency up to 0.5 / 0.5 ns = 1 GHz.",
+      fail:"Not quite. Total instantaneous current is 30 × 50 mA = 1.5 A. Then Z = V/I = 75 mV / 1.5 A = 50 mΩ. Always calculate the full instantaneous current from all active outputs before dividing."
+    }
+  }
+},
+{
+  id:2, label:"Chapter 03", title:"Via Inductance",
+  kicker:"The 60% Rule",
+  intro:"Via inductance is one of the highest-leverage variables in PDN design — and most engineers dramatically underestimate the role of spacing versus size.",
+  content:`
+    <p>Inductance cannot be assigned to a single isolated via. It is always a property of a <em>pair</em> — specifically, the closed magnetic loop formed by a power via and its return (ground) via. The partial inductance of an isolated via is essentially meaningless for design purposes.</p>
+    <p>What matters is the <strong>spacing between the power and ground vias</strong>. The further apart they are, the larger the volume of the magnetic field they generate — and inductance scales with field volume. Bring them together and the field condenses, inductance falls sharply.</p>
+    <div class="diagram">
+      <svg viewBox="0 0 620 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+        <text x="155" y="18" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="11" font-weight="700">Far Apart — High L</text>
+        <text x="465" y="18" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="11" font-weight="700">Close Together — Low L</text>
+        <line x1="310" y1="8" x2="310" y2="210" stroke="#222" stroke-width="1" stroke-dasharray="4 4"/>
+        <!-- left: far -->
+        <ellipse cx="110" cy="105" rx="66" ry="66" fill="none" stroke="rgba(255,77,77,0.08)" stroke-width="1"/>
+        <ellipse cx="110" cy="105" rx="50" ry="50" fill="none" stroke="rgba(255,77,77,0.12)" stroke-width="1"/>
+        <ellipse cx="200" cy="105" rx="66" ry="66" fill="none" stroke="rgba(255,77,77,0.08)" stroke-width="1"/>
+        <ellipse cx="200" cy="105" rx="50" ry="50" fill="none" stroke="rgba(255,77,77,0.12)" stroke-width="1"/>
+        <circle cx="110" cy="105" r="12" fill="#181818" stroke="#ff4d4d" stroke-width="2"/>
+        <text x="110" y="109" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="11" font-weight="800">+</text>
+        <circle cx="200" cy="105" r="12" fill="#181818" stroke="#777" stroke-width="2"/>
+        <text x="200" y="109" text-anchor="middle" fill="#777" font-family="Poppins,sans-serif" font-size="11" font-weight="800">−</text>
+        <text x="155" y="195" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="13" font-weight="800">≈ 1.2 nH</text>
+        <!-- right: close -->
+        <ellipse cx="440" cy="105" rx="30" ry="30" fill="none" stroke="rgba(0,255,148,0.1)" stroke-width="1"/>
+        <ellipse cx="440" cy="105" rx="20" ry="20" fill="none" stroke="rgba(0,255,148,0.16)" stroke-width="1"/>
+        <ellipse cx="464" cy="105" rx="30" ry="30" fill="none" stroke="rgba(0,255,148,0.1)" stroke-width="1"/>
+        <ellipse cx="464" cy="105" rx="20" ry="20" fill="none" stroke="rgba(0,255,148,0.16)" stroke-width="1"/>
+        <circle cx="440" cy="105" r="12" fill="#181818" stroke="#00FF94" stroke-width="2"/>
+        <text x="440" y="109" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="11" font-weight="800">+</text>
+        <circle cx="464" cy="105" r="12" fill="#181818" stroke="#777" stroke-width="2"/>
+        <text x="464" y="109" text-anchor="middle" fill="#777" font-family="Poppins,sans-serif" font-size="11" font-weight="800">−</text>
+        <rect x="388" y="30" width="136" height="24" rx="3" fill="rgba(0,255,148,0.07)" stroke="rgba(0,255,148,0.2)"/>
+        <text x="456" y="46" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="10" font-weight="700">60% reduction</text>
+        <text x="452" y="195" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="13" font-weight="800">≈ 0.5 nH</text>
+      </svg>
+      <div class="diagram-cap">Doubling via diameter reduces inductance ~15%. Halving the spacing between via pairs reduces inductance ~60%.</div>
+    </div>
+    <p>This has a concrete, quantifiable implication: <strong>size barely matters; position matters enormously</strong>. A pair of 10-mil drill vias separated by 6.35 mm has approximately 1.2 nH of loop inductance. Moving the same vias to minimal separation drops this to about 0.5 nH — a 60% reduction, without changing via diameter, length, or any other physical parameter.</p>
+    <div class="callout"><div class="callout-lbl">Design rule</div><p>Never route power and ground vias separately. Always pair them. Place each power via as close as possible to a ground via. The inductance of the pair scales with their separation, not their size.</p></div>
+  `,
+  quiz:{
+    q:"You have a power via and a ground via separated by 8 mm (≈ 0.5 nH). If you move them to within 1 mm of each other (same size, same length), what happens to inductance?",
+    opts:["Increases by ~20%","Stays roughly the same — size matters more","Drops by roughly 60%","Doubles — they're now forming a tighter loop"],
+    correct:2,
+    feedback:{
+      ok:"Correct. Moving vias closer dramatically reduces the volume of the magnetic field. The 60% reduction applies when going from a wide separation to a tight pairing — without changing via geometry at all.",
+      fail:"Actually, spacing is the dominant factor. Reducing separation from 8 mm to 1 mm causes roughly a 60% inductance reduction — the magnetic field volume shrinks dramatically when the forward and return paths are brought together."
+    }
+  }
+},
+{
+  id:3, label:"Chapter 04", title:"Capacitor Mounting Strategy",
+  kicker:"Placement & Polarity",
+  intro:"The nominal inductance spec on a capacitor datasheet is meaningless without knowing how it's mounted. Placement, via location, and via polarity arrangement determine the effective inductance you'll actually see.",
+  content:`
+    <p>When you attach a decoupling capacitor to a PCB, the vias form part of the inductance loop. The capacitor body contributes inductance; so do the pads and the vias connecting the pads to the power and ground planes.</p>
+    <h3>End Vias vs Side Vias</h3>
+    <p>Placing vias at the ends of a capacitor (the standard pad locations) creates maximum separation between the power and ground current paths. Placing them at the sides — close together, on opposite edges of the pads — reduces the loop area significantly.</p>
+    <table class="data-table">
+      <tr><th>Configuration</th><th>Effective inductance</th><th>Notes</th></tr>
+      <tr><td>0603, end vias</td><td class="bad">~1,000 pH</td><td>Standard, poor for high speed</td></tr>
+      <tr><td>0603, side vias (1 pair)</td><td class="accent">~500 pH</td><td>2× improvement</td></tr>
+      <tr><td>0603, side vias (2 pairs)</td><td class="accent">~250 pH</td><td>4× improvement</td></tr>
+      <tr><td>1206 side-lead (correct)</td><td class="accent">~450 pH</td><td>Same as 0201 correctly mounted</td></tr>
+    </table>
+    <h3>Polarity Matters — Fields Must Oppose</h3>
+    <p>When two vias of the same polarity are adjacent, their magnetic fields repel each other — the total field is larger, and inductance increases. When a positive via and a negative via are adjacent, their fields attract and partially cancel. This is what makes side-mounted, opposite-polarity via pairs effective.</p>
+    <div class="callout"><div class="callout-lbl">Non-negotiable rule</div><p>Opposite polarity vias must be adjacent. A pair of same-polarity vias side by side does not reduce inductance — it can actually increase it. Always verify polarity when placing side vias.</p></div>
+    <h3>Same Side as the IC — Always</h3>
+    <p>Routing decoupling capacitors to the opposite side of the board from the IC dramatically increases path inductance. The current loop now includes via stubs through the full board thickness before reaching the power or ground plane. Even a well-placed, correctly-oriented capacitor on the wrong side of the board can deliver worse performance than a poorly-mounted one on the correct side.</p>
+  `,
+  quiz:{
+    q:"For a high-speed BGA decoupling capacitor, where should the vias be placed for lowest effective inductance?",
+    opts:["At the ends of the capacitor pads (standard placement)","At the sides of the capacitor, with opposite polarity vias adjacent","Under the capacitor body","As far from the IC as possible to avoid disrupting its plane area"],
+    correct:1,
+    feedback:{
+      ok:"Correct. Side-mounted vias reduce the current loop area significantly. Opposite polarity vias adjacent to each other allow their magnetic fields to partially cancel, which is the mechanism behind the inductance reduction.",
+      fail:"End-mounted vias create the maximum loop area because the power and ground current paths are as far apart as the capacitor is long. Side-mounted, opposite-polarity vias give a 2–4× inductance reduction."
+    }
+  }
+},
+{
+  id:4, label:"Chapter 05", title:"Decoupling by Rise Time",
+  kicker:"Matching Strategy to Speed",
+  intro:"Low-speed and high-speed boards are not just quantitatively different — they require fundamentally different decoupling strategies. Applying the high-speed approach to a microcontroller, or vice versa, causes problems.",
+  content:`
+    <p>The key dividing line is whether capacitors alone can deliver the required frequencies, or whether planes must carry that burden. This depends entirely on rise time and the resulting maximum frequency.</p>
+    <h3>Low-Speed Strategy (2–4 ns rise time, 125–250 MHz max)</h3>
+    <p>At these frequencies, capacitors alone handle the job. No power plane is required. The correct approach is to mount the capacitor near the IC on the same side of the board, with vias at the <em>outer edges</em>. This <strong>intentionally increases inductance</strong> of the attachment to the power rail — decoupling the IC from the rail. The capacitor serves as a local reservoir; it recharges slowly through the (intentionally inductive) path.</p>
+    <div class="callout"><div class="callout-lbl">The etymology of "decoupling"</div><p>The term "decoupling capacitor" came from this exact technique: intentionally mounting the capacitor with vias at the ends to create inductance that decouples the IC from the power rail. The rail charges the capacitor slowly; the capacitor delivers energy to the IC directly with low impedance.</p></div>
+    <h3>High-Speed Strategy (sub-nanosecond rise time)</h3>
+    <p>When planes are closely spaced (under 6 mil), their inductance is <em>lower</em> than the inductance of the capacitor attachment. Energy from the capacitors dumps into the planes; the planes deliver it to the IC. In this regime:</p>
+    <p>• Capacitor location within an <strong>energy circle</strong> is what matters — not proximity to the IC.</p>
+    <p>• Spreading capacitors around the IC (rather than crowding them near it) often improves performance.</p>
+    <p>• Placing caps under the BGA is not required and may disrupt the plane near where continuity matters most.</p>
+    <div class="formula">
+      <div class="formula-lbl">Energy circle radius</div>
+      <div class="formula-main"><span class="a">r</span> = t<sub>rise</sub> × 6 in/ns</div>
+      <div class="formula-note">250 ps rise time → r = 0.25 × 6 = 0.75 in reach<br>500 ps rise time → r = 0.5 × 6 = 1.5 in reach<br>Capacitors placed anywhere within this circle are "close enough"</div>
+    </div>
+  `,
+  quiz:{
+    q:"In a high-speed design with closely spaced planes, why doesn't the decoupling capacitor need to be directly under the BGA?",
+    opts:["Because BGA packages already have built-in capacitance","Because the plane inductance is lower than the capacitor attachment inductance — the planes do the delivery, caps just refill them","Because the BGA prevents the capacitor from accessing the plane","Because decoupling is not needed on BGA designs"],
+    correct:1,
+    feedback:{
+      ok:"Correct. When plane inductance is lower than capacitor attachment inductance, the planes become the delivery medium. Capacitors dump their charge into the planes; planes deliver to the IC. The capacitor's job is to refill the planes — not to directly charge the IC.",
+      fail:"When planes are closely spaced, their inductance is lower than the inductance of capacitor via attachments. Energy flows from capacitors into the planes, then from planes to the IC. The capacitor location within the energy circle is sufficient — it doesn't need to be at the IC."
+    }
+  }
+},
+{
+  id:5, label:"Chapter 06", title:"Plane Inductance",
+  kicker:"Per-Square Measurement",
+  intro:"Plane inductance is counterintuitive. Larger area boards don't necessarily mean lower plane inductance — and understanding why shapes how you approach high-speed board design.",
+  content:`
+    <p>Plane inductance is a <strong>per-square measurement</strong>. Like sheet resistance in conductors, the inductance of a planar region depends on the separation between power and ground planes — not on the total area. A 1-inch square and a 10-inch square of planes at the same separation have the same per-square inductance.</p>
+    <h3>IC Placement and Field Geometry</h3>
+    <p>An IC placed at the center of the board has a complete circular energy field available to it. Place that same IC at the board edge, and you've cut off part of the circle. Place it in a corner, and two sides of the field are gone. The result is a non-square, irregular field geometry — and inductance goes up.</p>
+    <table class="data-table">
+      <tr><th>IC placement</th><th>Field geometry</th><th>Effect on inductance</th></tr>
+      <tr><td>Board center</td><td>Full circle</td><td class="accent">Lowest — optimal</td></tr>
+      <tr><td>Board edge</td><td>Semicircle</td><td>Moderate increase</td></tr>
+      <tr><td>Board corner</td><td>Quarter circle</td><td class="bad">Significant increase</td></tr>
+    </table>
+    <p><strong>High-current, high-speed ICs belong in the center of the board.</strong> Routing pressure often pushes ICs to corners or edges — resist this for high-speed devices pulling significant current.</p>
+    <h3>Four-Layer Boards and the Capacitance Myth</h3>
+    <p>A standard 62-mil (1.6 mm) four-layer board with power and ground planes in the middle has a plane separation of approximately 1 mm. At this separation, the plane capacitance is so low that a single 0.1 µF 0603 ceramic capacitor delivers more usable energy than the planes across virtually the entire frequency range from 1 MHz to 1 GHz.</p>
+    <div class="callout"><div class="callout-lbl">Implication</div><p>On a standard four-layer board, your planes are there for DC distribution and return path continuity — not for high-frequency decoupling. Your capacitors are doing all of that work. Don't reduce the capacitor count because you "have planes."</p></div>
+  `,
+  quiz:{
+    q:"A design requires minimum PDN inductance. The IC is a high-speed processor pulling 8 A of instantaneous current. Where should it be placed?",
+    opts:["Bottom-left corner for easiest routing","Center of the board","Top edge for easier connector access","Location doesn't affect PDN inductance"],
+    correct:1,
+    feedback:{
+      ok:"Correct. The center of the board allows a complete circular energy field, which minimizes per-square inductance. Any deviation toward an edge or corner cuts off part of the field and increases the effective inductance.",
+      fail:"Board placement directly affects PDN inductance. An IC at the center has a full circular energy field available — maximum usable plane area and minimum inductance. Corner and edge placement cuts the field and raises inductance significantly."
+    }
+  }
+},
+{
+  id:6, label:"Chapter 07", title:"Board Stackup",
+  kicker:"Stackup as PDN Design",
+  intro:"Stackup selection is not just a mechanical choice — it is a PDN design decision with up to 10× impact on inductance. Two boards with identical components can have dramatically different power delivery performance.",
+  content:`
+    <p>The two most common problematic stackups are the standard 4-layer board and the standard 6-layer board. Both have power and ground planes widely separated — and often with signal layers in between.</p>
+    <h3>The Standard 4-Layer Problem</h3>
+    <p>A typical 1.6 mm board with power on L2 and ground on L3 (or L2 and L5 in a 6-layer) has plane separation of roughly 1 mm. As shown in the previous chapter, this gives almost no useful high-frequency decoupling. The problem compounds when signals route between the power and ground layers — those signal fields and the power delivery fields now share and interfere with the same dielectric space.</p>
+    <h3>The Fix: Copper Pours</h3>
+    <p>Adding ground pours to the outer signal layers, and splitting power distribution across multiple thin dielectrics, transforms the stackup without adding layers. This technique achieves:</p>
+    <p>• Power delivery from multiple thin dielectric layers simultaneously (lower impedance)</p>
+    <p>• Signal fields isolated from power fields (they're adjacent, not overlapping)</p>
+    <p>• 5–10× lower inductance than a standard 4 or 6-layer stackup</p>
+    <div class="callout"><div class="callout-lbl">Copper pour rules</div><p>Every copper pour must be connected to its reference with at least 2 vias. An isolated copper island with only 1 via is electrically connected but creates a resonant structure. Remove pours that cannot receive at least 2 stitching vias. Via spacing: maximum 1/10th wavelength at the highest frequency in the design.</p></div>
+    <h3>High-Speed High-Layer-Count Boards</h3>
+    <p>At multi-gigabit speeds (8–34+ layer boards), power-ground plane pairs should be placed near the surface — adjacent to the BGA. When closely-spaced planes are near the surface, decoupling capacitors mounted on the board's top side generate smaller via loops than caps placed under the BGA. This delivers measurably lower impedance — in some configurations, up to 40% lower than the under-BGA alternative.</p>
+  `,
+  quiz:{
+    q:"On a 6-layer board, you pour ground copper onto the top and bottom signal layers and power copper onto the inner signal layers. Compared to a standard 6-layer (power L2, ground L5), this change achieves approximately:",
+    opts:["2× lower inductance","5× lower inductance","10× lower inductance","No change — power delivery depends only on plane thickness"],
+    correct:2,
+    feedback:{
+      ok:"Correct. Adding copper pours to signal layers and distributing power delivery across multiple adjacent dielectrics achieves approximately one order of magnitude (10×) lower inductance compared to widely-spaced discrete power and ground planes. This is one of the most impactful low-cost improvements available.",
+      fail:"The improvement from copper pours is much more significant than most expect. By distributing power delivery across multiple thin dielectrics and isolating signal fields from power fields, the inductance reduction is approximately 10× — an order of magnitude — compared to a standard 6-layer."
+    }
+  }
+},
+{
+  id:7, label:"Chapter 08", title:"Capacitor Orientation Around BGAs",
+  kicker:"The Study Nobody Shows You",
+  intro:"Capacitor placement around a BGA is not just about distance. How they face each other determines whether their magnetic fields work together — or fight each other.",
+  content:`
+    <p>A research study by Dr. Bruce Archambault and Dr. James Drewniak examined how capacitor orientation around a BGA affects inductance — keeping placement distance constant, varying only how the caps were oriented relative to each other.</p>
+    <p>They tested four configurations:</p>
+    <div class="diagram" style="overflow-x:auto">
+      <svg viewBox="0 0 620 260" xmlns="http://www.w3.org/2000/svg" style="width:100%;min-width:400px;display:block;margin:0 auto">
+        <!-- 4 quadrant layout -->
+        <text x="310" y="18" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="10" font-weight="600">FOUR CONFIGURATIONS — SAME CAPS, SAME DISTANCE</text>
+        <!-- Top Left: densely packed, same direction -->
+        <rect x="20" y="30" width="130" height="100" rx="3" fill="#161616" stroke="#2a2a2a"/>
+        <text x="85" y="46" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="9" font-weight="700">A: Dense, Same Dir.</text>
+        <!-- BGA -->
+        <rect x="58" y="54" width="54" height="54" rx="2" fill="#1a1a1a" stroke="#3a3a3a"/>
+        <text x="85" y="84" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">BGA</text>
+        <!-- caps same dir -->
+        <rect x="30" y="62" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff4d4d"/>
+        <text x="32" y="69" fill="#ff4d4d" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="30" y="80" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff4d4d"/>
+        <text x="32" y="87" fill="#ff4d4d" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="118" y="62" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff4d4d"/>
+        <text x="120" y="69" fill="#ff4d4d" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="118" y="80" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff4d4d"/>
+        <text x="120" y="87" fill="#ff4d4d" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <text x="85" y="120" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="10" font-weight="800">Worst L</text>
+        <!-- Top Right: dense, alternating -->
+        <rect x="170" y="30" width="130" height="100" rx="3" fill="#161616" stroke="#2a2a2a"/>
+        <text x="235" y="46" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="700">B: Dense, Alternating</text>
+        <rect x="208" y="54" width="54" height="54" rx="2" fill="#1a1a1a" stroke="#3a3a3a"/>
+        <text x="235" y="84" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">BGA</text>
+        <rect x="180" y="62" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#00FF94"/>
+        <text x="182" y="69" fill="#00FF94" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="180" y="80" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#888"/>
+        <text x="182" y="87" fill="#888" font-family="Courier New,monospace" font-size="7" font-weight="700">−</text>
+        <rect x="268" y="62" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#00FF94"/>
+        <text x="270" y="69" fill="#00FF94" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="268" y="80" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#888"/>
+        <text x="270" y="87" fill="#888" font-family="Courier New,monospace" font-size="7" font-weight="700">−</text>
+        <text x="235" y="120" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="10" font-weight="800">Lower L</text>
+        <!-- Bottom Left: spread, same direction -->
+        <rect x="320" y="30" width="130" height="100" rx="3" fill="#161616" stroke="#2a2a2a"/>
+        <text x="385" y="46" text-anchor="middle" fill="#ff8c42" font-family="Poppins,sans-serif" font-size="9" font-weight="700">C: Spread, Same Dir.</text>
+        <rect x="358" y="54" width="54" height="54" rx="2" fill="#1a1a1a" stroke="#3a3a3a"/>
+        <text x="385" y="84" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">BGA</text>
+        <rect x="328" y="56" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff8c42"/>
+        <text x="330" y="63" fill="#ff8c42" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="328" y="92" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff8c42"/>
+        <text x="330" y="99" fill="#ff8c42" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="420" y="56" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff8c42"/>
+        <text x="422" y="63" fill="#ff8c42" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="420" y="92" width="20" height="8" rx="1" fill="#2a2a2a" stroke="#ff8c42"/>
+        <text x="422" y="99" fill="#ff8c42" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <text x="385" y="120" text-anchor="middle" fill="#ff8c42" font-family="Poppins,sans-serif" font-size="10" font-weight="800">Better</text>
+        <!-- Bottom Right: spread, alternating (BEST) -->
+        <rect x="470" y="30" width="130" height="100" rx="3" fill="rgba(0,255,148,0.04)" stroke="rgba(0,255,148,0.3)"/>
+        <text x="535" y="46" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="700">D: Spread, Alternating</text>
+        <rect x="508" y="54" width="54" height="54" rx="2" fill="#1a1a1a" stroke="#3a3a3a"/>
+        <text x="535" y="84" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">BGA</text>
+        <rect x="478" y="56" width="20" height="8" rx="1" fill="#1a2a1a" stroke="#00FF94"/>
+        <text x="480" y="63" fill="#00FF94" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="478" y="92" width="20" height="8" rx="1" fill="#2a1a1a" stroke="#888"/>
+        <text x="480" y="99" fill="#888" font-family="Courier New,monospace" font-size="7" font-weight="700">−</text>
+        <rect x="570" y="56" width="20" height="8" rx="1" fill="#1a2a1a" stroke="#00FF94"/>
+        <text x="572" y="63" fill="#00FF94" font-family="Courier New,monospace" font-size="7" font-weight="700">+</text>
+        <rect x="570" y="92" width="20" height="8" rx="1" fill="#2a1a1a" stroke="#888"/>
+        <text x="572" y="99" fill="#888" font-family="Courier New,monospace" font-size="7" font-weight="700">−</text>
+        <text x="535" y="120" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="10" font-weight="800">Best L ✓</text>
+        <!-- inductance bar comparison -->
+        <text x="310" y="148" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="9" font-weight="600">RELATIVE INDUCTANCE</text>
+        <!-- bars -->
+        <rect x="20" y="158" width="130" height="12" rx="2" fill="#ff4d4d" opacity="0.7"/>
+        <text x="160" y="168" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="9" font-weight="700">100% (worst)</text>
+        <rect x="170" y="175" width="90" height="12" rx="2" fill="#00FF94" opacity="0.5"/>
+        <text x="268" y="185" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="700">~69%</text>
+        <rect x="320" y="192" width="75" height="12" rx="2" fill="#ff8c42" opacity="0.6"/>
+        <text x="402" y="202" fill="#ff8c42" font-family="Poppins,sans-serif" font-size="9" font-weight="700">~58%</text>
+        <rect x="470" y="209" width="55" height="12" rx="2" fill="#00FF94" opacity="0.8"/>
+        <text x="532" y="219" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="700">~42% ✓</text>
+        <text x="310" y="250" text-anchor="middle" fill="#555" font-family="Poppins,sans-serif" font-size="9">Same caps · same distance · only orientation changed</text>
+      </svg>
+    </div>
+    <p>Configuration D — spread out and alternating polarity — achieves roughly <strong>58% lower inductance</strong> than configuration A, without changing any capacitor, any placement distance, or any via. The only change is the direction each capacitor faces relative to its neighbours.</p>
+    <h3>Why Orientation Matters</h3>
+    <p>When adjacent capacitors are oriented the same way (all power pins pointing in the same direction), their magnetic fields add together — the combined field is larger, and inductance is higher. When they alternate orientation, adjacent caps have opposing field polarities. The fields partially cancel, reducing total field volume and therefore inductance.</p>
+    <div class="callout"><div class="callout-lbl">Design rule</div><p>When placing decoupling capacitors around a BGA, alternate the orientation: rotate every other capacitor 180°. Power pin up, power pin down, power pin up, power pin down — around the perimeter. This is free — it costs nothing in BOM, routing time, or board area.</p></div>
+    <h3>Parallel Capacitors and Inductance</h3>
+    <p>A common misconception: using a larger value capacitor instead of two smaller ones improves high-frequency response. It does not. <strong>A larger single capacitor lowers the capacitive impedance at low frequencies but does not change the inductance</strong>. The inductance curve — which dominates above resonance — stays the same regardless of value.</p>
+    <p>Placing two capacitors in <em>parallel</em> halves the effective inductance (inductors in parallel combine like resistors in parallel). This is why multiple smaller caps always outperform a single large one at high frequency, even when the total capacitance is identical.</p>
+  `,
+  quiz:{
+    q:"Around a high-speed BGA, you have 8 decoupling capacitors placed equidistant from the IC. All are currently oriented the same direction (all power pins facing right). What change gives the biggest inductance reduction at no cost?",
+    opts:["Replace all 8 with double the capacitance value","Move them closer to the BGA","Alternate orientation — rotate every other cap 180° so power pins alternate direction","Add 8 more caps in parallel"],
+    correct:2,
+    feedback:{
+      ok:"Correct. Alternating orientation causes adjacent capacitor magnetic fields to have opposing polarity, partially cancelling each other. This reduces total effective inductance by up to 58% compared to same-direction orientation — with zero change to BOM, placement distance, or routing.",
+      fail:"Increasing capacitor value only lowers impedance in the capacitive region (below resonance). Above resonance, inductance dominates — and a larger single cap has the same inductance as the smaller one it replaced. Alternating orientation is the no-cost fix that addresses inductance directly."
+    }
+  }
+},
+{
+  id:8, label:"Chapter 09", title:"On-Package & On-Die Decoupling",
+  kicker:"When the Board Isn't Enough",
+  intro:"Beyond a certain combination of speed and current demand, board-level PDN design reaches its physical limits. Understanding what happens next is essential for anyone working on high-performance systems.",
+  content:`
+    <p>At multi-gigabit speeds — particularly rise times below 100 ps and currents above 30–50 A — even a perfectly designed board-level PDN cannot deliver charge fast enough to the IC during output transitions. The via inductance, even with optimal pairing and placement, is too high. The planes, even closely spaced and near the surface, are not close enough to the die.</p>
+    <h3>On-Package Decoupling (OPD)</h3>
+    <p>OPD refers to capacitance built into or mounted on the IC package itself — specifically on the <strong>interposer or substrate</strong> that sits between the die and the board. This capacitance is physically much closer to the die than any board capacitor can be, which means the inductance path to the die is orders of magnitude shorter.</p>
+    <p>OPD takes two forms:</p>
+    <p>• <strong>Embedded package capacitors</strong> — small ceramic capacitors mounted on the surface of the interposer, inside the package body. They are not visible or accessible from the board.</p>
+    <p>• <strong>Integrated substrate capacitance</strong> — the interposer itself is designed with power-ground plane pairs at very close spacing, creating plane capacitance across the full die footprint.</p>
+    <h3>On-Die Capacitance (ODC)</h3>
+    <p>ODC is capacitance intentionally designed into the silicon die itself. The gate oxide of every transistor acts as a tiny capacitor between the supply rail and ground. High-performance ICs include dedicated decoupling structures — arrays of transistors wired as capacitors — distributed across the die near the logic that needs them most.</p>
+    <div class="callout"><div class="callout-lbl">The cost implication</div><p>ICs with substantial OPD and ODC are significantly more expensive than equivalent ICs without them. The additional package complexity, substrate layers, and embedded components add real cost. A high-end networking processor with sufficient OPD and ODC for 15 Gbps operation can cost many tens of thousands of euros in single quantities. This is not unusual — it reflects the engineering required to make that performance level achievable on any board.</p></div>
+    <h3>What This Means for Board Design</h3>
+    <p>When your IC has OPD, it means the IC vendor has already solved part of your PDN problem at the package level. Your board's job is to:</p>
+    <p>1. Deliver charge to the package quickly enough to refill the OPD between transitions</p>
+    <p>2. Provide the low-impedance path from your planes to the BGA balls</p>
+    <p>3. Not interfere with the OPD by creating a high-inductance path between your planes and the package</p>
+    <p>If your IC does <em>not</em> have OPD and your speeds exceed ~500 ps rise time at high current, the IC itself may be the bottleneck — not your board design. Check the IC datasheet carefully for any mention of on-package or substrate capacitance before committing to the design.</p>
+  `,
+  quiz:{
+    q:"Your design uses a high-speed processor with < 50 ps rise time and 40 A peak current. Even with optimal board-level PDN, signal integrity simulation shows inadequate high-frequency decoupling. What is the most likely root cause and the correct fix?",
+    opts:["Add more 0.1 µF capacitors under the BGA","The board is fine — reduce clock frequency instead","The IC likely lacks sufficient on-package decoupling (OPD). Select a different IC with OPD or verify OPD specs with the vendor","Increase the power plane thickness"],
+    correct:2,
+    feedback:{
+      ok:"Correct. At < 50 ps rise times and 40 A, board-level decoupling physically cannot respond fast enough. The solution is on-package decoupling — capacitance embedded in the IC substrate or interposer. If your current IC lacks OPD, adding more board capacitors will not solve the problem. You need a different IC, or you need the IC vendor to confirm sufficient OPD specs.",
+      fail:"At < 50 ps rise times, the inductance of even the shortest board via path is too high for the speed of charge transfer required. Adding more board capacitors or thicker planes does not address the inductance problem at this speed. The only solution is capacitance physically inside the IC package (OPD) or on the die itself (ODC)."
+    }
+  }
+},
+{
+  id:9, label:"Chapter 10", title:"Ten Rules to Apply Now",
+  kicker:"Practical Summary",
+  intro:"Everything covered in this course reduces to ten actionable design rules. Apply them to your next board before layout begins.",
+  content:`
+    <div style="display:flex;flex-direction:column;gap:16px;margin-top:8px">
+      ${[
+        ["01","Calculate Z<sub>target</sub> before placing a single component","Maximum tolerable noise voltage ÷ peak instantaneous current. This is the impedance budget your PDN must achieve and maintain from f<sub>clock</sub> to 0.5/t<sub>rise</sub>."],
+        ["02","Pair power and ground vias — always","Never route them separately. Spacing between the pair dominates inductance. A 60% reduction in inductance is achievable by closing the gap — without changing via size."],
+        ["03","Mount decoupling vias at the sides, not the ends","Side-mounted vias with opposite polarity adjacent reduce effective inductance by 2–4×. Each additional via pair halves the inductance further."],
+        ["04","Decoupling caps go on the same side as the IC","Routing to the other side of the board dramatically increases attachment inductance. Same-side mounting is non-negotiable for high-speed designs."],
+        ["05","Place high-current ICs at board center","Edge and corner placement cuts the energy field, increases effective inductance, and reduces usable decoupling bandwidth. The center of the board gives the full plane field."],
+        ["06","Close-coupled planes beat capacitors at high frequency","Plane inductance decreases with plane separation. Planes under 4–6 mil apart outperform capacitors at frequencies above 400 MHz. Above 400 MHz, inductance is the only lever."],
+        ["07","Use copper pours and stitch them properly","Ground pours on signal layers deliver 5–10× inductance improvement on low layer count boards. Remove any isolated pour that cannot receive at least 2 stitching vias."],
+        ["09","Alternate capacitor orientation around BGAs","Every other cap rotated 180° — power pin up, down, up, down. Adjacent fields cancel instead of adding. Up to 58% inductance reduction at zero cost."],
+        ["10","At >30A and <100ps, verify IC has OPD","Board-level PDN cannot solve what OPD must. Check for on-package or on-die capacitance in the IC datasheet before committing to the design."]
+      ].map(([n,t,d]) => `
+        <div style="background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:18px 20px">
+          <div style="font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:6px">RULE ${n}</div>
+          <div style="font-size:14px;font-weight:700;color:var(--fg);margin-bottom:6px;line-height:1.4">${t}</div>
+          <div style="font-size:13px;color:var(--fg-secondary);line-height:1.65">${d}</div>
+        </div>`).join('')}
+    </div>
+    <div class="callout" style="margin-top:36px">
+      <div class="callout-lbl">© Copyright Notice</div>
+      <p>This course and all content within are original educational material produced by Fresu Electronics. All diagrams, formulas, and written explanations are copyright © Fresu Electronics. Reproduction or redistribution without written permission is prohibited.</p>
+    </div>
+  `,
+  quiz:{
+    q:"Above 400 MHz, which design variable has the most leverage over PDN impedance?",
+    opts:["Increasing total capacitance (adding more caps)","Using larger capacitor packages","Reducing inductance (plane spacing, via pairing)","Increasing supply voltage"],
+    correct:2,
+    feedback:{
+      ok:"Correct. At high frequencies, impedance is dominated by inductance. Adding more capacitance shifts the resonance frequency but doesn't help above the resonant point. Reducing inductance — through close plane spacing, via pairing, and side-mounted capacitor vias — is the only effective lever above 400 MHz.",
+      fail:"Above resonance (~400 MHz), PDN impedance rises with frequency at a rate dominated by inductance. Adding capacitance shifts the resonance but provides no benefit above it. Reducing inductance through plane spacing, via pairing, and capacitor mounting strategy is the only effective high-frequency tool."
+    }
+  }
+}
+];
+
+// ═══════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════
+let current = 0;
+const done = new Set();
+let quizAnswered = false;
+
+// ═══════════════════════════════════════════════════
+// SIDEBAR RENDER
+// ═══════════════════════════════════════════════════
+function renderSidebar(){
+  const nav = document.getElementById('sidebarNav');
+  nav.innerHTML = chapters.map((c,i) => `
+    <div class="nav-item ${i===current?'active':''} ${done.has(i)?'done':''}" onclick="goTo(${i})">
+      <div class="nav-check"></div>
+      <div class="nav-text">
+        <div class="nav-chapter">${c.label}</div>
+        <div class="nav-title">${c.title}</div>
+      </div>
+    </div>
+  `).join('');
+
+  const pct = Math.round((done.size / chapters.length) * 100);
+  document.getElementById('progressFill').style.width = pct + '%';
+  document.getElementById('progressPct').textContent = pct + '% complete';
+}
+
+// ═══════════════════════════════════════════════════
+// CONTENT RENDER
+// ═══════════════════════════════════════════════════
+function renderContent(){
+  const c = chapters[current];
+  quizAnswered = false;
+
+  document.getElementById('topbarLabel').textContent = c.label;
+  document.getElementById('btnPrev').disabled = current === 0;
+  document.getElementById('btnNext').textContent = current === chapters.length - 1 ? 'Finish ✓' : 'Next →';
+  document.getElementById('btnNext').disabled = false;
+
+  const quiz = c.quiz;
+  const quizHtml = `
+    <div class="quiz" id="quizBlock">
+      <div class="quiz-header">
+        <span class="quiz-badge">Check-in</span>
+        <span class="quiz-title">Quick question</span>
+      </div>
+      <div class="quiz-question">${quiz.q}</div>
+      <div class="quiz-options" id="quizOpts">
+        ${quiz.opts.map((o,i) => `
+          <button class="quiz-option" onclick="selectOpt(${i})" data-idx="${i}">${o}</button>
+        `).join('')}
+      </div>
+      <button class="quiz-btn" id="quizSubmit" onclick="submitQuiz()" disabled>Submit Answer</button>
+      <div class="quiz-feedback" id="quizFeedback"></div>
+    </div>
+  `;
+
+  const el = document.getElementById('content');
+  el.style.animation = 'none';
+  el.offsetHeight;
+  el.style.animation = 'fade-up 500ms cubic-bezier(0.16,1,0.3,1) both';
+  el.innerHTML = `
+    <div class="chapter-kicker">${c.kicker}</div>
+    <h1>${c.title.replace(/([\w\s]+)(\w+)$/, '$1<span>$2</span>')}</h1>
+    <p class="chapter-intro">${c.intro}</p>
+    ${c.content}
+    ${quizHtml}
+  `;
+
+  document.getElementById('completion').classList.remove('visible');
+  document.getElementById('content').style.display = '';
+
+  window.scrollTo({top:0,behavior:'smooth'});
+  renderSidebar();
+}
+
+let selectedOpt = null;
+function selectOpt(idx){
+  if(quizAnswered) return;
+  selectedOpt = idx;
+  document.querySelectorAll('.quiz-option').forEach((el,i) => {
+    el.classList.toggle('selected', i === idx);
+  });
+  document.getElementById('quizSubmit').disabled = false;
+}
+
+function submitQuiz(){
+  if(quizAnswered || selectedOpt === null) return;
+  quizAnswered = true;
+  const c = chapters[current];
+  const correct = c.quiz.correct;
+  const isCorrect = selectedOpt === correct;
+
+  document.querySelectorAll('.quiz-option').forEach((el,i) => {
+    el.disabled = true;
+    if(i === correct) el.classList.add('correct');
+    else if(i === selectedOpt && !isCorrect) el.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('quizFeedback');
+  fb.className = 'quiz-feedback ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+  fb.innerHTML = isCorrect
+    ? `<strong>✓ Correct.</strong> ${c.quiz.feedback.ok}`
+    : `<strong>✗ Not quite.</strong> ${c.quiz.feedback.fail}`;
+  fb.style.display = 'block';
+
+  document.getElementById('quizSubmit').textContent = 'Continue →';
+  document.getElementById('quizSubmit').disabled = false;
+  document.getElementById('quizSubmit').onclick = () => navigate(1);
+
+  done.add(current);
+  renderSidebar();
+}
+
+// ═══════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════
+function navigate(dir){
+  const next = current + dir;
+  if(next < 0) return;
+  if(next >= chapters.length){
+    showCompletion(); return;
+  }
+  current = next;
+  renderContent();
+}
+
+function goTo(idx){
+  current = idx;
+  renderContent();
+  closeSidebar();
+}
+
+function showCompletion(){
+  done.add(current);
+  renderSidebar();
+  document.getElementById('content').style.display = 'none';
+  document.getElementById('completion').classList.add('visible');
+  document.getElementById('topbarLabel').textContent = 'Complete!';
+  document.getElementById('btnNext').disabled = true;
+}
+
+// ═══════════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ═══════════════════════════════════════════════════
+function toggleSidebar(){
+  const s = document.getElementById('sidebar');
+  const o = document.getElementById('overlay');
+  const open = s.classList.toggle('open');
+  o.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
+}
+function closeSidebar(){
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ═══════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════
+renderContent();
+</script>
+</body>
+</html>
