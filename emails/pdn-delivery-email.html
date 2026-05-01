@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your PDN Design Series is ready</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins','Helvetica Neue',Arial,sans-serif;background:#060606;color:#ffffff;-webkit-font-smoothing:antialiased}
+.wrapper{max-width:600px;margin:0 auto;background:#0a0a0a}
+.header{background:#0a0a0a;border-bottom:1px solid #1e1e1e;padding:24px 40px;display:flex;align-items:center;justify-content:space-between}
+.header img{height:26px;display:block}
+.header-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#00FF94}
+.hero{background:#0d1a0d;border-bottom:2px solid #00FF94;padding:48px 40px 40px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(0,255,148,0.1);border:1px solid rgba(0,255,148,0.3);color:#00FF94;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;padding:5px 14px;border-radius:3px;margin-bottom:20px}
+.hero h1{font-size:28px;font-weight:800;line-height:1.15;margin-bottom:12px;color:#ffffff;letter-spacing:-0.01em}
+.hero h1 span{color:#00FF94}
+.hero p{font-size:15px;color:#a0aab8;line-height:1.7;max-width:400px;margin:0 auto}
+.body{padding:40px}
+.section-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#00FF94;margin-bottom:16px}
+.intro{font-size:15px;color:#e8edf5;line-height:1.75;margin-bottom:32px}
+.intro strong{color:#ffffff;font-weight:600}
+/* Resource cards */
+.resources{margin-bottom:36px}
+.rc{background:#111111;border:1px solid #242424;border-radius:8px;padding:18px 20px;margin-bottom:10px;display:flex;align-items:flex-start;gap:14px;text-decoration:none}
+.rc:last-child{margin-bottom:0}
+.rc-icon{font-size:22px;flex-shrink:0;width:36px;text-align:center;padding-top:2px}
+.rc-content{flex:1}
+.rc-type{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#00FF94;margin-bottom:4px}
+.rc-title{font-size:14px;font-weight:700;color:#ffffff;margin-bottom:3px}
+.rc-desc{font-size:12px;color:#a0aab8;line-height:1.5;margin-bottom:8px}
+.rc-link{font-size:11px;font-weight:700;color:#00FF94;text-decoration:none;letter-spacing:0.04em}
+/* How to access */
+.how{background:#111111;border:1px solid #242424;border-radius:8px;padding:22px;margin-bottom:32px}
+.how-title{font-size:13px;font-weight:700;color:#ffffff;margin-bottom:14px}
+.how-step{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.how-step:last-child{margin-bottom:0}
+.step-num{width:22px;height:22px;border-radius:50%;background:#00FF94;color:#0a0a0a;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-text{font-size:13px;color:#e8edf5;line-height:1.6}
+/* CTA button */
+.cta-wrap{text-align:center;margin-bottom:36px}
+.cta-btn{display:inline-block;background:#00FF94;color:#0a0a0a;text-decoration:none;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:15px 36px;border-radius:5px}
+.cta-sub{font-size:12px;color:#a0aab8;margin-top:10px}
+/* Upsell */
+.upsell{background:#0d1a0d;border:1px solid rgba(0,255,148,0.2);border-radius:8px;padding:24px;margin-bottom:32px;text-align:center}
+.upsell-badge{display:inline-block;background:rgba(0,255,148,0.1);border:1px solid rgba(0,255,148,0.25);color:#00FF94;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:3px 10px;border-radius:3px;margin-bottom:12px}
+.upsell h3{font-size:16px;font-weight:800;color:#ffffff;margin-bottom:8px}
+.upsell p{font-size:13px;color:#a0aab8;line-height:1.65;margin-bottom:16px}
+.upsell-link{display:inline-block;border:1px solid rgba(0,255,148,0.4);color:#00FF94;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:10px 24px;border-radius:4px}
+/* Divider */
+.divider{border-top:1px solid #1e1e1e;margin:28px 0}
+/* Footer */
+.footer{padding:28px 40px 40px;text-align:center}
+.footer-logo img{height:20px;display:block;margin:0 auto 12px}
+.footer-text{font-size:11px;color:#3a3a3a;line-height:1.7}
+.footer-links{margin-top:12px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.footer-links a{font-size:11px;color:#555;text-decoration:none}
+.footer-links a:hover{color:#00FF94}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+    <span class="header-label">Purchase Confirmed</span>
+  </div>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">&#10003; Payment received</div>
+    <h1>Your <span>PDN Design Series</span><br>is ready.</h1>
+    <p>All four resources are live and waiting. No downloads, no setup &mdash; open any link below and you're in.</p>
+  </div>
+
+  <!-- BODY -->
+  <div class="body">
+
+    <p class="intro">Hi {{customer_name}},<br><br>
+    Thank you for your purchase. Your <strong>PDN Design Series</strong> is confirmed and ready to access right now. Bookmark the links below &mdash; they never expire and work on any device.</p>
+
+    <!-- RESOURCES -->
+    <div class="section-label">Your 4 resources</div>
+    <div class="resources">
+
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-explainer.html" class="rc" target="_blank">
+        <div class="rc-icon">&#128218;</div>
+        <div class="rc-content">
+          <div class="rc-type">01 &middot; Reading</div>
+          <div class="rc-title">PDN Design Mastery: The Complete Guide</div>
+          <div class="rc-desc">8 illustrated sections &mdash; complete PDN framework from first principles to multi-gigabit stackup.</div>
+          <div class="rc-link">Open guide &rarr;</div>
+        </div>
+      </a>
+
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-minicourse.html" class="rc" target="_blank">
+        <div class="rc-icon">&#127891;</div>
+        <div class="rc-content">
+          <div class="rc-type">02 &middot; Course</div>
+          <div class="rc-title">PDN Design Mini-Course</div>
+          <div class="rc-desc">10 chapters with inline diagrams and a quiz after each. Progress tracked throughout.</div>
+          <div class="rc-link">Start course &rarr;</div>
+        </div>
+      </a>
+
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-cheatsheet.html" class="rc" target="_blank">
+        <div class="rc-icon">&#128203;</div>
+        <div class="rc-content">
+          <div class="rc-type">03 &middot; Reference</div>
+          <div class="rc-title">PDN Design Cheat Sheet</div>
+          <div class="rc-desc">A4 landscape, print-ready. All formulas, via rules, stackup guide &mdash; one page. Print it, pin it above your desk.</div>
+          <div class="rc-link">Open cheat sheet &rarr;</div>
+        </div>
+      </a>
+
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-wizard.html" class="rc" target="_blank">
+        <div class="rc-icon">&#129517;</div>
+        <div class="rc-content">
+          <div class="rc-type">04 &middot; Tool</div>
+          <div class="rc-title">PDN Decision Wizard</div>
+          <div class="rc-desc">5 questions about your board &mdash; personalised impedance targets, via strategy, cap mounting, OPD recommendations.</div>
+          <div class="rc-link">Run wizard &rarr;</div>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- HOW TO ACCESS -->
+    <div class="how">
+      <div class="how-title">How to access your resources</div>
+      <div class="how-step">
+        <div class="step-num">1</div>
+        <div class="step-text">Click any link above &mdash; it opens directly in your browser, no login required.</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">2</div>
+        <div class="step-text">Bookmark this email or the individual links. They never expire.</div>
+      </div>
+      <div class="how-step">
+        <div class="step-num">3</div>
+        <div class="step-text">For the cheat sheet: open it, then use <strong>Ctrl+P</strong> &rarr; Save as PDF, or <strong>Ctrl+Shift+P</strong> in Chrome DevTools &rarr; "Capture full size screenshot" to save as PNG.</div>
+      </div>
+    </div>
+
+    <!-- MAIN CTA -->
+    <div class="cta-wrap">
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-index.html" class="cta-btn" target="_blank">Open All Resources &rarr;</a>
+      <div class="cta-sub">All 4 resources in one place</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- UPSELL -->
+    <div class="upsell">
+      <div class="upsell-badge">Fresu EMC Academy</div>
+      <h3>Want the Signal Integrity Series too?</h3>
+      <p>Join the Fresu EMC Academy and get every series &mdash; current and future &mdash; included in your membership. Plus community, monthly live sessions, and board review threads with Dario.</p>
+      <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="upsell-link" target="_blank">Join the Academy &mdash; $33/mo &rarr;</a>
+    </div>
+
+    <p style="font-size:13px;color:#a0aab8;line-height:1.7">Questions? Reply to this email and I'll get back to you directly. These resources are built from real board designs &mdash; if something isn't clear or something isn't working, I want to know.<br><br>
+    &mdash; Dario Fresu<br>
+    <span style="color:#555;font-size:12px">Principal EMC Architect &middot; Fresu Electronics</span></p>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-logo">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+    </div>
+    <div class="footer-text">
+      &copy; Fresu Electronics &middot; PDN Design Series<br>
+      IPC CID &middot; Principal Engineer &middot; 4th Generation Electrical Professional<br>
+      <span style="color:#2a2a2a">You received this because you purchased the PDN Design Series.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.fresuelectronics.com">Website</a>
+      <a href="https://blog.fresuelectronics.com">Blog</a>
+      <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+      <a href="https://www.fresuelectronics.com/emc-audit">EMC Audit</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
