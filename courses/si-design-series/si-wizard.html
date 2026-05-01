@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SI Design Wizard — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#161616;--s3:#1e1e1e;
+  --border:#242424;--border-hi:#333;
+  --fg:#ffffff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.15);
+  --red:#ff4d4d;--amber:#ffb84d;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  --sans:'Poppins','Helvetica Neue',Arial,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html,body{min-height:100vh}
+body{font-family:var(--sans);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.75;overflow-x:hidden}
+
+#topbar{position:fixed;top:0;left:0;right:0;z-index:200;height:56px;padding:0 32px;background:rgba(10,10,10,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.tb-logo img{height:26px;display:block}
+.tb-label{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc)}
+
+#app{max-width:680px;margin:0 auto;padding:96px 32px 80px;min-height:100vh}
+
+/* STEPS */
+#step-track{display:flex;align-items:center;gap:0;margin-bottom:48px}
+.s-pip{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border-hi);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--label);flex-shrink:0;transition:all 300ms var(--ease);background:var(--s2)}
+.s-pip.active{border-color:var(--acc);color:var(--acc);background:var(--acc-dim)}
+.s-pip.done{border-color:var(--acc);background:var(--acc);color:#0a0a0a}
+.s-line{flex:1;height:1px;background:var(--border);transition:background 300ms}
+.s-line.done{background:var(--acc)}
+
+/* SCREEN */
+.screen{display:none;animation:slide-in 400ms var(--ease) both}
+.screen.active{display:block}
+@keyframes slide-in{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.sc-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:12px}
+.sc-q{font-size:clamp(20px,3.5vw,28px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.sc-sub{font-size:14px;color:var(--label);margin-bottom:30px;line-height:1.6}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
+.opt{background:var(--s2);border:1.5px solid var(--border);border-radius:8px;padding:15px 19px;cursor:pointer;transition:all 200ms var(--ease);display:flex;align-items:flex-start;gap:13px;text-align:left;min-height:44px;width:100%;font-family:var(--sans)}
+.opt:hover{border-color:var(--border-hi);background:var(--s3)}
+.opt.selected{border-color:var(--acc);background:var(--acc-dim)}
+.opt-radio{width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:2px;border:1.5px solid var(--border-hi);background:var(--s1);transition:all 200ms;display:flex;align-items:center;justify-content:center}
+.opt.selected .opt-radio{border-color:var(--acc);background:var(--acc)}
+.opt.selected .opt-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#0a0a0a}
+.opt-title{font-size:15px;font-weight:600;color:var(--fg);margin-bottom:2px}
+.opt-desc{font-size:12px;color:var(--label);line-height:1.5}
+.opt.selected .opt-title{color:var(--fg)}
+.opt.selected .opt-desc{color:var(--fg2)}
+
+/* BUTTONS */
+.nav-row{display:flex;gap:10px;align-items:center}
+.btn-p{background:var(--acc);color:#0a0a0a;border:none;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:12px 26px;border-radius:5px;cursor:pointer;transition:background 180ms;min-height:44px}
+.btn-p:hover{background:#00e085}
+.btn-p:disabled{opacity:0.35;cursor:not-allowed}
+.btn-g{background:none;border:1px solid var(--border-hi);color:var(--fg2);font-family:var(--sans);font-size:13px;font-weight:500;padding:11px 20px;border-radius:5px;cursor:pointer;transition:all 180ms;min-height:44px}
+.btn-g:hover{border-color:var(--acc);color:var(--acc)}
+
+/* RESULTS */
+#results{display:none}
+#results.show{display:block;animation:slide-in 500ms var(--ease) both}
+.res-hdr{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:22px 26px;margin-bottom:24px;position:relative;overflow:hidden}
+.res-hdr::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc)}
+.res-badge{display:inline-flex;align-items:center;gap:8px;background:var(--acc-dim);border:1px solid var(--acc-mid);padding:4px 12px;border-radius:3px;margin-bottom:12px}
+.res-badge span{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc)}
+.res-hdr h2{font-size:22px;font-weight:800;margin-bottom:6px}
+.res-hdr h2 span{color:var(--acc)}
+.res-hdr p{font-size:14px;color:var(--fg2);line-height:1.65}
+
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:22px}
+.stat-c{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:12px 14px;text-align:center}
+.stat-lbl{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--label);margin-bottom:5px}
+.stat-val{font-size:20px;font-weight:800;color:var(--acc);font-family:var(--mono);line-height:1}
+.stat-unit{font-size:10px;color:var(--label);margin-top:3px}
+
+/* Rec sections */
+.rec-sec{margin-bottom:18px}
+.rec-sec-title{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);margin-bottom:9px;display:flex;align-items:center;gap:8px}
+.rec-sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.rec-cards{display:flex;flex-direction:column;gap:8px}
+.rec-card{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:13px 17px;display:flex;align-items:flex-start;gap:11px}
+.rec-card.critical{border-left:3px solid var(--acc)}
+.rec-card.warning{border-left:3px solid var(--amber)}
+.rec-card.info{border-left:3px solid var(--border-hi)}
+.rec-icon{font-size:15px;flex-shrink:0;margin-top:1px;width:18px;text-align:center}
+.rec-title{font-size:14px;font-weight:700;color:var(--fg);margin-bottom:3px}
+.rec-desc{font-size:13px;color:var(--fg2);line-height:1.65}
+.rec-desc strong{color:var(--fg);font-weight:600}
+.rec-desc .mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
+
+/* Footer */
+.res-footer{border-top:1px solid var(--border);padding-top:22px;margin-top:26px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px}
+.cta-link{display:inline-flex;align-items:center;gap:8px;background:var(--acc);color:#0a0a0a;text-decoration:none;font-family:var(--sans);font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:12px 22px;border-radius:4px;min-height:44px;transition:background 180ms}
+.cta-link:hover{background:#00e085}
+
+/* Mobile */
+@media(max-width:600px){
+  #topbar{padding:0 16px}
+  #app{padding:80px 16px 64px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stats-row .stat-c:last-child{grid-column:span 2}
+  .res-footer{flex-direction:column;align-items:flex-start}
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="https://www.fresuelectronics.com" class="tb-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <span class="tb-label">SI Design Wizard</span>
+</div>
+
+<div id="app">
+  <div id="step-track"></div>
+  <div id="screens"></div>
+  <div id="results"></div>
+</div>
+
+<script>
+const questions = [
+{id:'rise_time',kicker:'Step 1 of 5 · Signal Speed',
+ q:'What is the typical rise time of your fastest signal?',
+ sub:'Rise time — not clock frequency — is the governing parameter. It determines bandwidth, critical trace length, and termination requirements.',
+ opts:[
+  {val:'slow',title:'2–4 ns',desc:'Slow microcontrollers, legacy logic, low-speed interfaces'},
+  {val:'mid',title:'500 ps – 2 ns',desc:'Mid-speed processors, moderate FPGA I/Os, SPI/I²C high-speed'},
+  {val:'fast',title:'100–500 ps',desc:'High-speed processors, DDR3/4, GbE, USB 3.x'},
+  {val:'vfast',title:'< 100 ps',desc:'PCIe Gen 3+, 10 Gbps SerDes, high-speed ADC interfaces'}
+]},
+{id:'topology',kicker:'Step 2 of 5 · Signal Topology',
+ q:'What routing topology are you using for the critical signals?',
+ sub:'Topology determines which termination strategies are available and where reflections will appear.',
+ opts:[
+  {val:'p2p',title:'Point-to-point',desc:'One driver, one receiver — the simplest and most controlled case'},
+  {val:'multidrop',title:'Multi-drop (daisy chain)',desc:'One driver, multiple receivers in series along the trace'},
+  {val:'star',title:'Star (one-to-many)',desc:'One driver, multiple receivers via branches from a central point'},
+  {val:'diff',title:'Differential pairs',desc:'LVDS, PCIe, USB, SerDes — complementary signal pairs'}
+]},
+{id:'layers',kicker:'Step 3 of 5 · Board Stackup',
+ q:'How many PCB layers does your design have?',
+ sub:'Layer count determines reference plane availability and whether closely coupled plane pairs are achievable.',
+ opts:[
+  {val:'2l',title:'2 layers',desc:'Top signal + bottom reference — minimal SI control'},
+  {val:'4l',title:'4 layers',desc:'Standard mid-complexity boards — power/ground planes available'},
+  {val:'6to8',title:'6 to 8 layers',desc:'High-complexity designs with multiple plane pairs'},
+  {val:'10plus',title:'10+ layers',desc:'High-density, HDI, multi-gigabit serial links'}
+]},
+{id:'concern',kicker:'Step 4 of 5 · Primary Concern',
+ q:'What is your primary signal integrity concern?',
+ sub:'Identifying the dominant concern allows prioritisation of the most impactful design actions.',
+ opts:[
+  {val:'reflect',title:'Reflections / Ringing',desc:'Overshoots and undershoots visible on oscilloscope, timing failures'},
+  {val:'crosstalk',title:'Crosstalk',desc:'Adjacent signals interfering — noise on victim traces'},
+  {val:'emi',title:'EMI / Radiated emissions',desc:'Board failing radiated emissions testing or causing interference'},
+  {val:'ground',title:'Ground bounce / Noise',desc:'Power rail noise, simultaneous switching noise, SSO effects'}
+]},
+{id:'interface',kicker:'Step 5 of 5 · Interface Type',
+ q:'What type of interface or signal are you designing?',
+ sub:'Specific interfaces have well-established SI requirements and known failure modes.',
+ opts:[
+  {val:'gen',title:'General digital logic',desc:'GPIO, SPI, UART, I²C, address/data buses'},
+  {val:'ddr',title:'DDR memory interface',desc:'DDR3, DDR4, DDR5 — fly-by topology, strict timing'},
+  {val:'serdes',title:'High-speed SerDes',desc:'PCIe, USB 3.x, SGMII, 10GbE, MIPI — AC-coupled differential'},
+  {val:'rf_adc',title:'RF or precision ADC/DAC',desc:'Analogue-digital boundary, clock distribution, jitter sensitivity'}
+]}
+];
+
+const buildRecs = (a) => {
+  const recs=[];
+  const {rise_time,topology,layers,concern,interface:iface}=a;
+
+  // BW and critical length
+  const bw={slow:'87–175 MHz',mid:'175 MHz – 700 MHz',fast:'700 MHz – 3.5 GHz',vfast:'> 3.5 GHz'}[rise_time];
+  const lc={slow:'2–4 in',mid:'0.5–2 in',fast:'0.1–0.5 in',vfast:'< 0.1 in'}[rise_time];
+
+  recs.push({sec:'Signal Profile',type:'critical',icon:'📡',
+    title:`Signal bandwidth: ${bw} · Critical length: ${lc}`,
+    desc:`Any trace longer than <span class="mono">${lc}</span> is electrically long at this rise time and requires termination. Shorter traces may not need it — always calculate before placing termination components.`});
+
+  // Termination
+  if(topology==='p2p'){
+    recs.push({sec:'Termination',type:'critical',icon:'⚡',
+      title:'Series termination — recommended for point-to-point',
+      desc:`Place <strong>Rs = Z₀ − Z_driver</strong> at the source. No DC power draw. Works for a single driver to a single load. If the driver output impedance is already ≈ Z₀, no resistor is needed.`});
+  } else if(topology==='multidrop'){
+    recs.push({sec:'Termination',type:'critical',icon:'⚡',
+      title:'Parallel termination at the last load — daisy-chain only',
+      desc:`Daisy-chain the receivers along the trace and place a <strong>parallel termination (Rp = Z₀) at the far end</strong>. Do not use star routing for multi-drop — reflections from each branch create superimposed noise on all receivers.`});
+  } else if(topology==='star'){
+    recs.push({sec:'Termination',type:'warning',icon:'⚡',
+      title:'Star topology creates reflection problems — avoid for high-speed',
+      desc:`Each branch reflects independently. The superimposed reflections from all branches arrive at the driver simultaneously and can cause severe distortion. <strong>Convert to daisy-chain</strong> if possible, or use a bus driver with output impedance matched to Z₀.`});
+  } else if(topology==='diff'){
+    recs.push({sec:'Termination',type:'critical',icon:'⚡',
+      title:'Differential termination at the receiver input',
+      desc:`Place a <strong>100 Ω differential termination resistor at the receiver</strong> (across the pair). AC-coupled links (PCIe, USB 3.x) use on-die termination — verify the IC datasheet. Match pair lengths within the protocol skew specification.`});
+  }
+
+  // Stackup
+  if(layers==='2l'&&(rise_time==='fast'||rise_time==='vfast')){
+    recs.push({sec:'Stackup',type:'critical',icon:'🔧',
+      title:'2-layer board cannot support this signal speed — critical risk',
+      desc:`At sub-nanosecond rise times, a 2-layer board provides no impedance control, no field containment, and no crosstalk mitigation. The return path is uncontrolled. <strong>Add copper ground pour to the full bottom layer</strong> as a minimum. Even so, impedance will be uncontrolled. Consider increasing to 4 layers.`});
+  } else if(layers==='4l'&&rise_time==='vfast'){
+    recs.push({sec:'Stackup',type:'critical',icon:'🔧',
+      title:'4-layer board is marginal for sub-100ps signals — verify plane spacing',
+      desc:`A standard 4-layer board has wide plane spacing (~1 mm). Controlled impedance is achievable but plane capacitance is low. <strong>Request tight mid-core stackup</strong> from the fabricator (3–5 mil core between L2 and L3) if possible. Add copper pours on signal layers to reduce inductance.`});
+  } else if(layers==='6to8'||layers==='10plus'){
+    recs.push({sec:'Stackup',type:'info',icon:'🔧',
+      title:'Multi-layer stackup — match each signal layer to an adjacent reference',
+      desc:`For each signal layer, the immediately adjacent layer should be the reference plane. <strong>No signal layer should be sandwiched between two other signal layers</strong> without a reference plane on at least one side. Route adjacent signal layers orthogonally to eliminate inter-layer coupling.`});
+  }
+
+  // Return path
+  recs.push({sec:'Return Path',type:concern==='emi'?'critical':'warning',icon:'↩',
+    title:'Every signal via needs a return via within 2× the dielectric thickness',
+    desc:`At every layer transition, the return current needs a local path. Without a nearby GND via, the return current detours along the plane, adding inductance and creating a partial impedance break. <strong>Place a return via immediately adjacent to every signal via</strong>, especially at reference plane transitions.`});
+
+  // Concern-specific
+  if(concern==='reflect'){
+    recs.push({sec:'Reflections',type:'critical',icon:'🔁',
+      title:'Reflections: match impedance at every discontinuity',
+      desc:`Verify impedance at: (1) driver output — use series resistor if Z_out ≠ Z₀; (2) every via — back-drill for multi-gigabit designs; (3) connectors — use impedance-matched connectors; (4) trace width changes — avoid sudden width steps; (5) load — terminate per topology recommendation above.`});
+  }
+  if(concern==='crosstalk'){
+    recs.push({sec:'Crosstalk',type:'critical',icon:'⚡',
+      title:'Apply 3W rule and route adjacent layers orthogonally',
+      desc:`<strong>3W rule:</strong> edge-to-edge trace spacing ≥ 3× trace width. <strong>Orthogonal routing:</strong> horizontal traces on L1, vertical on L2. <strong>Stripline for sensitive signals:</strong> two reference planes contain the field better than one. Keep parallel routing length short — crosstalk accumulates with coupling length.`});
+  }
+  if(concern==='emi'){
+    recs.push({sec:'EMI',type:'critical',icon:'📡',
+      title:'EMI from signal traces is a return path problem',
+      desc:`Radiated emissions from traces are almost always caused by enlarged current loops from discontinuous return paths. Check: (1) no routing over plane gaps or slots; (2) return via at every layer transition; (3) no split planes beneath high-speed signals; (4) board partitioning by function — not by splitting the reference plane.`});
+  }
+  if(concern==='ground'){
+    recs.push({sec:'Ground Bounce',type:'warning',icon:'⚠️',
+      title:'Decouple aggressively — PDN solves ground bounce',
+      desc:`Ground bounce = <strong>L_pkg × di/dt</strong>. Reduce L_pkg by placing decoupling caps close to power pins (reduce path inductance). Use parallel capacitors of different values (0.1 µF, 1 µF, 10 µF) to cover the full frequency range. If SSO is the concern, use ICs with lower package inductance (BGA over QFP) and on-package decoupling where available.`});
+  }
+
+  // Interface-specific
+  if(iface==='ddr'){
+    recs.push({sec:'DDR Interface',type:'warning',icon:'🧠',
+      title:'DDR: fly-by topology, on-die termination, strict length matching',
+      desc:`Modern DDR uses <strong>fly-by topology</strong> — address and command are daisy-chained, data is point-to-point. On-die termination (ODT) is used; external termination is usually not required. Length match data within 20–50 ps of skew (check your memory controller spec). <strong>Do not use star topology for DDR</strong>.`});
+  }
+  if(iface==='serdes'){
+    recs.push({sec:'SerDes / High-Speed',type:'warning',icon:'🔗',
+      title:'AC coupling, on-die termination, back-drill all vias',
+      desc:`High-speed SerDes links are AC-coupled (100 nF–220 nF caps in series). On-die termination handles receiver matching. <strong>Back-drill signal vias</strong> to remove via stubs — at 10+ Gbps, a 50-mil stub creates a notch at ~10 GHz. Use surface-launch connectors or edge-mount connectors to minimise transition discontinuities.`});
+  }
+  if(iface==='rf_adc'){
+    recs.push({sec:'RF / ADC',type:'warning',icon:'📻',
+      title:'Analogue-digital boundary: isolation by placement, not plane splitting',
+      desc:`Place analogue and digital circuits in separate board zones. Do not split the reference plane — use unbroken ground beneath both, with careful routing discipline at the boundary. Clock traces to ADC/DAC are the most critical: <strong>route on a single reference plane, minimise vias, maximise spacing from digital signals</strong>. Jitter adds directly to SNR degradation.`});
+  }
+
+  return recs;
+};
+
+const computeSummary=(a)=>({
+  bw:{slow:'175 MHz',mid:'700 MHz',fast:'3.5 GHz',vfast:'> 10 GHz'}[a.rise_time]||'—',
+  lc:{slow:'2 in',mid:'0.5–2 in',fast:'0.5 in',vfast:'< 0.25 in'}[a.rise_time]||'—',
+  z0:{diff:'100 Ω diff',p2p:'50 Ω',multidrop:'50 Ω',star:'50 Ω'}[a.topology]||'50 Ω'
+});
+
+// STATE
+let current=0;const answers={};const N=questions.length;
+
+function renderTrack(){
+  document.getElementById('step-track').innerHTML=questions.map((q,i)=>{
+    const d=answers[q.id]!==undefined;const ac=i===current;
+    return(i<N-1)?
+      `<div class="s-pip ${d?'done':ac?'active':''}">${d?'✓':i+1}</div><div class="s-line ${d?'done':''}"></div>`:
+      `<div class="s-pip ${d?'done':ac?'active':''}">${d?'✓':i+1}</div>`;
+  }).join('');
+}
+
+function renderScreen(idx){
+  const q=questions[idx];
+  document.getElementById('screens').innerHTML=`
+    <div class="screen active">
+      <div class="sc-kicker">${q.kicker}</div>
+      <div class="sc-q">${q.q}</div>
+      <div class="sc-sub">${q.sub}</div>
+      <div class="opts">
+        ${q.opts.map(o=>`
+          <button class="opt ${answers[q.id]===o.val?'selected':''}" onclick="sel('${q.id}','${o.val}',this)">
+            <div class="opt-radio"></div>
+            <div style="flex:1">
+              <div class="opt-title">${o.title}</div>
+              <div class="opt-desc">${o.desc}</div>
+            </div>
+          </button>`).join('')}
+      </div>
+      <div class="nav-row">
+        ${idx>0?`<button class="btn-g" onclick="back()">← Back</button>`:''}
+        <button class="btn-p" id="nxtBtn" onclick="next()" ${!answers[q.id]?'disabled':''}>
+          ${idx===N-1?'Get Recommendations →':'Next →'}
+        </button>
+      </div>
+    </div>`;
+}
+
+function sel(qid,val,el){
+  answers[qid]=val;
+  document.querySelectorAll('.opt').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  const b=document.getElementById('nxtBtn');if(b)b.disabled=false;
+}
+
+function next(){
+  if(!answers[questions[current].id])return;
+  if(current<N-1){current++;renderTrack();renderScreen(current);}
+  else showResults();
+}
+
+function back(){if(current>0){current--;renderTrack();renderScreen(current);}}
+
+function showResults(){
+  document.getElementById('screens').style.display='none';
+  document.getElementById('step-track').style.display='none';
+  const recs=buildRecs(answers);const sum=computeSummary(answers);
+  const secs={};recs.forEach(r=>{if(!secs[r.sec])secs[r.sec]=[];secs[r.sec].push(r);});
+  const profile={slow:'Low-Speed Digital',mid:'Mid-Speed Digital',fast:'High-Speed Digital',vfast:'Multi-Gigabit'}[answers.rise_time];
+  document.getElementById('results').innerHTML=`
+    <div class="res-hdr">
+      <div class="res-badge"><span>📡 SI Profile: ${profile}</span></div>
+      <h2>Your <span>Design Recommendations</span></h2>
+      <p>Based on your inputs — ${answers.layers} board · ${answers.topology.replace('p2p','point-to-point').replace('diff','differential').replace('star','star topology').replace('multidrop','multi-drop')} · ${answers.concern} concern — here is what your signal integrity design actually needs.</p>
+    </div>
+    <div class="stats-row">
+      <div class="stat-c"><div class="stat-lbl">Signal BW</div><div class="stat-val" style="font-size:16px">${sum.bw}</div><div class="stat-unit">Max signal frequency</div></div>
+      <div class="stat-c"><div class="stat-lbl">Critical length</div><div class="stat-val" style="font-size:16px">${sum.lc}</div><div class="stat-unit">Terminate if longer</div></div>
+      <div class="stat-c"><div class="stat-lbl">Target Z₀</div><div class="stat-val" style="font-size:16px">${sum.z0}</div><div class="stat-unit">Impedance target</div></div>
+    </div>
+    ${Object.entries(secs).map(([sec,items])=>`
+      <div class="rec-sec">
+        <div class="rec-sec-title">${sec}</div>
+        <div class="rec-cards">
+          ${items.map(r=>`
+            <div class="rec-card ${r.type}">
+              <div class="rec-icon">${r.icon}</div>
+              <div>
+                <div class="rec-title">${r.title}</div>
+                <div class="rec-desc">${r.desc}</div>
+              </div>
+            </div>`).join('')}
+        </div>
+      </div>`).join('')}
+    <div class="res-footer">
+      <div>
+        <div style="font-size:12px;color:var(--label);margin-bottom:8px">Want a full review of your actual board?</div>
+        <a href="https://www.fresuelectronics.com/emc-audit" class="cta-link">EMC Design Audit →</a>
+      </div>
+      <button class="btn-g" onclick="restart()">← Start Over</button>
+    </div>`;
+  document.getElementById('results').classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){
+  Object.keys(answers).forEach(k=>delete answers[k]);current=0;
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('results').innerHTML='';
+  document.getElementById('screens').style.display='';
+  document.getElementById('step-track').style.display='';
+  renderTrack();renderScreen(0);
+}
+
+renderTrack();renderScreen(0);
+</script>
+</body>
+</html>
