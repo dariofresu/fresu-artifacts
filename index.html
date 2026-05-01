@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fresu Electronics Lab — PCB Design Courses & Resources</title>
+<meta name="description" content="Professional PCB design courses covering PDN design, signal integrity, EMI filtering and more. Built by Dario Fresu, Principal EMC Architect.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111;--s2:#161616;--s3:#1c1c1c;
+  --border:#242424;--border-hi:#333;
+  --fg:#fff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.18);
+  --mono:'JetBrains Mono',monospace;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--fg);font-size:15px;line-height:1.75;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;background:rgba(10,10,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.nav-logo img{height:32px;display:block}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-link{font-size:12px;color:var(--label);text-decoration:none;transition:color 180ms;letter-spacing:0.04em}
+.nav-link:hover{color:var(--acc)}
+.nav-cta{background:var(--acc);color:#0a0a0a;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:8px 18px;border-radius:4px;text-decoration:none;transition:background 180ms}
+.nav-cta:hover{background:#00e085}
+
+/* HERO */
+.hero{padding:130px 48px 80px;max-width:1060px;margin:0 auto}
+.hero-kicker{font-size:11px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--acc);margin-bottom:18px;opacity:0;animation:ri 600ms var(--ease) 100ms forwards}
+.hero h1{font-size:clamp(32px,5vw,64px);font-weight:800;line-height:1.08;margin-bottom:20px;letter-spacing:-0.02em;opacity:0;animation:ri 700ms var(--ease) 250ms forwards}
+.hero h1 span{color:var(--acc)}
+.hero-desc{font-size:18px;font-weight:300;color:var(--fg2);max-width:600px;line-height:1.7;margin-bottom:44px;opacity:0;animation:ri 700ms var(--ease) 400ms forwards}
+.hero-meta{display:flex;align-items:center;gap:16px;opacity:0;animation:ri 600ms var(--ease) 550ms forwards;flex-wrap:wrap}
+.hero-meta img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--acc);flex-shrink:0}
+.meta-name{font-size:13px;font-weight:700}
+.meta-role{font-size:11px;color:var(--label)}
+.meta-div{width:1px;height:32px;background:var(--border)}
+.meta-stat{font-size:11px;color:var(--label)}
+.meta-stat strong{color:var(--fg2);font-weight:600}
+
+/* SERIES GRID */
+.section{max-width:1060px;margin:0 auto;padding:64px 48px}
+.sec-kicker{font-size:10px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;color:var(--acc);margin-bottom:10px}
+.section h2{font-size:clamp(22px,3.5vw,36px);font-weight:800;margin-bottom:12px;line-height:1.15}
+.section h2 span{color:var(--acc)}
+.sec-sub{font-size:15px;color:var(--label);max-width:520px;line-height:1.7;margin-bottom:44px}
+
+.series-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+
+/* Series card */
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:12px;overflow:hidden;transition:border-color 300ms,transform 250ms var(--ease);display:flex;flex-direction:column}
+.sc:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+.sc.available:hover{border-color:rgba(0,255,148,0.35)}
+.sc-img{width:100%;height:200px;overflow:hidden;position:relative;flex-shrink:0}
+.sc-img img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transition:transform 400ms var(--ease)}
+.sc:hover .sc-img img{transform:scale(1.03)}
+.sc-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,10,10,0.8) 100%)}
+.sc-img-badge{position:absolute;top:14px;left:14px;display:flex;gap:6px}
+.sib{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:4px 10px;border-radius:3px;backdrop-filter:blur(6px)}
+.sib.live{background:rgba(0,255,148,0.2);border:1px solid rgba(0,255,148,0.4);color:var(--acc)}
+.sib.soon{background:rgba(160,170,184,0.15);border:1px solid rgba(160,170,184,0.25);color:var(--label)}
+.sc-body{padding:24px 26px;display:flex;flex-direction:column;flex:1}
+.sc-num{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--label);margin-bottom:8px}
+.sc.available .sc-num{color:var(--acc)}
+.sc h3{font-size:19px;font-weight:800;margin-bottom:8px;line-height:1.2}
+.sc p{font-size:13px;color:var(--label);line-height:1.7;margin-bottom:18px;flex:1}
+.sc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:20px}
+.sctag{font-size:9px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--s3);border:1px solid var(--border);color:var(--label)}
+.sc-actions{display:flex;gap:10px;flex-wrap:wrap}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;background:var(--acc);color:#0a0a0a;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:11px 20px;border-radius:4px;transition:background 180ms;min-height:40px}
+.btn-primary:hover{background:#00e085}
+.btn-ghost{display:inline-flex;align-items:center;gap:8px;color:var(--fg2);text-decoration:none;font-size:12px;font-weight:500;padding:10px 16px;border-radius:4px;border:1px solid var(--border-hi);transition:all 180ms;min-height:40px}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+.sc-soon-overlay{background:var(--s2);border-radius:8px;padding:16px 18px;text-align:center;margin-top:4px}
+.sc-soon-overlay p{font-size:13px;color:var(--label);margin-bottom:10px}
+.notify-form{display:flex;gap:8px}
+.notify-input{flex:1;background:var(--s3);border:1px solid var(--border);border-radius:4px;padding:9px 14px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--fg);outline:none;min-width:0;transition:border-color 180ms}
+.notify-input:focus{border-color:var(--acc)}
+.notify-btn{background:var(--acc);color:#0a0a0a;border:none;font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.06em;padding:9px 16px;border-radius:4px;cursor:pointer;white-space:nowrap;transition:background 180ms}
+.notify-btn:hover{background:#00e085}
+
+/* ACADEMY BANNER */
+.academy-banner{background:linear-gradient(135deg,#0d1a0d 0%,#111 100%);border:1px solid rgba(0,255,148,0.2);border-radius:12px;padding:40px 44px;display:flex;align-items:center;justify-content:space-between;gap:32px;position:relative;overflow:hidden}
+.academy-banner::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc)}
+.ab-left h3{font-size:22px;font-weight:800;margin-bottom:8px;line-height:1.2}
+.ab-left h3 span{color:var(--acc)}
+.ab-left p{font-size:14px;color:var(--fg2);line-height:1.7;max-width:480px}
+.ab-right{flex-shrink:0;text-align:center}
+.ab-price{font-size:13px;color:var(--label);margin-bottom:6px}
+.ab-price strong{color:var(--fg2);font-weight:600}
+.ab-actions{display:flex;flex-direction:column;gap:8px;min-width:200px}
+
+/* ABOUT */
+.about-card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:36px;display:flex;align-items:flex-start;gap:28px}
+.about-card img{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--acc);flex-shrink:0;display:block}
+.about-card h3{font-size:18px;font-weight:800;margin-bottom:3px}
+.about-role{font-size:12px;color:var(--acc);font-weight:600;margin-bottom:12px;letter-spacing:0.04em}
+.about-card p{font-size:13px;color:var(--fg2);line-height:1.75;margin-bottom:14px}
+.about-creds{display:flex;flex-wrap:wrap;gap:7px}
+.cred{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:3px 9px;border-radius:3px;background:var(--acc-dim);border:1px solid rgba(0,255,148,0.2);color:var(--acc)}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:64px 48px 80px}
+.footer-brand{color:var(--acc);font-weight:700;font-size:14px}
+.footer-text{font-size:13px;color:var(--label);margin-top:8px;line-height:1.6}
+.footer-links{display:flex;gap:24px;margin-top:24px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:var(--fg2);text-decoration:none;letter-spacing:0.04em}
+.footer-links a:hover{color:var(--acc)}
+
+/* DIVIDER */
+.divider{border-top:1px solid var(--border)}
+
+/* ANIM */
+@keyframes ri{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 550ms var(--ease),transform 550ms var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:80ms}.d2{transition-delay:160ms}.d3{transition-delay:240ms}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .hero{padding:96px 20px 56px}
+  .section{padding:48px 20px}
+  .series-grid{grid-template-columns:1fr}
+  .academy-banner{flex-direction:column;padding:28px 24px}
+  .ab-actions{min-width:auto;width:100%}
+  .about-card{flex-direction:column;gap:16px;padding:24px}
+  footer{padding:48px 20px 64px}
+  .hero-meta .meta-div{display:none}
+  .notify-form{flex-direction:column}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <div class="nav-right">
+    <a href="https://www.fresuelectronics.com" class="nav-link">Main Site</a>
+    <a href="https://blog.fresuelectronics.com" class="nav-link">Blog</a>
+    <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="nav-cta" target="_blank">Join Academy →</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-kicker">Fresu Electronics Lab</div>
+  <h1>Build Boards That<br><span>Pass First Time</span></h1>
+  <p class="hero-desc">Professional PCB design course series covering PDN design, signal integrity, EMI filtering, troubleshooting, and stackup design. Built from a decade of applied EMC engineering.</p>
+  <div class="hero-meta">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg" alt="Dario Fresu">
+    <div>
+      <div class="meta-name">Dario Fresu</div>
+      <div class="meta-role">Principal EMC Architect · Fresu Electronics</div>
+    </div>
+    <div class="meta-div"></div>
+    <div class="meta-stat"><strong>80,000+</strong> engineers</div>
+    <div class="meta-div"></div>
+    <div class="meta-stat"><strong>4,000+</strong> trained</div>
+    <div class="meta-div"></div>
+    <div class="meta-stat">IPC CID · Altium Author</div>
+  </div>
+</div>
+
+<!-- SERIES -->
+<div class="divider"></div>
+<div class="section">
+  <div class="sec-kicker reveal">Course Series</div>
+  <h2 class="reveal d1">All <span>Available Series</span></h2>
+  <p class="sec-sub reveal d2">Each series is a complete package — explainer, interactive course, cheat sheet, and decision wizard. Buy standalone or get everything free in the academy.</p>
+
+  <div class="series-grid">
+
+    <!-- PDN SERIES — LIVE -->
+    <div class="sc available reveal">
+      <div class="sc-img">
+        <img src="https://raw.githubusercontent.com/dariofresu/fresu-artifacts/main/courses/pdn-design-series/assets/cover-pdn.png" alt="PDN Design Series">
+        <div class="sc-img-overlay"></div>
+        <div class="sc-img-badge">
+          <span class="sib live">Available now</span>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-num">Series 01 · Power Delivery Networks</div>
+        <h3>PDN Design for High-Speed PCBs</h3>
+        <p>Impedance, inductance, decoupling, and stackup — everything you need to design a power delivery network that won't fail your next EMC test.</p>
+        <div class="sc-tags">
+          <span class="sctag">4 Resources</span>
+          <span class="sctag">10 Chapters</span>
+          <span class="sctag">8 Topics</span>
+          <span class="sctag">~2 hrs</span>
+        </div>
+        <div class="sc-actions">
+          <a href="/courses/pdn-design-series/pdn-bundle.html" class="btn-primary">Get Series — €29 →</a>
+          <a href="/courses/pdn-design-series/pdn-index.html" class="btn-ghost">Browse Resources</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- SI SERIES — LIVE -->
+    <div class="sc available reveal d1">
+      <div class="sc-img" style="background:linear-gradient(135deg,#0a0a14 0%,#0d1a14 100%);display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;padding:20px">
+          <text x="200" y="40" text-anchor="middle" fill="rgba(255,255,255,0.15)" font-family="Poppins" font-size="11" font-weight="700" letter-spacing="0.10em">SIGNAL WAVEFRONT</text>
+          <path d="M 40,100 L 90,100 L 90,65 L 160,65 L 160,100 L 220,100 L 220,65 L 290,65 L 290,100 L 360,100" fill="none" stroke="#00FF94" stroke-width="2.5"/>
+          <path d="M 40,140 L 85,140 L 85,108 Q 98,88 110,108 Q 122,128 134,105 Q 142,92 155,105 L 155,140 L 245,140 L 245,108 Q 258,88 270,108 Q 282,128 294,105 L 294,140 L 360,140" fill="none" stroke="rgba(255,77,77,0.7)" stroke-width="1.5"/>
+          <text x="42" y="58" fill="rgba(0,255,148,0.7)" font-family="Poppins" font-size="9" font-weight="600">Terminated</text>
+          <text x="42" y="158" fill="rgba(255,77,77,0.6)" font-family="Poppins" font-size="9">Unterminated</text>
+          <rect x="40" y="168" width="320" height="14" rx="2" fill="#1a1a2a" stroke="rgba(100,100,255,0.3)" stroke-width="1"/>
+          <text x="200" y="179" text-anchor="middle" fill="rgba(150,150,255,0.6)" font-family="Poppins" font-size="8" font-weight="600">RETURN REFERENCE PLANE</text>
+        </svg>
+        <div class="sc-img-overlay"></div>
+        <div class="sc-img-badge">
+          <span class="sib live">Available now</span>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-num">Series 02 · Signal Integrity</div>
+        <h3>SI Design for High-Speed PCBs</h3>
+        <p>From electromagnetic field propagation to return paths, termination, crosstalk, and routing — a field-centric framework for engineers who need to know why, not just what.</p>
+        <div class="sc-tags">
+          <span class="sctag">4 Resources</span>
+          <span class="sctag">8 Chapters</span>
+          <span class="sctag">8 Topics</span>
+          <span class="sctag">~2 hrs</span>
+        </div>
+        <div class="sc-actions">
+          <a href="/courses/si-design-series/si-bundle.html" class="btn-primary">Get Series — €29 →</a>
+          <a href="/courses/si-design-series/si-index.html" class="btn-ghost">Browse Resources</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- EMI FILTER — COMING SOON -->
+    <div class="sc reveal">
+      <div class="sc-img" style="background:#111;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;padding:24px">
+          <text x="200" y="40" text-anchor="middle" fill="rgba(255,255,255,0.12)" font-family="Poppins" font-size="11" font-weight="700" letter-spacing="0.10em">EMI FILTER DESIGN</text>
+          <line x1="40" y1="100" x2="120" y2="100" stroke="#333" stroke-width="2"/>
+          <rect x="120" y="84" width="40" height="32" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1.5"/>
+          <text x="140" y="104" text-anchor="middle" fill="#666" font-family="Poppins" font-size="9" font-weight="600">L</text>
+          <line x1="160" y1="100" x2="220" y2="100" stroke="#333" stroke-width="2"/>
+          <line x1="220" y1="80" x2="220" y2="120" stroke="#444" stroke-width="2"/>
+          <line x1="232" y1="80" x2="232" y2="120" stroke="#444" stroke-width="2"/>
+          <line x1="220" y1="100" x2="226" y2="100" stroke="#333" stroke-width="1.5"/>
+          <line x1="226" y1="100" x2="226" y2="140" stroke="#333" stroke-width="1.5"/>
+          <line x1="200" y1="140" x2="260" y2="140" stroke="#333" stroke-width="1.5"/>
+          <line x1="232" y1="100" x2="300" y2="100" stroke="#333" stroke-width="2"/>
+          <rect x="300" y="84" width="40" height="32" rx="4" fill="#1a1a1a" stroke="#444" stroke-width="1.5"/>
+          <text x="320" y="104" text-anchor="middle" fill="#666" font-family="Poppins" font-size="9" font-weight="600">L</text>
+          <line x1="340" y1="100" x2="380" y2="100" stroke="#333" stroke-width="2"/>
+          <text x="200" y="170" text-anchor="middle" fill="#444" font-family="Poppins" font-size="9">π-filter topology</text>
+        </svg>
+        <div class="sc-img-overlay"></div>
+        <div class="sc-img-badge">
+          <span class="sib soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-num">Series 03 · EMI Filter Design</div>
+        <h3>EMI Filter Design for PCBs</h3>
+        <p>Filter topologies, component selection, placement, and common-mode vs differential-mode strategies. Designed for engineers who need filters that actually work on the board.</p>
+        <div class="sc-tags">
+          <span class="sctag">~9 Chapters</span>
+          <span class="sctag">Filter topologies</span>
+          <span class="sctag">Component selection</span>
+        </div>
+        <div class="sc-soon-overlay">
+          <p>Get notified when this series launches</p>
+          <div class="notify-form">
+            <input class="notify-input" type="email" placeholder="your@email.com" id="notifyEmi">
+            <button class="notify-btn" onclick="notify('emi')">Notify me</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TROUBLESHOOTING — COMING SOON -->
+    <div class="sc reveal d1">
+      <div class="sc-img" style="background:#110a0a;display:flex;align-items:center;justify-content:center">
+        <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;padding:24px">
+          <text x="200" y="40" text-anchor="middle" fill="rgba(255,255,255,0.12)" font-family="Poppins" font-size="11" font-weight="700" letter-spacing="0.10em">EMI TROUBLESHOOTING</text>
+          <circle cx="200" cy="110" r="60" fill="none" stroke="#2a1a1a" stroke-width="1.5"/>
+          <circle cx="200" cy="110" r="40" fill="none" stroke="#331a1a" stroke-width="1.5"/>
+          <line x1="200" y1="50" x2="200" y2="170" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="3 3"/>
+          <line x1="140" y1="110" x2="260" y2="110" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="3 3"/>
+          <path d="M 200,60 L 260,100 L 240,160 L 160,160 L 140,100 Z" fill="rgba(255,77,77,0.05)" stroke="rgba(255,77,77,0.3)" stroke-width="1"/>
+          <text x="200" y="115" text-anchor="middle" fill="rgba(255,77,77,0.5)" font-family="Poppins" font-size="10" font-weight="700">EMI source?</text>
+          <text x="200" y="165" text-anchor="middle" fill="#444" font-family="Poppins" font-size="9">Systematic diagnosis</text>
+        </svg>
+        <div class="sc-img-overlay"></div>
+        <div class="sc-img-badge">
+          <span class="sib soon">Coming soon</span>
+        </div>
+      </div>
+      <div class="sc-body">
+        <div class="sc-num">Series 04 · EMI Troubleshooting</div>
+        <h3>Systematic EMI Troubleshooting</h3>
+        <p>The series nobody else teaches. A structured diagnostic framework for finding and fixing EMI problems on real boards — without spending weeks guessing.</p>
+        <div class="sc-tags">
+          <span class="sctag">Diagnostic framework</span>
+          <span class="sctag">Real boards</span>
+          <span class="sctag">Case studies</span>
+        </div>
+        <div class="sc-soon-overlay">
+          <p>Get notified when this series launches</p>
+          <div class="notify-form">
+            <input class="notify-input" type="email" placeholder="your@email.com" id="notifyTs">
+            <button class="notify-btn" onclick="notify('ts')">Notify me</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ACADEMY BANNER -->
+<div class="divider"></div>
+<div class="section">
+  <div class="academy-banner reveal">
+    <div class="ab-left">
+      <h3>Get Everything Free.<br><span>Fresu EMC Academy.</span></h3>
+      <p>All series — current and future — are included with your academy membership. Plus community access, monthly live sessions, and board review threads.</p>
+    </div>
+    <div class="ab-right">
+      <div class="ab-price">From <strong>$33/month</strong> · Cancel anytime</div>
+      <div class="ab-actions">
+        <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="btn-primary" target="_blank">Join the Academy →</a>
+        <a href="https://www.fresuelectronics.com" class="btn-ghost" target="_blank">Learn more</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="divider"></div>
+<div class="section">
+  <div class="about-card reveal">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg" alt="Dario Fresu">
+    <div>
+      <h3>Dario Fresu</h3>
+      <div class="about-role">Principal EMC Architect · Fresu Electronics</div>
+      <p>Every series in this lab distils a decade of applied EMC engineering into structured, usable material. Every rule, formula, and diagram comes from real board designs — not theory. Engineers who go through this material make fewer mistakes, pass EMC testing on the first attempt, and spend less time debugging boards that should have worked.</p>
+      <div class="about-creds">
+        <span class="cred">IPC CID</span>
+        <span class="cred">Former ETH Zurich</span>
+        <span class="cred">Altium Author</span>
+        <span class="cred">4,000+ trained</span>
+        <span class="cred">80,000+ community</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Fresu Electronics Lab</div>
+  <div class="footer-text">
+    Professional PCB design courses and resources for hardware engineers.<br>
+    IPC CID · Former ETH Zurich Lead Hardware Engineer · 4,000+ engineers trained
+  </div>
+  <div class="footer-links">
+    <a href="https://www.fresuelectronics.com">fresuelectronics.com</a>
+    <a href="https://blog.fresuelectronics.com">Blog</a>
+    <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+    <a href="https://open.spotify.com/show/7w18uAkpQKrGzHMccacQEN">Podcast</a>
+    <a href="https://www.fresuelectronics.com/emc-audit">EMC Design Audit</a>
+  </div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.08});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+
+function notify(series){
+  const id = series==='emi'?'notifyEmi':'notifyTs';
+  const val = document.getElementById(id).value;
+  if(!val||!val.includes('@'))return;
+  alert('Thanks! We will notify you at '+val+' when this series launches.');
+  document.getElementById(id).value='';
+}
+</script>
+</body>
+</html>
