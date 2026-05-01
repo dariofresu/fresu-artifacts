@@ -5,7 +5,7 @@
 | Date | 2026-05-01 |
 | Format | PDF carousel (6 slides, 1080×1080px) |
 | Angle | #4 — "We'll fix it in testing" |
-| Status | Draft |
+| Status | Published ✓ |
 | Source email | emails/2026-05-01-fix-it-in-testing |
 
 ## Slides
