@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDN Design Wizard — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#161616;--s3:#1e1e1e;
+  --border:#2a2a2a;--border-hi:#383838;
+  --fg:#ffffff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.15);
+  --red:#ff4d4d;--red-dim:rgba(255,77,77,0.08);
+  --amber:#ffb84d;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  --sans:'Poppins','Helvetica Neue',Arial,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html,body{min-height:100vh}
+body{font-family:var(--sans);background:var(--bg);color:var(--fg);font-size:15px;line-height:1.7;overflow-x:hidden}
+
+/* ─── TOPBAR ────────────────────────────────────── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;z-index:200;
+  height:56px;padding:0 32px;
+  background:rgba(10,10,10,0.94);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.topbar-logo img{height:26px;width:auto;display:block}
+.topbar-label{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc)}
+
+/* ─── MAIN CONTAINER ─────────────────────────────── */
+#app{
+  max-width:680px;margin:0 auto;
+  padding:96px 32px 80px;
+  min-height:100vh;
+}
+
+/* ─── PROGRESS STEPS ─────────────────────────────── */
+#step-track{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:48px;
+}
+.step-pip{
+  width:28px;height:28px;border-radius:50%;
+  border:1.5px solid var(--border-hi);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;color:var(--label);
+  flex-shrink:0;transition:all 300ms var(--ease);
+  background:var(--s2);
+}
+.step-pip.active{border-color:var(--acc);color:var(--acc);background:var(--acc-dim)}
+.step-pip.done{border-color:var(--acc);background:var(--acc);color:#0a0a0a}
+.step-line{flex:1;height:1px;background:var(--border);transition:background 300ms}
+.step-line.done{background:var(--acc)}
+
+/* ─── SCREEN ─────────────────────────────────────── */
+.screen{display:none;animation:slide-in 420ms var(--ease) both}
+.screen.active{display:block}
+@keyframes slide-in{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+.screen-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:12px}
+.screen-q{font-size:clamp(20px,3.5vw,28px);font-weight:800;line-height:1.2;margin-bottom:8px}
+.screen-sub{font-size:14px;color:var(--label);margin-bottom:32px;line-height:1.6}
+
+/* ─── OPTION CARDS ───────────────────────────────── */
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.opt{
+  background:var(--s2);border:1.5px solid var(--border);
+  border-radius:8px;padding:16px 20px;cursor:pointer;
+  transition:all 200ms var(--ease);
+  display:flex;align-items:flex-start;gap:14px;
+  text-align:left;min-height:44px;width:100%;
+  font-family:var(--sans);
+}
+.opt:hover{border-color:var(--border-hi);background:var(--s3)}
+.opt.selected{border-color:var(--acc);background:var(--acc-dim)}
+.opt-radio{
+  width:18px;height:18px;border-radius:50%;flex-shrink:0;margin-top:2px;
+  border:1.5px solid var(--border-hi);background:var(--s1);
+  transition:all 200ms;display:flex;align-items:center;justify-content:center;
+}
+.opt.selected .opt-radio{border-color:var(--acc);background:var(--acc)}
+.opt.selected .opt-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#0a0a0a}
+.opt-text{flex:1}
+.opt-title{font-size:15px;font-weight:600;color:var(--fg);margin-bottom:2px}
+.opt-desc{font-size:12px;color:var(--label);line-height:1.5}
+.opt.selected .opt-title{color:var(--fg)}
+.opt.selected .opt-desc{color:var(--fg2)}
+
+/* ─── NAV BUTTONS ────────────────────────────────── */
+.nav-row{display:flex;gap:10px;align-items:center}
+.btn-primary{
+  background:var(--acc);color:#0a0a0a;border:none;
+  font-family:var(--sans);font-size:13px;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;
+  padding:13px 28px;border-radius:5px;cursor:pointer;
+  transition:background 180ms;min-height:44px;
+}
+.btn-primary:hover{background:#00e085}
+.btn-primary:disabled{opacity:0.35;cursor:not-allowed}
+.btn-ghost{
+  background:none;border:1px solid var(--border-hi);color:var(--fg2);
+  font-family:var(--sans);font-size:13px;font-weight:500;
+  padding:12px 20px;border-radius:5px;cursor:pointer;
+  transition:all 180ms;min-height:44px;
+}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+
+/* ─── RESULTS PAGE ───────────────────────────────── */
+#results{display:none}
+#results.show{display:block;animation:slide-in 500ms var(--ease) both}
+
+.results-header{
+  border:1px solid var(--border);border-radius:10px;
+  padding:24px 28px;margin-bottom:28px;
+  background:var(--s1);
+  position:relative;overflow:hidden;
+}
+.results-header::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--acc);
+}
+.results-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--acc-dim);border:1px solid var(--acc-mid);
+  padding:5px 12px;border-radius:3px;margin-bottom:14px;
+}
+.results-badge span{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc)}
+.results-header h2{font-size:22px;font-weight:800;margin-bottom:6px}
+.results-header h2 span{color:var(--acc)}
+.results-header p{font-size:14px;color:var(--fg2);line-height:1.65}
+
+/* recommendation sections */
+.rec-section{margin-bottom:20px}
+.rec-section-title{
+  font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--acc);margin-bottom:10px;
+  display:flex;align-items:center;gap:8px;
+}
+.rec-section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.rec-cards{display:flex;flex-direction:column;gap:8px}
+.rec-card{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:6px;padding:14px 18px;
+  display:flex;align-items:flex-start;gap:12px;
+}
+.rec-card.critical{border-left:3px solid var(--acc)}
+.rec-card.warning{border-left:3px solid var(--amber)}
+.rec-card.info   {border-left:3px solid var(--border-hi)}
+.rec-icon{font-size:16px;flex-shrink:0;margin-top:1px;width:20px;text-align:center}
+.rec-body{}
+.rec-title{font-size:14px;font-weight:700;color:var(--fg);margin-bottom:3px}
+.rec-desc{font-size:13px;color:var(--fg2);line-height:1.6}
+.rec-desc .mono{font-family:var(--mono);font-size:11px;color:var(--acc)}
+.rec-desc strong{color:var(--fg);font-weight:600}
+
+/* summary stats row */
+.stats-row{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  margin-bottom:24px;
+}
+.stat-card{
+  background:var(--s2);border:1px solid var(--border);
+  border-radius:6px;padding:14px 16px;text-align:center;
+}
+.stat-label{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--label);margin-bottom:6px}
+.stat-value{font-size:22px;font-weight:800;color:var(--acc);font-family:var(--mono);line-height:1}
+.stat-unit{font-size:11px;color:var(--label);margin-top:4px}
+
+/* restart & cta */
+.results-footer{
+  border-top:1px solid var(--border);
+  padding-top:24px;margin-top:28px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:16px;
+}
+.cta-link{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--acc);color:#0a0a0a;text-decoration:none;
+  font-family:var(--sans);font-size:13px;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;
+  padding:13px 24px;border-radius:5px;min-height:44px;
+  transition:background 180ms;
+}
+.cta-link:hover{background:#00e085}
+
+/* ─── MOBILE ─────────────────────────────────────── */
+@media(max-width:600px){
+  #topbar{padding:0 16px}
+  #app{padding:80px 16px 64px}
+  .stats-row{grid-template-columns:1fr 1fr}
+  .stats-row .stat-card:last-child{grid-column:span 2}
+  .results-footer{flex-direction:column;align-items:flex-start}
+}
+@supports(padding-bottom:env(safe-area-inset-bottom)){
+  #app{padding-bottom:calc(64px + env(safe-area-inset-bottom))}
+}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <a href="https://www.fresuelectronics.com" class="topbar-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <span class="topbar-label">PDN Design Wizard</span>
+</div>
+
+<div id="app">
+  <div id="step-track"></div>
+  <div id="screens"></div>
+  <div id="results"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════
+// QUESTIONS
+// ═══════════════════════════════════════════════════
+const questions = [
+  {
+    id:'rise_time',
+    kicker:'Step 1 of 5 · Signal Speed',
+    q:'What is the typical signal rise time of your fastest IC?',
+    sub:'This determines your maximum frequency requirement and which decoupling tools will actually work.',
+    opts:[
+      {val:'slow',  title:'2–4 ns',       desc:'Microcontrollers, slow FPGAs, legacy logic'},
+      {val:'mid',   title:'0.5–2 ns',     desc:'Mid-speed processors, moderate-speed FPGAs'},
+      {val:'fast',  title:'100–500 ps',   desc:'High-speed processors, DDR interfaces, GbE'},
+      {val:'vfast', title:'< 100 ps',     desc:'Multi-gigabit serial links, 10G+ networking'}
+    ]
+  },
+  {
+    id:'current',
+    kicker:'Step 2 of 5 · Current Demand',
+    q:'What is the peak instantaneous current draw from your power bus?',
+    sub:'Count all simultaneous output drivers multiplied by their drive current. This sets your target impedance floor.',
+    opts:[
+      {val:'low',   title:'< 500 mA',    desc:'Few outputs, light load — single MCU or small FPGA'},
+      {val:'mid',   title:'500 mA – 5 A',desc:'Multiple drivers, moderate DSP or processor'},
+      {val:'high',  title:'5 – 30 A',    desc:'High-performance processor, large FPGA, multi-rail'},
+      {val:'vhigh', title:'> 30 A',      desc:'Server-class CPU, networking ASIC, HPC compute'}
+    ]
+  },
+  {
+    id:'layers',
+    kicker:'Step 3 of 5 · Board Stackup',
+    q:'How many PCB layers does your design currently have (or plan to use)?',
+    sub:'Layer count determines what plane configurations are physically achievable.',
+    opts:[
+      {val:'4l',   title:'4 layers',      desc:'Cost-constrained, standard FR4, 62 mil thick'},
+      {val:'6l',   title:'6 layers',      desc:'Mid-complexity, some plane flexibility'},
+      {val:'8l',   title:'8–10 layers',   desc:'High complexity, multiple plane pairs possible'},
+      {val:'12l+', title:'12+ layers',    desc:'High-density, HDI possible, fine pitch BGAs'}
+    ]
+  },
+  {
+    id:'package',
+    kicker:'Step 4 of 5 · IC Package',
+    q:'What package type is your fastest or most power-hungry IC?',
+    sub:'Package type affects decoupling strategy — through-hole vs SMD vs BGA each follow different rules.',
+    opts:[
+      {val:'thru',  title:'Through-hole / PLCC / DIP',  desc:'Legacy or rugged designs, 2–4 ns typical'},
+      {val:'qfp',   title:'QFP / TQFP / LQFP',          desc:'Fine-pitch SMD, moderate speed'},
+      {val:'bga',   title:'BGA (standard pitch ≥ 0.8mm)',desc:'Modern processors, high I/O count'},
+      {val:'fbga',  title:'Fine-pitch BGA (< 0.8mm)',    desc:'Advanced processors, FPGAs, memory stacks'}
+    ]
+  },
+  {
+    id:'noise',
+    kicker:'Step 5 of 5 · Noise Budget',
+    q:'What is your maximum acceptable noise on the power supply rail?',
+    sub:'This is your voltage ripple tolerance — typically a percentage of Vcc. Tighter budgets demand lower PDN impedance.',
+    opts:[
+      {val:'relaxed', title:'> 5% of Vcc',   desc:'Tolerant designs, 3.3V or 5V logic with margin'},
+      {val:'typical', title:'3–5% of Vcc',   desc:'Standard digital — 100–165 mV on 3.3V'},
+      {val:'tight',   title:'1–3% of Vcc',   desc:'Sensitive analog-digital, DDR, high-speed logic'},
+      {val:'strict',  title:'< 1% of Vcc',   desc:'Precision ADC/DAC, RF, multi-GHz clocking'}
+    ]
+  }
+];
+
+// ═══════════════════════════════════════════════════
+// RECOMMENDATION ENGINE
+// ═══════════════════════════════════════════════════
+function buildRecs(answers){
+  const {rise_time,current,layers,package:pkg,noise} = answers;
+  const recs = [];
+
+  // ── Z TARGET ──────────────────────────────────────
+  const fmax = {slow:'125–250 MHz', mid:'250 MHz – 1 GHz', fast:'1–5 GHz', vfast:'5–20 GHz'}[rise_time];
+  const zneed = {
+    'low+relaxed':'100–200 mΩ', 'low+typical':'50–100 mΩ', 'low+tight':'25–50 mΩ', 'low+strict':'< 25 mΩ',
+    'mid+relaxed':'50–100 mΩ',  'mid+typical':'20–50 mΩ',  'mid+tight':'10–20 mΩ',  'mid+strict':'< 10 mΩ',
+    'high+relaxed':'10–30 mΩ',  'high+typical':'5–15 mΩ',  'high+tight':'2–8 mΩ',   'high+strict':'< 3 mΩ',
+    'vhigh+relaxed':'3–10 mΩ',  'vhigh+typical':'1–5 mΩ',  'vhigh+tight':'0.5–2 mΩ','vhigh+strict':'< 1 mΩ'
+  }[`${current}+${noise}`] || '10–50 mΩ';
+
+  recs.push({
+    section:'PDN Target',
+    type:'critical',
+    icon:'🎯',
+    title:`Target PDN impedance: ${zneed}`,
+    desc:`Your frequency band extends to <span class="mono">${fmax}</span>. Maintain impedance below target across this entire range — from clock frequency to f<sub>max</sub> = 0.5 / t<sub>rise</sub>.`
+  });
+
+  // ── PLANE STRATEGY ────────────────────────────────
+  if(rise_time === 'slow' && layers === '4l'){
+    recs.push({section:'Plane Strategy',type:'info',icon:'📐',
+      title:'Planes not required — capacitors handle everything',
+      desc:'At 125–250 MHz, decoupling capacitors alone deliver all needed current. Your standard 4-layer stackup is acceptable. <strong>No special plane configuration needed</strong> — focus budget on correct capacitor mounting instead.'
+    });
+  } else if(rise_time === 'slow'){
+    recs.push({section:'Plane Strategy',type:'info',icon:'📐',
+      title:'Standard stackup adequate for this speed',
+      desc:'Rise times of 2–4 ns put your frequency ceiling at 125–250 MHz. Planes help but are not the primary tool. Decoupling caps with correct mounting will dominate performance. Ensure power and ground planes are present but tight coupling is not critical yet.'
+    });
+  } else if(['fast','vfast'].includes(rise_time) && ['4l','6l'].includes(layers)){
+    recs.push({section:'Plane Strategy',type:'critical',icon:'⚡',
+      title:'Critical: your stackup cannot deliver at this speed',
+      desc:`A ${layers==='4l'?'4':'6'}-layer board with standard plane separation (~1 mm) offers almost no high-frequency decoupling. At ${fmax}, <strong>a single 0.1 µF cap outperforms both planes</strong>. You must add copper pours to signal layers, or increase layer count with close-coupled plane pairs (&lt; 6 mil separation).`
+    });
+  } else if(['fast','vfast'].includes(rise_time)){
+    recs.push({section:'Plane Strategy',type:'critical',icon:'⚡',
+      title:'Close-coupled plane pairs required above 400 MHz',
+      desc:`At ${fmax}, planes must be <strong>separated by less than 6 mil</strong> to contribute meaningfully. Standard mid-board plane placement may still be too far apart. Target 2–4 mil separation for plane pairs near the high-speed IC.`
+    });
+  } else {
+    recs.push({section:'Plane Strategy',type:'warning',icon:'📐',
+      title:'Moderate plane coupling recommended',
+      desc:`At ${fmax}, planes start to contribute above ~200 MHz if separation is under 11 mil. Ensure power-ground plane pairs are not separated by more than a quarter millimeter for useful decoupling benefit.`
+    });
+  }
+
+  // ── STACKUP RECOMMENDATION ────────────────────────
+  if(['fast','vfast'].includes(rise_time) && layers === '4l'){
+    recs.push({section:'Stackup',type:'critical',icon:'🔧',
+      title:'Add copper pours to signal layers — do not add layers',
+      desc:'The most cost-effective fix: pour <strong>ground copper on L1</strong> and <strong>L4</strong>, pour power copper around ICs on signal layers. Stitch ground pours every <span class="mono">λ/10</span> at your highest frequency. Connect all overlapping power pours with vias. This achieves up to <strong>5–10× lower inductance</strong> than the standard 4-layer configuration without a layer count increase.'
+    });
+  } else if(['fast','vfast'].includes(rise_time) && layers === '6l'){
+    recs.push({section:'Stackup',type:'critical',icon:'🔧',
+      title:'Move away from Power L2 / Ground L5',
+      desc:'Standard 6-layer with power on L2 and ground on L5 places signal fields in the same dielectric space as power delivery — guaranteed interference. Recommended approach: signal+ground pour on L1, distribute power pours on L2–L5, signal+ground pour on L6. This separates signal fields from power fields and achieves <strong>10× lower PDN inductance</strong>.'
+    });
+  } else if(['fast','vfast'].includes(rise_time) && ['8l','12l+'].includes(layers)){
+    recs.push({section:'Stackup',type:'critical',icon:'🔧',
+      title:'Place power-ground plane pairs near the surface',
+      desc:`On ${layers==='8l'?'8–10':'12+'}-layer boards at your speed, put power-ground pairs on layers 1–2 and 3–4 near the BGA. <strong>Top-mounted caps are 40% lower impedance</strong> than under-BGA caps when planes are near the surface, because the via loop area is smaller. Do not follow the common advice to put all decoupling under the BGA.`
+    });
+  }
+
+  // ── CAPACITOR STRATEGY ────────────────────────────
+  if(rise_time === 'slow'){
+    recs.push({section:'Capacitor Strategy',type:'info',icon:'🔋',
+      title:'End-mounted vias are acceptable — intentional decoupling',
+      desc:'At this speed, <strong>end-mounting vias is the correct choice</strong>. The intentionally higher inductance decouples the IC from the power rail. Place one cap per power pin on the same board side as the IC. Keep attachments short. Multiple values (100 µF + 0.1 µF) give coverage from low to mid frequencies.'
+    });
+  } else if(rise_time === 'mid'){
+    recs.push({section:'Capacitor Strategy',type:'warning',icon:'🔋',
+      title:'Side-mount vias, same board side, opposite polarity adjacent',
+      desc:'Start moving to side-mounted via placement. For 0603 packages: place vias at the sides of the cap, positive next to negative. This halves effective inductance vs end-mounted. Use parallel capacitors (two 0.1 µF side by side) to lower inductance further — <strong>parallel caps reduce inductance, not just increase capacitance</strong>.'
+    });
+  } else {
+    recs.push({section:'Capacitor Strategy',type:'critical',icon:'🔋',
+      title:'Side vias mandatory · parallel pairs · alternating BGA orientation',
+      desc:'<strong>Side-mounted vias only</strong> — opposite polarity adjacent. Two via pairs per cap if space allows (4× inductance reduction). Around BGAs: <strong>alternate capacitor orientation</strong> (power pin up, down, up, down) so adjacent caps have opposite polarity fields that cancel rather than reinforce. Caps within the energy circle (r = t<sub>rise</sub> × 6 in/ns) — distributed toward the perimeter, not crowded under the BGA.'
+    });
+  }
+
+  // ── OPD/ODC ───────────────────────────────────────
+  if(rise_time === 'vfast' && ['high','vhigh'].includes(current)){
+    recs.push({section:'Package-Level Decoupling',type:'critical',icon:'💠',
+      title:'OPD and ODC are non-negotiable at this speed and current',
+      desc:'At &lt; 100 ps rise times with &gt; 5 A demand, <strong>board-level decoupling cannot deliver fast enough</strong>. You need On-Package Decoupling (OPD) — capacitors built into or mounted on the IC substrate/interposer — and On-Die Capacitance (ODC) — intentional capacitance built into the silicon itself. Verify your IC has adequate OPD/ODC specs before committing to this design. ICs with sufficient OPD/ODC are significantly more expensive; factor this into BOM cost early.'
+    });
+  } else if(rise_time === 'vfast'){
+    recs.push({section:'Package-Level Decoupling',type:'warning',icon:'💠',
+      title:'Verify IC package has on-package decoupling (OPD)',
+      desc:'At &lt; 100 ps rise times, board-level capacitors may not respond fast enough even with optimal mounting. Check your IC datasheet for on-package or interposer capacitance. Devices with OPD are designed to operate at these speeds — devices without it may require special measures or may not meet target PDN impedance.'
+    });
+  }
+
+  // ── VIA PAIRING ───────────────────────────────────
+  if(!['slow'].includes(rise_time)){
+    recs.push({section:'Via Design',type:rise_time==='mid'?'warning':'critical',icon:'🔩',
+      title:'Always pair power and ground vias — minimize separation',
+      desc:'<strong>Spacing between the pair dominates inductance</strong> — not via size. Moving a pair from 6 mm to close proximity gives ~60% inductance reduction without changing drill size or pad size. Via pairs at power pins: place ground via directly adjacent to each power via, not routed to a distant ground via.'
+    });
+  }
+
+  // ── EMI WARNING ───────────────────────────────────
+  if(['fast','vfast'].includes(rise_time) && ['4l','6l'].includes(layers)){
+    recs.push({section:'EMI Risk',type:'warning',icon:'⚠️',
+      title:'Standard low-layer stackup at high speed = EMI risk',
+      desc:'Widely-spaced planes at high speeds cause field spreading during layer transitions. Signals changing layers capacitively couple to every other via in the area, creating common-mode current and EMI. <strong>Add copper pours before going to test</strong> — or plan for multiple EMC failures. The fix costs nothing on layout; fixing it after board spin is expensive.'
+    });
+  }
+
+  // ── NOISE BUDGET ─────────────────────────────────
+  if(noise === 'strict'){
+    recs.push({section:'Noise Budget',type:'warning',icon:'📊',
+      title:'< 1% noise budget requires simulation — not estimation',
+      desc:'At &lt; 1% of Vcc noise tolerance, you cannot design PDN by rules alone. You need PDN impedance simulation across the full frequency band. Verify plane capacitance, via inductance, and capacitor placement with a PDN solver before finalizing layout. Rule-of-thumb approaches will leave you within margin in normal cases but will fail at corners.'
+    });
+  }
+
+  return recs;
+}
+
+// ═══════════════════════════════════════════════════
+// COMPUTED SUMMARY VALUES
+// ═══════════════════════════════════════════════════
+function computeSummary(answers){
+  const fmaxMap = {slow:'250 MHz', mid:'1 GHz', fast:'5 GHz', vfast:'20 GHz'};
+  const zMap = {
+    'low+relaxed':'150 mΩ','low+typical':'75 mΩ','low+tight':'35 mΩ','low+strict':'15 mΩ',
+    'mid+relaxed':'75 mΩ','mid+typical':'35 mΩ','mid+tight':'15 mΩ','mid+strict':'7 mΩ',
+    'high+relaxed':'20 mΩ','high+typical':'10 mΩ','high+tight':'5 mΩ','high+strict':'2 mΩ',
+    'vhigh+relaxed':'7 mΩ','vhigh+typical':'3 mΩ','vhigh+tight':'1 mΩ','vhigh+strict':'< 1 mΩ'
+  };
+  return {
+    fmax: fmaxMap[answers.rise_time] || '—',
+    ztarget: zMap[`${answers.current}+${answers.noise}`] || '—',
+    radius: {slow:'3 in+', mid:'0.75–3 in', fast:'0.3–0.75 in', vfast:'< 0.3 in'}[answers.rise_time] || '—'
+  };
+}
+
+// ═══════════════════════════════════════════════════
+// STATE & RENDER
+// ═══════════════════════════════════════════════════
+let current = 0;
+const answers = {};
+const N = questions.length;
+
+function renderTrack(){
+  const track = document.getElementById('step-track');
+  track.innerHTML = questions.map((q,i) => {
+    const done = answers[q.id] !== undefined;
+    const active = i === current;
+    const cls = done ? 'done' : active ? 'active' : '';
+    const lineCls = done && i < N-1 ? 'done' : '';
+    return (i < N-1)
+      ? `<div class="step-pip ${cls}">${done?'✓':i+1}</div><div class="step-line ${lineCls}"></div>`
+      : `<div class="step-pip ${cls}">${done?'✓':i+1}</div>`;
+  }).join('');
+}
+
+function renderScreen(idx){
+  const q = questions[idx];
+  const container = document.getElementById('screens');
+  container.innerHTML = `
+    <div class="screen active">
+      <div class="screen-kicker">${q.kicker}</div>
+      <div class="screen-q">${q.q}</div>
+      <div class="screen-sub">${q.sub}</div>
+      <div class="options">
+        ${q.opts.map(o => `
+          <button class="opt ${answers[q.id]===o.val?'selected':''}" onclick="select('${q.id}','${o.val}',this)">
+            <div class="opt-radio"></div>
+            <div class="opt-text">
+              <div class="opt-title">${o.title}</div>
+              <div class="opt-desc">${o.desc}</div>
+            </div>
+          </button>
+        `).join('')}
+      </div>
+      <div class="nav-row">
+        ${idx > 0 ? `<button class="btn-ghost" onclick="back()">← Back</button>` : ''}
+        <button class="btn-primary" id="nextBtn" onclick="next()" ${!answers[q.id]?'disabled':''}>
+          ${idx === N-1 ? 'Get Recommendations →' : 'Next →'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function select(qid, val, el){
+  answers[qid] = val;
+  document.querySelectorAll('.opt').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  const btn = document.getElementById('nextBtn');
+  if(btn) btn.disabled = false;
+}
+
+function next(){
+  if(!answers[questions[current].id]) return;
+  if(current < N-1){
+    current++;
+    renderTrack();
+    renderScreen(current);
+  } else {
+    showResults();
+  }
+}
+
+function back(){
+  if(current > 0){
+    current--;
+    renderTrack();
+    renderScreen(current);
+  }
+}
+
+function showResults(){
+  document.getElementById('screens').style.display = 'none';
+  document.getElementById('step-track').style.display = 'none';
+
+  const recs = buildRecs(answers);
+  const summary = computeSummary(answers);
+
+  // group by section
+  const sections = {};
+  recs.forEach(r => {
+    if(!sections[r.section]) sections[r.section] = [];
+    sections[r.section].push(r);
+  });
+
+  const sectionHtml = Object.entries(sections).map(([sec, items]) => `
+    <div class="rec-section">
+      <div class="rec-section-title">${sec}</div>
+      <div class="rec-cards">
+        ${items.map(r => `
+          <div class="rec-card ${r.type}">
+            <div class="rec-icon">${r.icon}</div>
+            <div class="rec-body">
+              <div class="rec-title">${r.title}</div>
+              <div class="rec-desc">${r.desc}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  const profileLabel = {
+    slow:'Low-Speed Microcontroller',
+    mid:'Mid-Speed Processor',
+    fast:'High-Speed Digital',
+    vfast:'Multi-Gigabit System'
+  }[answers.rise_time];
+
+  document.getElementById('results').innerHTML = `
+    <div class="results-header">
+      <div class="results-badge"><span>⚡ PDN Profile: ${profileLabel}</span></div>
+      <h2>Your <span>Design Recommendations</span></h2>
+      <p>Based on your inputs — ${answers.layers} board · ${answers.package.replace('fbga','Fine-pitch BGA').replace('bga','BGA').replace('qfp','QFP').replace('thru','Through-hole')} package · ${answers.noise} noise budget — here is what your PDN actually needs.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Max frequency</div>
+        <div class="stat-value">${summary.fmax}</div>
+        <div class="stat-unit">PDN must cover up to</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Z target</div>
+        <div class="stat-value" style="font-size:16px">${summary.ztarget}</div>
+        <div class="stat-unit">Target impedance</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Energy radius</div>
+        <div class="stat-value" style="font-size:16px">${summary.radius}</div>
+        <div class="stat-unit">Cap placement zone</div>
+      </div>
+    </div>
+
+    ${sectionHtml}
+
+    <div class="results-footer">
+      <div>
+        <div style="font-size:12px;color:var(--label);margin-bottom:8px">Want a full audit of your actual board?</div>
+        <a href="https://www.fresuelectronics.com/emc-audit" class="cta-link">EMC Design Audit — €8,000 →</a>
+      </div>
+      <button class="btn-ghost" onclick="restart()">← Start Over</button>
+    </div>
+  `;
+
+  const el = document.getElementById('results');
+  el.classList.add('show');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){
+  Object.keys(answers).forEach(k => delete answers[k]);
+  current = 0;
+  document.getElementById('results').classList.remove('show');
+  document.getElementById('results').innerHTML = '';
+  document.getElementById('screens').style.display = '';
+  document.getElementById('step-track').style.display = '';
+  renderTrack();
+  renderScreen(0);
+}
+
+// ── INIT ─────────────────────────────────────────
+renderTrack();
+renderScreen(0);
+</script>
+</body>
+</html>
