@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Integrity for PCB Engineers — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#181818;--s3:#1e1e1e;
+  --border:#242424;--border-hi:#333;
+  --fg:#ffffff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.18);
+  --red:#ff4d4d;--amber:#ffb84d;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  --sans:'Poppins','Helvetica Neue',Arial,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--fg);font-size:16px;line-height:1.75;overflow-x:hidden}
+
+/* PROGRESS */
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--acc);z-index:1000;transition:width 80ms linear;box-shadow:0 0 12px rgba(0,255,148,0.5)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:60px;padding:0 48px;background:rgba(10,10,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.nav-logo img{height:28px;width:auto;display:block}
+.nav-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:120px 48px 80px;max-width:960px;margin:0 auto;position:relative}
+.hero-kicker{font-size:11px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;color:var(--acc);margin-bottom:24px;opacity:0;animation:rise-in 600ms var(--ease) 100ms forwards}
+.hero h1{font-size:clamp(34px,5.5vw,62px);font-weight:800;line-height:1.08;margin-bottom:24px;letter-spacing:-0.02em;opacity:0;animation:rise-in 700ms var(--ease) 250ms forwards}
+.hero h1 span{color:var(--acc)}
+.hero-desc{font-size:18px;font-weight:300;color:var(--fg2);max-width:580px;line-height:1.7;margin-bottom:48px;opacity:0;animation:rise-in 700ms var(--ease) 400ms forwards}
+.hero-meta{display:flex;align-items:center;gap:16px;opacity:0;animation:rise-in 700ms var(--ease) 550ms forwards}
+.hero-meta img.av{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid var(--acc);flex-shrink:0}
+.hero-meta .name{font-size:13px;font-weight:700}
+.hero-meta .role{font-size:11px;color:var(--label)}
+.hero-divider{width:1px;height:32px;background:var(--border)}
+.hero-meta .stats{font-size:11px;color:var(--label)}
+.hero-meta .stats span{color:var(--fg2);font-weight:600}
+.scroll-cue{position:absolute;bottom:48px;left:48px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;opacity:0;animation:rise-in 600ms var(--ease) 800ms forwards}
+.scroll-line{width:1px;height:48px;background:linear-gradient(to bottom,var(--acc),transparent);animation:pulse-line 1.5s ease-in-out 1.2s infinite}
+.scroll-cue span{font-size:10px;letter-spacing:0.16em;text-transform:uppercase;color:var(--label)}
+
+/* SECTION */
+.section{max-width:860px;margin:0 auto;padding:120px 48px;position:relative;border-top:1px solid var(--border)}
+.section-num{position:absolute;top:80px;right:48px;font-size:clamp(80px,12vw,140px);font-weight:800;color:rgba(255,255,255,0.025);line-height:1;user-select:none;pointer-events:none}
+.section-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
+.section h2{font-size:clamp(26px,4vw,40px);font-weight:800;line-height:1.15;margin-bottom:24px}
+.section h2 span{color:var(--acc)}
+.section p{font-size:15px;color:var(--fg2);line-height:1.8;margin-bottom:18px;max-width:680px}
+.section p strong{color:var(--fg);font-weight:600}
+.section p:last-of-type{margin-bottom:0}
+h3{font-size:17px;font-weight:700;color:var(--fg);margin:32px 0 12px}
+
+/* DIAGRAM */
+.diagram{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:28px;margin:32px 0;overflow:hidden}
+.diagram-cap{font-size:11px;color:var(--label);text-align:center;margin-top:14px;font-style:italic;line-height:1.5}
+
+/* FORMULA */
+.formula{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:18px 22px;margin:24px 0;max-width:500px}
+.formula-lbl{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--label);margin-bottom:8px}
+.formula-expr{font-family:var(--mono);font-size:20px;font-weight:700;color:var(--fg)}
+.formula-expr .a{color:var(--acc)}
+.formula-note{font-size:11px;color:var(--label);margin-top:8px;line-height:1.6}
+.formula-note .mono{font-family:var(--mono);font-size:10px;color:var(--acc)}
+
+/* CALLOUT */
+.callout{background:var(--s1);border-left:3px solid var(--acc);padding:18px 22px;border-radius:0 6px 6px 0;margin:24px 0;max-width:680px}
+.callout-lbl{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.callout p{font-size:14px;color:var(--fg);line-height:1.7;margin:0;font-weight:500}
+
+/* COMPARE */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:24px 0}
+.compare-card{background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:18px}
+.compare-card.good{border-left:3px solid var(--acc)}
+.compare-card.bad{border-left:3px solid var(--red)}
+.compare-lbl{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;margin-bottom:8px}
+.compare-card.good .compare-lbl{color:var(--acc)}
+.compare-card.bad .compare-lbl{color:var(--red)}
+.compare-card p{font-size:13px;color:var(--fg2);line-height:1.6;margin:0}
+
+/* TABLE */
+.data-table{width:100%;border-collapse:collapse;margin:24px 0;font-size:13px}
+.data-table th{background:var(--s2);color:var(--fg);font-weight:600;text-align:left;padding:9px 14px;border-bottom:1px solid var(--border);font-size:11px;letter-spacing:0.06em}
+.data-table td{padding:8px 14px;border-bottom:1px solid #1a1a1a;color:var(--fg2);vertical-align:top}
+.data-table td.acc{color:var(--acc);font-weight:600;font-family:var(--mono);font-size:12px}
+.data-table td.bad{color:var(--red);font-weight:600}
+.data-table tr:last-child td{border-bottom:none}
+
+/* RULES */
+.rules{display:flex;flex-direction:column;gap:10px;margin:24px 0}
+.rule{display:flex;align-items:flex-start;gap:12px;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:14px 18px}
+.rule.ok{border-left:3px solid var(--acc)}
+.rule.ng{border-left:3px solid var(--red)}
+.rule-num{font-family:var(--mono);font-size:10px;font-weight:700;color:var(--acc);flex-shrink:0;padding-top:2px;min-width:22px}
+.rule.ng .rule-num{color:var(--red)}
+.rule-text{font-size:13px;color:var(--fg2);line-height:1.6}
+.rule-text strong{color:var(--fg);font-weight:600}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:56px 48px 72px}
+.footer-brand{color:var(--acc);font-weight:700;font-size:13px;margin-bottom:8px}
+.footer-text{font-size:12px;color:var(--label);line-height:1.6;max-width:300px}
+.footer-links{display:flex;gap:20px;margin-top:20px;flex-wrap:wrap}
+.footer-links a{font-size:12px;color:var(--fg2);text-decoration:none}
+.footer-links a:hover{color:var(--acc)}
+.footer-legal{font-size:10px;color:#333;margin-top:20px}
+
+/* ANIM */
+@keyframes rise-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes pulse-line{0%,100%{opacity:0.4;transform:scaleY(0.8)}50%{opacity:1;transform:scaleY(1)}}
+.reveal{opacity:0;transform:translateY(22px);transition:opacity 600ms var(--ease),transform 600ms var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:60ms}.d2{transition-delay:120ms}.d3{transition-delay:180ms}.d4{transition-delay:240ms}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .hero{padding:100px 20px 64px}
+  .scroll-cue{left:20px}
+  .section{padding:80px 20px}
+  .section-num{right:16px;top:56px}
+  .compare{grid-template-columns:1fr}
+  footer{padding:48px 20px 64px}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <a href="https://www.fresuelectronics.com" class="nav-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <span class="nav-label">Signal Integrity Series</span>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">Fresu Electronics · Signal Integrity Series</div>
+  <h1>Signal Integrity<br>for <span>High-Speed PCBs</span></h1>
+  <p class="hero-desc">A field-centric guide to SI design — from how signals actually propagate, to return paths, impedance control, termination, crosstalk, and routing. Built from first principles for engineers who need to know why, not just what.</p>
+  <div class="hero-meta">
+    <img class="av" src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg" alt="Dario Fresu">
+    <div>
+      <div class="name">Dario Fresu</div>
+      <div class="role">Principal EMC Architect · Fresu Electronics</div>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="stats"><span>8</span> sections &nbsp;·&nbsp; <span>~30 min</span> read</div>
+  </div>
+  <div class="scroll-cue">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ═══ SECTION 1: Signal Propagation ═══ -->
+<section class="section">
+  <div class="section-num">01</div>
+  <div class="section-kicker reveal">Foundation</div>
+  <h2 class="reveal d1">Signals Are <span>Electromagnetic Fields</span>,<br>Not Electrons</h2>
+  <p class="reveal d2">Before anything else in signal integrity, this concept must be internalised: a signal is not electrons moving through a copper trace. A signal is an electromagnetic field propagating through the dielectric between two conductors. The copper sets the boundary conditions — it does not carry the energy.</p>
+  <p class="reveal d3">In a PCB transmission line, two conductors work together: the signal conductor and the return reference conductor. Both are equally necessary. Remove either one and the electromagnetic field is no longer guided — it spreads into space and becomes a source of EMI.</p>
+
+  <div class="diagram reveal">
+    <svg viewBox="0 0 660 210" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+      <!-- Return plane -->
+      <rect x="40" y="160" width="580" height="32" rx="3" fill="#1a1a1a" stroke="#333"/>
+      <text x="330" y="181" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="11" font-weight="600">RETURN REFERENCE PLANE (Ground)</text>
+      <!-- EM field zone (dielectric) -->
+      <rect x="40" y="68" width="580" height="88" fill="rgba(0,255,148,0.05)" stroke="rgba(0,255,148,0.18)" stroke-dasharray="5 4" stroke-width="1"/>
+      <text x="330" y="107" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="12" font-weight="700">⚡  Signal = EM field propagating here</text>
+      <text x="330" y="126" text-anchor="middle" fill="rgba(0,255,148,0.5)" font-family="Poppins,sans-serif" font-size="10">(dielectric — the PCB substrate material)</text>
+      <!-- Signal trace -->
+      <rect x="140" y="40" width="380" height="24" rx="3" fill="#222" stroke="#444"/>
+      <text x="330" y="56" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="10" font-weight="600">SIGNAL TRACE</text>
+      <!-- Wavefront arrow -->
+      <defs><marker id="wf" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M0,0 L0,6 L6,3Z" fill="#00FF94"/></marker></defs>
+      <line x1="100" y1="52" x2="134" y2="52" stroke="#00FF94" stroke-width="2" marker-end="url(#wf)"/>
+      <text x="97" y="48" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" text-anchor="end" font-weight="600">Wavefront →</text>
+      <!-- Return current arrow -->
+      <defs><marker id="rc" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto-start-reverse"><path d="M0,0 L0,6 L6,3Z" fill="#a0aab8"/></marker></defs>
+      <line x1="580" y1="176" x2="546" y2="176" stroke="#a0aab8" stroke-width="1.5" marker-end="url(#rc)"/>
+      <text x="584" y="180" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="9">← Return I</text>
+    </svg>
+    <div class="diagram-cap">A signal propagates as an EM field in the dielectric between signal trace and return plane. Both conductors are required to contain the field. Forward current flows in the trace; return current flows simultaneously in the plane beneath it.</div>
+  </div>
+
+  <p class="reveal">The <strong>signal wavefront</strong> — the leading edge of the electromagnetic transition — is where all the high-frequency energy is concentrated. The faster this transition (the shorter the rise time), the more energy is compressed into a shorter physical distance. This is why rise time, not clock frequency, is the governing parameter in signal integrity.</p>
+
+  <div class="formula reveal">
+    <div class="formula-lbl">Signal bandwidth from rise time</div>
+    <div class="formula-expr"><span class="a">BW</span> = 0.35 / t<sub>r</sub></div>
+    <div class="formula-note">t<sub>r</sub> in ns · BW in GHz<br><span class="mono">1 ns rise time → 350 MHz bandwidth</span><br><span class="mono">100 ps rise time → 3.5 GHz bandwidth</span></div>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-lbl">Why this matters for EMC</div>
+    <p>Every SI problem and every EMI problem in a digital PCB originates from the same root cause: electromagnetic fields that are not properly contained between their two conductors. Solve the containment problem and you solve both simultaneously.</p>
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: Return Path ═══ -->
+<section class="section">
+  <div class="section-num">02</div>
+  <div class="section-kicker reveal">Return Path</div>
+  <h2 class="reveal d1">The Return Path<br><span>Is Part of the Signal</span></h2>
+  <p class="reveal d2">Return current is not an afterthought. It is half of the transmission line. The electromagnetic field that constitutes the signal is formed between the forward current path and the return current path — if the return path is poorly designed, the signal is poorly designed.</p>
+  <p class="reveal d3">Return current does not simply flow to the nearest ground connection. Its path depends on frequency. At <strong>low frequency</strong>, the inductive component of impedance is small, so return current spreads across the entire return plane, following the path of least resistance. At <strong>high frequency</strong>, inductance dominates — and the path of least inductance is the one directly beneath the signal trace, minimising the area of the current loop.</p>
+
+  <div class="diagram reveal">
+    <svg viewBox="0 0 660 220" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+      <text x="170" y="20" text-anchor="middle" fill="#ff8c42" font-family="Poppins,sans-serif" font-size="11" font-weight="700">LOW FREQUENCY</text>
+      <text x="490" y="20" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="11" font-weight="700">HIGH FREQUENCY</text>
+      <line x1="330" y1="10" x2="330" y2="220" stroke="#222" stroke-width="1" stroke-dasharray="4 4"/>
+      <!-- Left: low freq -->
+      <rect x="40" y="35" width="260" height="20" rx="2" fill="#222" stroke="#444"/>
+      <text x="170" y="49" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Signal Trace</text>
+      <rect x="40" y="145" width="260" height="28" rx="2" fill="#1a1a1a" stroke="#333"/>
+      <text x="170" y="163" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="9">Return Plane</text>
+      <!-- spread return current arcs (low freq) -->
+      <path d="M 90,145 Q 50,100 90,56" fill="none" stroke="#ff8c42" stroke-width="1" stroke-dasharray="3 2" opacity="0.5"/>
+      <path d="M 130,145 Q 100,95 130,56" fill="none" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.7"/>
+      <path d="M 170,145 Q 170,90 170,56" fill="none" stroke="#ff8c42" stroke-width="2"/>
+      <path d="M 210,145 Q 240,95 210,56" fill="none" stroke="#ff8c42" stroke-width="1.5" stroke-dasharray="3 2" opacity="0.7"/>
+      <path d="M 250,145 Q 290,100 250,56" fill="none" stroke="#ff8c42" stroke-width="1" stroke-dasharray="3 2" opacity="0.5"/>
+      <text x="170" y="200" text-anchor="middle" fill="#ff8c42" font-family="Poppins,sans-serif" font-size="10" font-weight="600">Spreads — path of least resistance</text>
+      <!-- Right: high freq -->
+      <rect x="360" y="35" width="260" height="20" rx="2" fill="#222" stroke="#444"/>
+      <text x="490" y="49" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Signal Trace</text>
+      <rect x="360" y="145" width="260" height="28" rx="2" fill="#1a1a1a" stroke="#333"/>
+      <text x="490" y="163" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="9">Return Plane</text>
+      <!-- tight return current directly below (high freq) -->
+      <path d="M 490,145 L 490,56" fill="none" stroke="#00FF94" stroke-width="2.5"/>
+      <!-- shaded loop area -->
+      <rect x="475" y="56" width="30" height="89" fill="rgba(0,255,148,0.06)" stroke="rgba(0,255,148,0.2)" stroke-width="1"/>
+      <text x="490" y="200" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="10" font-weight="600">Directly beneath — path of least inductance</text>
+    </svg>
+    <div class="diagram-cap">At low frequency, return current spreads across the plane. At high frequency, it concentrates directly beneath the signal trace, minimising loop area and inductance. Anything that interrupts this path — a slot, gap, or split — forces the return current to detour, increasing loop area and EMI.</div>
+  </div>
+
+  <h3>What Breaks the Return Path</h3>
+  <p class="reveal">Gaps, slots, and splits in the return reference plane force high-frequency return current to detour around the obstruction. The current loop area increases dramatically — and radiated emissions scale with loop area. This is one of the most common causes of EMC test failures.</p>
+  <p class="reveal">Routing a signal trace over a plane gap is functionally equivalent to routing it with no return plane at all at high frequency. The fields are uncontained, the impedance discontinuity creates reflections, and the enlarged current loop radiates.</p>
+
+  <div class="compare reveal">
+    <div class="compare-card good">
+      <div class="compare-lbl">✓ Correct</div>
+      <p>Solid return reference plane beneath every signal layer. No splits, no cuts, no large voids. Return vias placed immediately adjacent to signal vias at every layer transition.</p>
+    </div>
+    <div class="compare-card bad">
+      <div class="compare-lbl">✗ Avoid</div>
+      <p>Split planes beneath high-speed signals. Routing over plane gaps. Layer transitions without nearby return vias. "Isolated ground islands" connected by narrow bridges.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: Impedance Control ═══ -->
+<section class="section">
+  <div class="section-num">03</div>
+  <div class="section-kicker reveal">Impedance</div>
+  <h2 class="reveal d1">Controlling <span>Characteristic Impedance</span></h2>
+  <p class="reveal d2">Characteristic impedance is not a material property — it is a geometric property of the transmission line. It depends on the width of the signal trace, the distance to the return reference plane, and the dielectric constant of the material between them.</p>
+  <p class="reveal d3">When a signal transitions from one impedance to another — at a via, a connector, a trace width change, or a reference plane gap — part of the signal reflects back toward the source. The reflected energy creates ringing, overshoot, and timing errors at the receiver.</p>
+
+  <div class="diagram reveal">
+    <svg viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+      <!-- Microstrip -->
+      <text x="170" y="18" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="11" font-weight="700">MICROSTRIP (outer layer)</text>
+      <rect x="40" y="155" width="260" height="22" rx="2" fill="#1a1a1a" stroke="#333"/>
+      <text x="170" y="170" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="9">Return Plane</text>
+      <!-- dielectric -->
+      <rect x="40" y="75" width="260" height="78" fill="rgba(0,255,148,0.04)" stroke="rgba(0,255,148,0.1)" stroke-dasharray="3 3" stroke-width="1"/>
+      <text x="170" y="120" text-anchor="middle" fill="#555" font-family="Poppins,sans-serif" font-size="9">εr · h</text>
+      <!-- trace -->
+      <rect x="130" y="55" width="80" height="16" rx="2" fill="#2a2a2a" stroke="#555"/>
+      <text x="170" y="67" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">w</text>
+      <!-- dim arrows -->
+      <line x1="170" y1="73" x2="170" y2="153" stroke="#444" stroke-width="1" stroke-dasharray="2 2"/>
+      <text x="178" y="118" fill="#555" font-family="Poppins,sans-serif" font-size="9">h</text>
+      <!-- formula -->
+      <text x="170" y="192" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="10" font-weight="700">Z₀ ↑ when h↑ or w↓ or εr↓</text>
+
+      <!-- Stripline -->
+      <text x="490" y="18" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="11" font-weight="700">STRIPLINE (inner layer)</text>
+      <rect x="360" y="30" width="260" height="20" rx="2" fill="#1a1a1a" stroke="#333"/>
+      <text x="490" y="44" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="9">Return Plane (top)</text>
+      <rect x="360" y="155" width="260" height="20" rx="2" fill="#1a1a1a" stroke="#333"/>
+      <text x="490" y="169" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="9">Return Plane (bottom)</text>
+      <!-- dielectric fills -->
+      <rect x="360" y="52" width="260" height="100" fill="rgba(0,255,148,0.03)" stroke="rgba(0,255,148,0.08)" stroke-dasharray="3 3" stroke-width="1"/>
+      <!-- inner trace -->
+      <rect x="430" y="92" width="120" height="16" rx="2" fill="#2a2a2a" stroke="#555"/>
+      <text x="490" y="104" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Signal Trace (buried)</text>
+      <text x="490" y="192" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="10" font-weight="700">Better containment · lower crosstalk</text>
+    </svg>
+    <div class="diagram-cap">Microstrip (outer layer, one reference plane) vs Stripline (inner layer, two reference planes). Stripline offers better field containment and lower crosstalk but cannot be inspected visually after assembly.</div>
+  </div>
+
+  <table class="data-table reveal">
+    <tr><th>Target Z₀</th><th>Why it's standard</th><th>Common applications</th></tr>
+    <tr><td class="acc">50 Ω</td><td>Compromise between power transfer (low Z) and loss (high Z). Industry standard for test equipment and RF.</td><td>Single-ended high-speed signals, RF traces, SMA connectors</td></tr>
+    <tr><td class="acc">100 Ω diff.</td><td>Two 50Ω traces loosely coupled. Differential impedance = 2 × Z₀ when traces are far apart.</td><td>USB, PCIe, LVDS, Ethernet differential pairs</td></tr>
+    <tr><td class="acc">90 Ω diff.</td><td>USB-specific. Accounts for tight trace coupling which lowers differential impedance.</td><td>USB 2.0 / USB 3.x differential pairs</td></tr>
+  </table>
+
+  <h3>Vias as Impedance Discontinuities</h3>
+  <p class="reveal">Every via on a high-speed signal trace creates a capacitive stub — the cylindrical barrel of the via acts as a shunt capacitor. At frequencies where the stub length approaches a quarter wavelength, the stub resonates and can completely attenuate the signal. This is why back-drilling (removing the unused via barrel) is standard practice on multi-gigabit boards.</p>
+  <p class="reveal">A companion return via must be placed immediately adjacent to every signal via at a layer transition. Without it, the return current must travel along the plane to the nearest ground via before it can transition — the detour creates inductance and a partial impedance break.</p>
+</section>
+
+<!-- ═══ SECTION 4: Reflections & Termination ═══ -->
+<section class="section">
+  <div class="section-num">04</div>
+  <div class="section-kicker reveal">Termination</div>
+  <h2 class="reveal d1">Reflections, Ringing,<br>and <span>When to Terminate</span></h2>
+  <p class="reveal d2">A signal launched into a transmission line travels at a finite speed. When it reaches the load, if the load impedance does not match the line impedance, part of the signal reflects back toward the source. This reflected wave and the original signal superimpose, creating the characteristic ringing waveform seen on oscilloscopes.</p>
+  <p class="reveal d3">Not every trace needs termination. A line is electrically short when its propagation delay is less than approximately one-sixth of the signal rise time. Below this threshold, reflections return to the source before the signal transition is complete, and the effect is negligible.</p>
+
+  <div class="formula reveal">
+    <div class="formula-lbl">When a line becomes electrically long</div>
+    <div class="formula-expr"><span class="a">l<sub>critical</sub></span> = t<sub>r</sub> / 6 × v<sub>p</sub></div>
+    <div class="formula-note">v<sub>p</sub> ≈ 6 in/ns in FR4 · t<sub>r</sub> in ns<br><span class="mono">1 ns rise → terminate lines longer than 1 inch</span><br><span class="mono">500 ps rise → terminate lines longer than 0.5 inch</span></div>
+  </div>
+
+  <div class="diagram reveal">
+    <svg viewBox="0 0 660 180" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+      <!-- Series termination -->
+      <text x="170" y="18" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="10" font-weight="700">SERIES TERMINATION</text>
+      <!-- driver -->
+      <rect x="40" y="65" width="50" height="50" rx="3" fill="#1a1a1a" stroke="#444"/>
+      <text x="65" y="93" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Driver</text>
+      <text x="65" y="104" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">Z_out</text>
+      <!-- series resistor -->
+      <rect x="110" y="83" width="36" height="16" rx="2" fill="#2a1a1a" stroke="#00FF94" stroke-width="1.5"/>
+      <text x="128" y="95" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="700">Rs</text>
+      <!-- line -->
+      <line x1="146" y1="91" x2="245" y2="91" stroke="#444" stroke-width="2"/>
+      <text x="196" y="82" text-anchor="middle" fill="#555" font-family="Poppins,sans-serif" font-size="9">Z₀</text>
+      <!-- load -->
+      <rect x="245" y="65" width="50" height="50" rx="3" fill="#1a1a1a" stroke="#444"/>
+      <text x="270" y="93" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Load</text>
+      <text x="270" y="104" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">High Z</text>
+      <text x="170" y="150" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="9">Rs = Z₀ − Z_out · Place at source</text>
+      <text x="170" y="165" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">Half amplitude at load rises to full after reflection</text>
+
+      <!-- Parallel termination -->
+      <text x="490" y="18" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="10" font-weight="700">PARALLEL TERMINATION</text>
+      <!-- driver -->
+      <rect x="360" y="65" width="50" height="50" rx="3" fill="#1a1a1a" stroke="#444"/>
+      <text x="385" y="93" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Driver</text>
+      <!-- line -->
+      <line x1="410" y1="91" x2="515" y2="91" stroke="#444" stroke-width="2"/>
+      <text x="462" y="82" text-anchor="middle" fill="#555" font-family="Poppins,sans-serif" font-size="9">Z₀</text>
+      <!-- load + shunt R -->
+      <rect x="515" y="65" width="50" height="50" rx="3" fill="#1a1a1a" stroke="#444"/>
+      <text x="540" y="93" text-anchor="middle" fill="#e8edf5" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Load</text>
+      <rect x="590" y="78" width="16" height="28" rx="2" fill="#2a1a1a" stroke="#00FF94" stroke-width="1.5"/>
+      <text x="598" y="96" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="8" font-weight="700">Rp</text>
+      <line x1="565" y1="91" x2="590" y2="91" stroke="#555" stroke-width="1.5"/>
+      <line x1="606" y1="91" x2="620" y2="91" stroke="#555" stroke-width="1.5"/>
+      <text x="490" y="150" text-anchor="middle" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="9">Rp = Z₀ · Place at load · Draws DC current</text>
+      <text x="490" y="165" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">Full amplitude at load, no reflection</text>
+    </svg>
+    <div class="diagram-cap">Series termination places a resistor at the source — quieter launch, no DC power. Parallel termination places a resistor at the load — clean signal everywhere on the line but draws continuous current. Choice depends on topology, fanout, and power budget.</div>
+  </div>
+
+  <div class="callout reveal">
+    <div class="callout-lbl">Termination myth</div>
+    <p>Adding termination "just in case" to short traces does not improve signal quality — it degrades it. A correctly terminated short line wastes power and can slow edges. Only terminate when the trace exceeds the critical length for the given rise time.</p>
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: Crosstalk ═══ -->
+<section class="section">
+  <div class="section-num">05</div>
+  <div class="section-kicker reveal">Crosstalk</div>
+  <h2 class="reveal d1">How Signals<br><span>Interfere With Each Other</span></h2>
+  <p class="reveal d2">Crosstalk is the unintentional transfer of energy from one transmission line (the aggressor) to an adjacent one (the victim). It occurs because the electromagnetic field of the aggressor is not perfectly contained between its two conductors — some field couples into the victim line through both capacitive (electric field) and inductive (magnetic field) mechanisms.</p>
+  <p class="reveal d3">The two types produce different effects. Capacitive coupling injects current into the victim in both directions. Inductive coupling injects voltage. At the near end (same end as the aggressor driver), these effects partially add. At the far end, they partially cancel — but never completely, and their relative magnitudes depend on the coupling geometry and termination.</p>
+
+  <div class="diagram reveal">
+    <svg viewBox="0 0 660 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin:0 auto">
+      <!-- Aggressor trace -->
+      <text x="60" y="30" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="10" font-weight="700">AGGRESSOR</text>
+      <rect x="40" y="40" width="580" height="18" rx="2" fill="#2a1a1a" stroke="#ff4d4d" stroke-width="1.5"/>
+      <text x="50" y="53" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="9" font-weight="600">→ Signal</text>
+      <!-- Victim trace -->
+      <text x="60" y="115" fill="#a0aab8" font-family="Poppins,sans-serif" font-size="10" font-weight="700">VICTIM</text>
+      <rect x="40" y="125" width="580" height="18" rx="2" fill="#1e1e1e" stroke="#444" stroke-width="1.5"/>
+      <!-- Coupling region -->
+      <rect x="200" y="36" width="200" height="111" fill="rgba(255,77,77,0.04)" stroke="rgba(255,77,77,0.25)" stroke-width="1" stroke-dasharray="4 3"/>
+      <text x="300" y="80" text-anchor="middle" fill="rgba(255,77,77,0.6)" font-family="Poppins,sans-serif" font-size="9" font-weight="600">Coupling region</text>
+      <text x="300" y="93" text-anchor="middle" fill="rgba(255,77,77,0.4)" font-family="Poppins,sans-serif" font-size="8">Electric + Magnetic</text>
+      <!-- NEXT label -->
+      <text x="168" y="95" text-anchor="middle" fill="#ffb84d" font-family="Poppins,sans-serif" font-size="9" font-weight="700">NEXT ←</text>
+      <!-- FEXT label -->
+      <text x="432" y="95" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="9" font-weight="700">→ FEXT</text>
+      <!-- spacing dim -->
+      <line x1="300" y1="60" x2="300" y2="123" stroke="#555" stroke-width="1" stroke-dasharray="2 2"/>
+      <text x="310" y="96" fill="#555" font-family="Poppins,sans-serif" font-size="9">s</text>
+      <!-- 3W labels -->
+      <line x1="40" y1="170" x2="220" y2="170" stroke="#333" stroke-width="1"/>
+      <text x="170" y="185" text-anchor="middle" fill="#555" font-family="Poppins,sans-serif" font-size="9">→ 3W rule: s ≥ 3× trace width</text>
+      <line x1="40" y1="185" x2="300" y2="185" stroke="rgba(0,255,148,0.3)" stroke-width="1"/>
+      <text x="320" y="185" fill="rgba(0,255,148,0.7)" font-family="Poppins,sans-serif" font-size="9" font-weight="600">← 3W</text>
+    </svg>
+    <div class="diagram-cap">NEXT (Near-End CrossTalk) appears at the same end as the aggressor driver. FEXT (Far-End CrossTalk) appears at the far end. The 3W rule — maintaining a trace separation of at least 3 times the trace width — is the primary layout tool for crosstalk reduction.</div>
+  </div>
+
+  <h3>Practical Rules for Crosstalk Control</h3>
+  <div class="rules reveal">
+    <div class="rule ok"><span class="rule-num">R1</span><span class="rule-text"><strong>Apply the 3W rule.</strong> Keep edge-to-edge trace separation ≥ 3× trace width. This contains approximately 70% of the electric field between conductors, leaving less to couple into adjacent traces.</span></div>
+    <div class="rule ok"><span class="rule-num">R2</span><span class="rule-text"><strong>Route on adjacent layers orthogonally.</strong> Signals routed in the same direction on adjacent layers have maximum parallel coupling length — the worst case. Orthogonal routing on adjacent layers reduces crosstalk to near zero.</span></div>
+    <div class="rule ok"><span class="rule-num">R3</span><span class="rule-text"><strong>Use buried microstrip or stripline for sensitive signals.</strong> The second reference plane on the opposite side of a buried trace reduces the field that couples laterally, decreasing both NEXT and FEXT.</span></div>
+    <div class="rule ng"><span class="rule-num">✗</span><span class="rule-text"><strong>Do not route high-speed and low-speed signals in parallel over long distances.</strong> Even at 3W spacing, a sufficiently long parallel run will accumulate significant coupled energy.</span></div>
+    <div class="rule ng"><span class="rule-num">✗</span><span class="rule-text"><strong>Do not use split planes to isolate analogue and digital returns.</strong> The split creates a gap that enlarges return current loops for signals that cross it — EMI increases even as the perceived isolation is meaningless at high frequency.</span></div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6: Ground Bounce & Plane Noise ═══ -->
+<section class="section">
+  <div class="section-num">06</div>
+  <div class="section-kicker reveal">Noise</div>
+  <h2 class="reveal d1">Ground Bounce<br>and <span>Plane Noise</span></h2>
+  <p class="reveal d2">When multiple output drivers switch simultaneously — a common event in buses, memory interfaces, and FPGAs — each driver draws a fast transient current through the power delivery path. The inductance of the IC package and the PDN (power delivery network) converts this di/dt into a voltage spike.</p>
+
+  <div class="formula reveal">
+    <div class="formula-lbl">Voltage spike from switching inductance</div>
+    <div class="formula-expr"><span class="a">ΔV</span> = L<sub>pkg</sub> × di/dt</div>
+    <div class="formula-note">L<sub>pkg</sub> = package + via inductance (typically 1–10 nH)<br><span class="mono">10 nH × 1 A/ns → 10 V spike on supply rail</span><br>This spike corrupts adjacent signals and can cause logic errors</div>
+  </div>
+
+  <p class="reveal">This spike appears on both VCC and GND rails simultaneously — hence the name "ground bounce." From the perspective of the output driver, the ground reference shifts momentarily, causing the driven signal level to appear to change when it has not. Adjacent inputs may misinterpret this as a valid transition.</p>
+  <p class="reveal">The solution is to reduce the inductance seen by the switching current. This means placing decoupling capacitors as close as possible to the IC power pins, using low-inductance power delivery paths (closely spaced plane pairs), and choosing ICs with lower package inductance where critical.</p>
+
+  <div class="callout reveal">
+    <div class="callout-lbl">Connection to SI</div>
+    <p>Ground bounce is where power integrity and signal integrity meet. A clean signal launched by a driver can be corrupted before it leaves the package if the power delivery is noisy. Solving PDN is not separate from solving SI — they are the same problem viewed from different angles.</p>
+  </div>
+</section>
+
+<!-- ═══ SECTION 7: Routing Rules ═══ -->
+<section class="section">
+  <div class="section-num">07</div>
+  <div class="section-kicker reveal">Routing</div>
+  <h2 class="reveal d1">Routing Rules for<br><span>Signal Integrity</span></h2>
+  <p class="reveal d2">Routing for signal integrity is routing for controlled fields. Every decision — layer choice, spacing, via placement, corner geometry — is a decision about where the electromagnetic field will be and whether it will be properly contained.</p>
+
+  <div class="rules reveal">
+    <div class="rule ok"><span class="rule-num">01</span><span class="rule-text"><strong>Never route over a gap in the return plane.</strong> The return current must detour, the loop area increases, and the impedance is no longer controlled. This single rule prevents more EMC failures than any other.</span></div>
+    <div class="rule ok"><span class="rule-num">02</span><span class="rule-text"><strong>Place a return via within 2× the dielectric thickness of every signal via.</strong> At a layer transition, the return current needs a local path to follow the signal to the new layer. Without a nearby return via, it detours along the plane — adding inductance.</span></div>
+    <div class="rule ok"><span class="rule-num">03</span><span class="rule-text"><strong>Match the reference plane on both sides of a layer transition.</strong> If a signal moves from a GND-referenced layer to a PWR-referenced layer, the return current must cross from GND to PWR — place a decoupling capacitor close by to provide that path.</span></div>
+    <div class="rule ok"><span class="rule-num">04</span><span class="rule-text"><strong>Route differential pairs tightly and with matched length.</strong> Tightly coupled pairs share the same field region, improving common-mode rejection. Skew (length mismatch) converts differential signal energy to common-mode, which cannot be rejected.</span></div>
+    <div class="rule ok"><span class="rule-num">05</span><span class="rule-text"><strong>Minimise serpentine meander amplitude.</strong> When length-tuning with serpentines, keep the spacing between meander segments at least 3× the trace width to avoid coupling the forward segment into the return segment.</span></div>
+    <div class="rule ng"><span class="rule-num">✗</span><span class="rule-text"><strong>90° corners are a myth — but stubs are not.</strong> A 90° corner in a trace at digital speeds does not cause measurable signal degradation. What does cause problems is an unterminated stub — a branch off a signal trace that creates a parallel resonator.</span></div>
+  </div>
+
+  <h3>Board Partitioning</h3>
+  <p class="reveal">High-speed digital, analogue, power conversion, and RF sections of a board each generate and are sensitive to different types of interference. Placing them in dedicated zones — with careful routing discipline at the boundary — prevents common-impedance coupling. The return reference plane beneath each zone should be continuous; isolation comes from zone placement, not from splitting the plane.</p>
+</section>
+
+<!-- ═══ SECTION 8: Summary ═══ -->
+<section class="section">
+  <div class="section-num">08</div>
+  <div class="section-kicker reveal">Summary</div>
+  <h2 class="reveal d1">Eight Rules to Apply<br><span>Before Your Next Layout</span></h2>
+
+  <div class="rules reveal">
+    <div class="rule ok"><span class="rule-num">01</span><span class="rule-text"><strong>Think in fields, not wires.</strong> Signal integrity is a field containment problem. Every rule that follows is a consequence of this.</span></div>
+    <div class="rule ok"><span class="rule-num">02</span><span class="rule-text"><strong>Rise time sets the rules, not clock frequency.</strong> Calculate BW = 0.35/tr before choosing trace geometry, stackup, and termination strategy.</span></div>
+    <div class="rule ok"><span class="rule-num">03</span><span class="rule-text"><strong>Protect the return path above all else.</strong> Solid return planes. No gaps beneath high-speed signals. Return via at every layer transition.</span></div>
+    <div class="rule ok"><span class="rule-num">04</span><span class="rule-text"><strong>Match impedance throughout the signal path.</strong> From driver output impedance, through the trace, to the load — any discontinuity reflects energy.</span></div>
+    <div class="rule ok"><span class="rule-num">05</span><span class="rule-text"><strong>Terminate only electrically long lines.</strong> A trace longer than tr/6 × vp needs termination. Shorter traces do not — termination on short lines degrades signal quality.</span></div>
+    <div class="rule ok"><span class="rule-num">06</span><span class="rule-text"><strong>Apply the 3W rule to parallel traces.</strong> Minimum edge-to-edge spacing of 3× trace width reduces lateral field coupling to an acceptable level.</span></div>
+    <div class="rule ok"><span class="rule-num">07</span><span class="rule-text"><strong>Route adjacent layers orthogonally.</strong> Eliminates parallel coupling between layers entirely — the most powerful and lowest-cost crosstalk fix available.</span></div>
+    <div class="rule ok"><span class="rule-num">08</span><span class="rule-text"><strong>Solve PDN and SI together.</strong> Ground bounce corrupts signals before they leave the IC. A strong PDN is a prerequisite for signal integrity, not a separate discipline.</span></div>
+  </div>
+
+  <div class="callout reveal" style="margin-top:40px">
+    <div class="callout-lbl">Copyright notice</div>
+    <p>Original educational content produced by Fresu Electronics. All diagrams, formulations, and written explanations are copyright © Fresu Electronics. Reproduction or redistribution without written permission is prohibited.</p>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">Fresu Electronics</div>
+  <div class="footer-text">Professional EMC and signal integrity engineering resources for hardware teams.</div>
+  <div class="footer-links">
+    <a href="https://www.fresuelectronics.com">fresuelectronics.com</a>
+    <a href="https://blog.fresuelectronics.com">Blog</a>
+    <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+    <a href="https://open.spotify.com/show/7w18uAkpQKrGzHMccacQEN">Podcast</a>
+    <a href="https://www.fresuelectronics.com/emc-audit">EMC Audit</a>
+  </div>
+  <div class="footer-legal">© Fresu Electronics · Signal Integrity Series · All rights reserved</div>
+</footer>
+
+<script>
+const pb = document.getElementById('progress');
+window.addEventListener('scroll',()=>{
+  const pct=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;
+  pb.style.width=pct+'%';
+});
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
