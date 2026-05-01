@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Integrity Series — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#161616;--s3:#1c1c1c;
+  --border:#242424;--border-hi:#333;
+  --fg:#ffffff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.15);
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--fg);font-size:16px;line-height:1.75;overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:900;height:60px;padding:0 48px;background:rgba(10,10,10,0.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.nav-logo img{height:28px;display:block}
+.nav-cta{background:var(--acc);color:#0a0a0a;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:9px 20px;border-radius:4px;text-decoration:none;transition:background 180ms}
+.nav-cta:hover{background:#00e085}
+
+/* HERO */
+.hero{padding:130px 48px 100px;max-width:1000px;margin:0 auto;text-align:center}
+.hero-kicker{font-size:11px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;color:var(--acc);margin-bottom:20px;opacity:0;animation:ri 600ms var(--ease) 100ms forwards}
+.hero h1{font-size:clamp(34px,5.5vw,64px);font-weight:800;line-height:1.08;margin-bottom:24px;letter-spacing:-0.02em;opacity:0;animation:ri 700ms var(--ease) 250ms forwards}
+.hero h1 span{color:var(--acc)}
+.hero-desc{font-size:18px;font-weight:300;color:var(--fg2);max-width:580px;margin:0 auto 48px;line-height:1.7;opacity:0;animation:ri 700ms var(--ease) 400ms forwards}
+.hero-actions{display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;opacity:0;animation:ri 700ms var(--ease) 550ms forwards}
+.btn-hero{background:var(--acc);color:#0a0a0a;text-decoration:none;font-size:14px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:15px 32px;border-radius:5px;min-height:48px;display:inline-flex;align-items:center;transition:background 180ms}
+.btn-hero:hover{background:#00e085}
+.btn-ghost{color:var(--fg2);text-decoration:none;font-size:14px;font-weight:500;padding:14px 24px;border:1px solid var(--border-hi);border-radius:5px;min-height:48px;display:inline-flex;align-items:center;transition:all 180ms}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+.trust-bar{max-width:800px;margin:60px auto 0;display:flex;align-items:center;justify-content:center;gap:32px;flex-wrap:wrap;opacity:0;animation:ri 700ms var(--ease) 700ms forwards}
+.trust-item{font-size:12px;color:var(--label)}
+.trust-item strong{color:var(--fg2);font-weight:600}
+
+/* SECTION */
+.section{max-width:1000px;margin:0 auto;padding:80px 48px}
+.sec-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:12px;text-align:center}
+.section h2{font-size:clamp(24px,4vw,38px);font-weight:800;text-align:center;margin-bottom:14px;line-height:1.15}
+.section h2 span{color:var(--acc)}
+.section-sub{font-size:16px;color:var(--label);text-align:center;max-width:520px;margin:0 auto 52px;line-height:1.7}
+
+/* PRODUCTS */
+.products-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.product-card{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:26px;position:relative;overflow:hidden;transition:border-color 300ms,transform 300ms var(--ease)}
+.product-card:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--border);transition:background 300ms}
+.product-card:hover::before{background:var(--acc)}
+.product-card.featured{border-color:rgba(0,255,148,0.25);grid-column:span 2}
+.product-card.featured::before{background:var(--acc)}
+.product-num{font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--label);margin-bottom:12px}
+.product-card.featured .product-num{color:var(--acc)}
+.product-icon{font-size:28px;margin-bottom:12px}
+.product-card h3{font-size:19px;font-weight:800;margin-bottom:8px;line-height:1.2}
+.product-card p{font-size:14px;color:var(--fg2);line-height:1.7;margin-bottom:18px}
+.product-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:18px}
+.tag{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:3px 9px;border-radius:3px;background:var(--s3);border:1px solid var(--border);color:var(--label)}
+.product-link{display:inline-flex;align-items:center;gap:8px;color:var(--acc);font-size:13px;font-weight:600;text-decoration:none;transition:gap 200ms}
+.product-link:hover{gap:12px}
+.product-card.featured{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0}
+.feat-left{padding:30px 34px;border-right:1px solid var(--border)}
+.feat-right{padding:30px 34px;background:var(--s2);border-radius:0 10px 10px 0}
+.feat-right h4{font-size:13px;font-weight:700;color:var(--fg);margin-bottom:12px;letter-spacing:0.04em}
+.feat-list{display:flex;flex-direction:column;gap:7px}
+.feat-item{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--fg2);line-height:1.5}
+.feat-item::before{content:'✓';color:var(--acc);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* TOPICS */
+.topics-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.topic-card{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:18px 20px}
+.topic-num{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.12em;margin-bottom:5px}
+.topic-card h4{font-size:14px;font-weight:700;color:var(--fg);margin-bottom:4px}
+.topic-card p{font-size:12px;color:var(--label);line-height:1.5}
+
+/* AUTHOR */
+.author-section{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:40px;display:flex;align-items:flex-start;gap:32px}
+.auth-photo img{width:80px;height:80px;border-radius:50%;object-fit:cover;border:2px solid var(--acc);display:block}
+.auth-content h3{font-size:20px;font-weight:800;margin-bottom:4px}
+.auth-role{font-size:13px;color:var(--acc);font-weight:600;margin-bottom:14px;letter-spacing:0.04em}
+.auth-content p{font-size:14px;color:var(--fg2);line-height:1.7;margin-bottom:16px}
+.auth-creds{display:flex;flex-wrap:wrap;gap:8px}
+.cred{font-size:11px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:4px 10px;border-radius:3px;background:var(--acc-dim);border:1px solid rgba(0,255,148,0.2);color:var(--acc)}
+
+/* CTA */
+.bundle-cta{background:var(--s1);border:1px solid rgba(0,255,148,0.2);border-radius:10px;padding:48px;text-align:center;position:relative;overflow:hidden}
+.bundle-cta::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc)}
+.bundle-cta h2{font-size:clamp(24px,4vw,38px);font-weight:800;margin-bottom:12px}
+.bundle-cta h2 span{color:var(--acc)}
+.bundle-cta p{font-size:16px;color:var(--fg2);max-width:520px;margin:0 auto 36px;line-height:1.7}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);max-width:1000px;margin:0 auto;padding:48px 48px 64px;display:flex;align-items:flex-start;justify-content:space-between;gap:32px;flex-wrap:wrap}
+.footer-brand{color:var(--acc);font-weight:700;font-size:14px;margin-bottom:6px}
+.footer-text{font-size:12px;color:var(--label);line-height:1.6;max-width:280px}
+.footer-links{display:flex;flex-direction:column;gap:6px}
+.footer-links a{font-size:12px;color:var(--fg2);text-decoration:none}
+.footer-links a:hover{color:var(--acc)}
+.footer-legal{font-size:10px;color:#333;margin-top:20px}
+
+/* ANIMATIONS */
+@keyframes ri{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(18px);transition:opacity 600ms var(--ease),transform 600ms var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:80ms}.d2{transition-delay:160ms}.d3{transition-delay:240ms}
+
+/* MOBILE */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .hero{padding:100px 20px 64px}
+  .section{padding:56px 20px}
+  .products-grid{grid-template-columns:1fr}
+  .product-card.featured{grid-column:span 1;display:flex;flex-direction:column}
+  .feat-left,.feat-right{border-right:none;border-radius:0;padding:22px}
+  .feat-right{border-top:1px solid var(--border)}
+  .topics-grid{grid-template-columns:1fr}
+  .author-section{flex-direction:column;gap:20px;padding:28px}
+  .bundle-cta{padding:32px 24px}
+  footer{padding:40px 20px 64px;flex-direction:column;gap:24px}
+  .trust-bar{gap:16px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://www.fresuelectronics.com" class="nav-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <a href="https://www.fresuelectronics.com/emc-audit" class="nav-cta">EMC Design Audit →</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-kicker">Fresu Electronics · Signal Integrity Series</div>
+  <h1>Signal Integrity for<br><span>High-Speed PCBs</span></h1>
+  <p class="hero-desc">Four precision-designed resources covering the complete signal integrity framework — from electromagnetic field propagation to termination, crosstalk, and routing. Built from first principles.</p>
+  <div class="hero-actions">
+    <a href="#products" class="btn-hero">See All Resources →</a>
+    <a href="#topics" class="btn-ghost">What's Covered</a>
+  </div>
+  <div class="trust-bar">
+    <span class="trust-item"><strong>80,000+</strong> engineers in the community</span>
+    <span class="trust-item"><strong>4,000+</strong> engineers trained</span>
+    <span class="trust-item">IPC Certified Interconnect Designer</span>
+    <span class="trust-item">Published on Altium Learning Hub</span>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="section" id="products">
+  <div class="sec-kicker reveal">The Resources</div>
+  <h2 class="reveal d1">Four Tools. <span>One Framework.</span></h2>
+  <p class="section-sub reveal d2">Each resource covers signal integrity from a different angle — read it, study it, apply it. They work as a complete set.</p>
+
+  <div class="products-grid">
+    <!-- FEATURED -->
+    <div class="product-card featured reveal">
+      <div class="feat-left">
+        <div class="product-num">Resource 01 · Reading Experience</div>
+        <div class="product-icon">📖</div>
+        <h3>Signal Integrity Mastery:<br>The Complete Guide</h3>
+        <p>A scroll-based editorial guide — 8 illustrated sections covering the full SI framework from EM field propagation through to routing rules. Every concept includes a diagram, a formula where needed, and a concrete design implication.</p>
+        <div class="product-tags">
+          <span class="tag">8 Sections</span>
+          <span class="tag">SVG Diagrams</span>
+          <span class="tag">~30 min read</span>
+        </div>
+        <a href="si-explainer.html" class="product-link">Open the Guide →</a>
+      </div>
+      <div class="feat-right">
+        <h4>What you'll learn</h4>
+        <div class="feat-list">
+          <div class="feat-item">Why signals are electromagnetic fields — not electrons in copper</div>
+          <div class="feat-item">How rise time (not clock frequency) governs signal integrity</div>
+          <div class="feat-item">Why the return path is half the signal — and how to protect it</div>
+          <div class="feat-item">What controls characteristic impedance and how to maintain it</div>
+          <div class="feat-item">When to terminate, and which strategy to use for which topology</div>
+          <div class="feat-item">How crosstalk couples between traces and how to prevent it</div>
+          <div class="feat-item">Ground bounce — where PDN and SI meet</div>
+          <div class="feat-item">8 routing rules that prevent the most common SI failures</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINI-COURSE -->
+    <div class="product-card reveal">
+      <div class="product-num">Resource 02 · Interactive Course</div>
+      <div class="product-icon">🎓</div>
+      <h3>SI Design<br>Mini-Course</h3>
+      <p>8 chapters with inline SVG diagrams and a check-in quiz after each one. Progress tracked throughout. Each quiz explains the correct reasoning — not just the answer.</p>
+      <div class="product-tags">
+        <span class="tag">8 Chapters</span>
+        <span class="tag">8 Quizzes</span>
+        <span class="tag">Progress tracking</span>
+      </div>
+      <a href="si-minicourse.html" class="product-link">Start the Course →</a>
+    </div>
+
+    <!-- CHEAT SHEET -->
+    <div class="product-card reveal d1">
+      <div class="product-num">Resource 03 · Reference Card</div>
+      <div class="product-icon">📋</div>
+      <h3>SI Design<br>Cheat Sheet</h3>
+      <p>A4 landscape, print-ready reference card. All core formulas, return path rules, termination comparison, crosstalk rules, stackup guide, and the 8 routing rules — on one page.</p>
+      <div class="product-tags">
+        <span class="tag">A4 Landscape</span>
+        <span class="tag">Print-ready</span>
+        <span class="tag">PDF export</span>
+      </div>
+      <a href="si-cheatsheet.html" class="product-link">Open the Cheat Sheet →</a>
+    </div>
+
+    <!-- WIZARD -->
+    <div class="product-card reveal d2">
+      <div class="product-num">Resource 04 · Design Tool</div>
+      <div class="product-icon">🧭</div>
+      <h3>SI Design<br>Decision Wizard</h3>
+      <p>5 questions about your board — rise time, topology, layer count, primary concern, interface type. Personalised recommendations covering termination strategy, routing rules, stackup guidance, and interface-specific requirements.</p>
+      <div class="product-tags">
+        <span class="tag">5 Questions</span>
+        <span class="tag">Personalised output</span>
+        <span class="tag">Interface-specific</span>
+      </div>
+      <a href="si-wizard.html" class="product-link">Run the Wizard →</a>
+    </div>
+  </div>
+</div>
+
+<!-- TOPICS -->
+<div class="section" style="border-top:1px solid var(--border)" id="topics">
+  <div class="sec-kicker reveal">Curriculum</div>
+  <h2 class="reveal d1">8 Topics. <span>Complete Coverage.</span></h2>
+  <p class="section-sub reveal d2">Every concept across all four resources maps to these eight core SI topics.</p>
+  <div class="topics-grid">
+    <div class="topic-card reveal"><div class="topic-num">TOPIC 01</div><h4>EM Field Propagation</h4><p>Signals as electromagnetic fields in the dielectric. Rise time vs clock frequency. The signal wavefront. Why BW = 0.35/tr.</p></div>
+    <div class="topic-card reveal d1"><div class="topic-num">TOPIC 02</div><h4>Return Path</h4><p>Return current follows path of least inductance at high frequency. No routing over gaps. Zone partitioning vs split planes.</p></div>
+    <div class="topic-card reveal d2"><div class="topic-num">TOPIC 03</div><h4>Characteristic Impedance</h4><p>Geometric control: trace width, dielectric height, εᵣ. Reflection coefficient. Vias as discontinuities. Back-drilling.</p></div>
+    <div class="topic-card reveal"><div class="topic-num">TOPIC 04</div><h4>Reflections & Termination</h4><p>Critical length: l = (tr/6) × vp. Series, parallel, Thevenin strategies. Topology impact on termination choice.</p></div>
+    <div class="topic-card reveal d1"><div class="topic-num">TOPIC 05</div><h4>Crosstalk</h4><p>Capacitive + inductive coupling. NEXT vs FEXT. 3W rule. Orthogonal layer routing. Differential pair discipline.</p></div>
+    <div class="topic-card reveal d2"><div class="topic-num">TOPIC 06</div><h4>Ground Bounce</h4><p>ΔV = L × di/dt. Simultaneous switching noise. Decoupling strategy. Where PDN and SI design converge.</p></div>
+    <div class="topic-card reveal"><div class="topic-num">TOPIC 07</div><h4>SI Routing Rules</h4><p>Every signal layer needs a reference. Return via at every transition. Orthogonal layers. Differential length matching.</p></div>
+    <div class="topic-card reveal d1"><div class="topic-num">TOPIC 08</div><h4>Interface-Specific Design</h4><p>DDR fly-by topology. SerDes AC coupling and back-drilling. RF/ADC boundary isolation. USB differential requirements.</p></div>
+  </div>
+</div>
+
+<!-- AUTHOR -->
+<div class="section" style="border-top:1px solid var(--border)">
+  <div class="author-section reveal">
+    <div class="auth-photo">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg" alt="Dario Fresu">
+    </div>
+    <div class="auth-content">
+      <h3>Dario Fresu</h3>
+      <div class="auth-role">Principal EMC Architect · Fresu Electronics</div>
+      <p>The signal integrity framework in this series is built from a decade of applied EMC engineering and published in the <em>Mastering EMI Control in PCB Design</em> series on Altium's Learning Hub. Every concept connects directly to board-level EMC — because SI failures and EMI failures share the same root cause: electromagnetic fields that are not properly contained.</p>
+      <div class="auth-creds">
+        <span class="cred">IPC CID</span>
+        <span class="cred">Altium Published Author</span>
+        <span class="cred">4,000+ engineers trained</span>
+        <span class="cred">80,000+ community</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="section" style="border-top:1px solid var(--border)">
+  <div class="bundle-cta reveal">
+    <h2>Need a Full Review<br>of Your <span>Actual Board?</span></h2>
+    <p>A complete EMC design audit covering stackup, return paths, signal routing, power delivery, and compliance readiness — delivered in 10 business days.</p>
+    <a href="https://www.fresuelectronics.com/emc-audit" class="btn-hero">EMC Design Audit →</a>
+  </div>
+</div>
+
+<footer>
+  <div>
+    <div class="footer-brand">Fresu Electronics</div>
+    <div class="footer-text">Professional EMC and signal integrity resources for hardware engineering teams.</div>
+    <div class="footer-legal">© Fresu Electronics · Signal Integrity Series · All rights reserved · Do not reproduce without written permission</div>
+  </div>
+  <div class="footer-links">
+    <a href="https://www.fresuelectronics.com">fresuelectronics.com</a>
+    <a href="https://blog.fresuelectronics.com">Engineering Blog</a>
+    <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+    <a href="https://open.spotify.com/show/7w18uAkpQKrGzHMccacQEN">EMI Control Podcast</a>
+    <a href="https://www.fresuelectronics.com/emc-audit">EMC Design Audit</a>
+  </div>
+</footer>
+
+<script>
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');obs.unobserve(e.target);}});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
