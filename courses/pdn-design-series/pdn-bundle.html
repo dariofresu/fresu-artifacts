@@ -32,9 +32,9 @@ nav{
 
 /* ── HERO ─────────────────────────────────────────── */
 .hero{
-  display:grid;grid-template-columns:1fr 1fr;
-  gap:0;width:100%;
-  padding:108px 48px 72px;align-items:stretch;
+  display:grid;grid-template-columns:55% 45%;
+  gap:0;width:100%;max-width:1200px;margin:0 auto;
+  padding:108px 48px 72px;align-items:start;
 }
 .hero-left{padding-right:56px}
 .hero-kicker{font-size:11px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;color:var(--accent);margin-bottom:16px}
@@ -68,26 +68,27 @@ nav{
 .academy-link span{color:var(--accent);font-weight:600}
 
 /* hero image */
-.hero-right{position:relative;display:flex;flex-direction:column;justify-content:center}
+.hero-right{position:relative;display:flex;flex-direction:column;justify-content:flex-start;padding-left:32px;padding-top:8px}
 .hero-img-wrap{
   border-radius:10px;overflow:hidden;
   border:1px solid var(--border);
   box-shadow:0 0 60px rgba(0,255,148,0.06);
-  flex:1;min-height:320px;
+  width:100%;height:300px;
+  position:relative;
 }
-.hero-img-wrap img{width:100%;height:100%;display:block;object-fit:cover}
-.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.hero-img-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center}
+.hero-badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;max-width:100%}
 .hb{font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);background:var(--accent-dim);border:1px solid rgba(0,255,148,0.18);padding:4px 10px;border-radius:3px}
 
 /* ── TRUST ─────────────────────────────────────────── */
-.trust{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;padding:32px 48px 64px;width:100%;border-top:1px solid var(--border)}
+.trust{display:flex;align-items:center;justify-content:center;gap:24px;flex-wrap:wrap;padding:32px 48px 64px;max-width:1200px;margin:0 auto;border-top:1px solid var(--border)}
 .trust-item{font-size:12px;color:var(--label)}
 .trust-item strong{color:var(--fg-secondary);font-weight:600}
 .tdiv{width:1px;height:14px;background:var(--border)}
 
 /* ── SECTION ─────────────────────────────────────── */
 .divider{border-top:1px solid var(--border)}
-.section{width:100%;padding:64px 48px}
+.section{max-width:1200px;margin:0 auto;padding:64px 48px}
 .sec-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--accent);margin-bottom:10px;text-align:center;max-width:960px;margin-left:auto;margin-right:auto}
 .section h2{font-size:clamp(22px,3.5vw,34px);font-weight:800;text-align:center;margin-bottom:12px;line-height:1.15}
 .section h2 span{color:var(--accent)}
@@ -162,9 +163,10 @@ footer{
 /* ── MOBILE ─────────────────────────────────────────── */
 @media(max-width:768px){
   nav{padding:0 20px}
-  .hero{grid-template-columns:1fr;padding:88px 20px 48px;gap:36px;align-items:start}
+  .hero{grid-template-columns:1fr;padding:88px 20px 36px;gap:24px;align-items:start}
   .hero-left{padding-right:0}
-  .hero-right{min-height:220px}
+  .hero-right{padding-left:0}
+  .hero-img-wrap{height:220px}
   .trust{padding:24px 20px 48px;gap:12px}
   .tdiv{display:none}
   .section{padding:48px 20px}
