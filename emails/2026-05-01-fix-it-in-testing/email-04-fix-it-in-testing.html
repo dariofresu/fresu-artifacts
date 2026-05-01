@@ -82,11 +82,11 @@
         <tr>
           <td class="pad" style="padding:0 48px;">
 
-            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">Every EMC re-spin I've seen started with the same four words.</p>
+            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">Every EMC re-spin I've been called into started with those words.</p>
 
-            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">It usually comes from a project plan with no room for EMC trade-offs. When a layout decision needs to be made and the EMC constraints aren't written down anywhere, the easy move is to log it and keep going. So teams do. Three months later, the lab finds it at €40–80K a cycle.</p>
+            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">There's no EMC section in the project plan. A layout trade-off comes up. Nobody has data. So the decision gets pushed to the lab. Three months later, you're looking at a €40–80K re-spin and a conversation about why the product isn't shipping.</p>
 
-            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">The fix, when it comes, is usually straightforward. What costs is doing it at the wrong stage — after the board is locked, after the schedule is tight, after you've already told your customer when the product ships.</p>
+            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">The actual fix is usually quick. What kills you is the timing. By the time the lab finds it, the board is done, the schedule is locked, and your customer already has a date.</p>
 
           </td>
         </tr>
@@ -111,9 +111,9 @@
 
             <h2 style="margin:8px 0 16px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:18px; font-weight:700; color:#ffffff; line-height:1.4;">What first-pass teams say instead</h2>
 
-            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">They use the phrase too. But when they say it, they've already looked at the risk. The fix is bounded. They know what the lab might find and have decided it's manageable. That's not the same as saying it to get past a deadline.</p>
+            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">They say it too. The difference is that when they say it, they've already looked at the risk. They know what the lab might find. They've decided the cost of fixing it there is acceptable. That's a real decision. It's not the same thing as saying it because nobody wants to slow the review down.</p>
 
-            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">The reason they can make that call is that EMC constraints were in the project plan before the layout started. Present when the component list was locked. When the first schematic review happened. When the timeline still had room to move.</p>
+            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">They can make that call because EMC was in the plan before the layout started. Not added at the end. In at the beginning, when the component list was being built and the schedule still had slack in it.</p>
 
           </td>
         </tr>
@@ -146,8 +146,8 @@
         <!-- CLOSING -->
         <tr>
           <td class="pad" style="padding:0 48px 28px;">
-            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">First-pass teams still make trade-offs. Every project has them. What's different is that when they walk into the lab, none of it is news to them. They know what they carried in and why.</p>
-            <p style="margin:0; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">If "we'll fix it in testing" has come up more than once on your current project, the EMC Design Audit maps where those deferrals are. It tells you which ones are safe to carry into the lab and which ones will cost you when you get there.</p>
+            <p style="margin:0 0 20px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">First-pass teams still make trade-offs. Every project does. What's different is they go into the lab with no open questions. They know exactly what they decided and why.</p>
+            <p style="margin:0; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#e8edf5; line-height:1.8;">If "we'll fix it in testing" has been said more than once on your current project, the EMC Design Audit is where to start. It goes through your design before the lab does, finds what's likely to fail, and tells you what's worth fixing now versus what you can genuinely leave for testing.</p>
           </td>
         </tr>
 
@@ -165,7 +165,7 @@
             <div style="border-bottom:1px solid #1a1a1a; margin-bottom:28px;"></div>
             <p style="margin:0 0 4px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:16px; color:#ffffff; font-weight:500;">— Dario</p>
             <p style="margin:0 0 24px; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:13px; color:#a0aab8;">Principal EMC Architect, Fresu Electronics</p>
-            <p style="margin:0; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:14px; color:#e8edf5; line-height:1.7;"><strong style="color:#ffffff;">P.S.</strong> The phrase isn't always wrong. Sometimes you genuinely need test data before you know what to fix. But when it's a reflex — said to get past a deadline rather than to make a call — that's when it gets expensive. The teams I work with that catch it early almost always say the same thing: "I knew that was going to come back."</p>
+            <p style="margin:0; font-family:'Poppins','Helvetica Neue',Arial,sans-serif; font-size:14px; color:#e8edf5; line-height:1.7;"><strong style="color:#ffffff;">P.S.</strong> The phrase isn't always wrong. There are times you genuinely need to see test data before you know where to focus. But when it gets said just to keep the review moving, that's when it shows up three months later as a line item nobody budgeted for. The engineers I work with who catch it early almost always say the same thing: "I knew that one was going to come back."</p>
           </td>
         </tr>
 
