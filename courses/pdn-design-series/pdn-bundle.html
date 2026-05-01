@@ -63,11 +63,11 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;b
   position:absolute;inset:0;
   background:linear-gradient(to bottom,transparent 40%,rgba(10,10,10,0.7) 100%);
 }
-.card-badge{
-  position:absolute;top:12px;left:12px;
-  font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;
-  background:rgba(0,255,148,0.15);border:1px solid rgba(0,255,148,0.35);
-  color:var(--acc);padding:4px 10px;border-radius:3px;backdrop-filter:blur(6px);
+.card-series{
+  display:inline-block;
+  font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--acc);background:var(--acc-dim);border:1px solid var(--acc-mid);
+  padding:4px 10px;border-radius:3px;margin-bottom:14px;
 }
 
 /* card body */
@@ -215,9 +215,9 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
     <div class="card-img">
       <img src="https://raw.githubusercontent.com/dariofresu/fresu-artifacts/main/courses/pdn-design-series/assets/cover-pdn.png" alt="PDN Design for High-Speed PCBs">
       <div class="card-img-overlay"></div>
-      <span class="card-badge">PDN Design Series</span>
     </div>
     <div class="card-body">
+      <div class="card-series">PDN Design Series</div>
       <div class="card-label">This Series Only</div>
       <div class="card-price"><sub>€</sub>29</div>
       <div class="card-note">One-time &middot; Instant access via email</div>
