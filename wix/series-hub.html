@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCB Design Course Series — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111;--s2:#161616;--s3:#1c1c1c;
+  --border:#242424;--border-hi:#333;
+  --fg:#fff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.18);
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--fg);font-size:15px;line-height:1.75;overflow-x:hidden;padding:48px 32px 64px}
+
+/* HEADER */
+.hdr{text-align:center;margin-bottom:52px}
+.hdr-kicker{font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
+.hdr h1{font-size:clamp(26px,4vw,44px);font-weight:800;line-height:1.1;margin-bottom:14px;letter-spacing:-0.02em}
+.hdr h1 span{color:var(--acc)}
+.hdr p{font-size:16px;font-weight:300;color:var(--label);max-width:540px;margin:0 auto 32px;line-height:1.7}
+.academy-note{display:inline-flex;align-items:center;gap:10px;background:var(--acc-dim);border:1px solid var(--acc-mid);border-radius:6px;padding:10px 18px;font-size:13px;color:var(--fg2)}
+.academy-note a{color:var(--acc);font-weight:700;text-decoration:none}
+.academy-note a:hover{text-decoration:underline}
+
+/* SERIES GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:860px;margin:0 auto 40px}
+
+/* Series card */
+.sc{background:var(--s1);border:1px solid var(--border);border-radius:10px;overflow:hidden;position:relative;transition:border-color 300ms,transform 250ms var(--ease)}
+.sc:hover{border-color:rgba(0,255,148,0.35);transform:translateY(-2px)}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc)}
+.sc-img{width:100%;height:180px;overflow:hidden;position:relative}
+.sc-img img{width:100%;height:100%;object-fit:cover;object-position:right center;display:block;transition:transform 400ms var(--ease)}
+.sc:hover .sc-img img{transform:scale(1.04)}
+.sc-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(10,10,10,0.85) 100%)}
+.sc-img-badge{position:absolute;bottom:12px;left:14px;display:flex;gap:6px}
+.sib{font-size:8px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:3px 8px;border-radius:2px;backdrop-filter:blur(6px)}
+.sib.live{background:rgba(0,255,148,0.2);border:1px solid rgba(0,255,148,0.4);color:var(--acc)}
+.sib.soon{background:rgba(160,170,184,0.15);border:1px solid rgba(160,170,184,0.2);color:var(--label)}
+.sc-body{padding:20px 22px 22px}
+.sc-num{font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);margin-bottom:6px}
+.sc h3{font-size:17px;font-weight:800;margin-bottom:6px;line-height:1.2}
+.sc p{font-size:12px;color:var(--label);line-height:1.65;margin-bottom:16px}
+.sc-includes{display:flex;flex-direction:column;gap:4px;margin-bottom:18px}
+.si{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--fg2)}
+.si::before{content:'✓';color:var(--acc);font-weight:700;flex-shrink:0;font-size:11px}
+.sc-price{display:flex;align-items:baseline;gap:6px;margin-bottom:14px}
+.price-val{font-size:28px;font-weight:800;color:var(--fg);line-height:1;letter-spacing:-0.02em}
+.price-note{font-size:11px;color:var(--label)}
+.btn-buy{display:flex;align-items:center;justify-content:center;gap:8px;background:var(--acc);color:#0a0a0a;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:12px 18px;border-radius:4px;min-height:42px;transition:background 180ms;margin-bottom:10px}
+.btn-buy:hover{background:#00e085}
+.btn-free{display:block;text-align:center;font-size:11px;color:var(--label);text-decoration:none;transition:color 180ms}
+.btn-free:hover{color:var(--acc)}
+.btn-free span{color:var(--acc);font-weight:600}
+
+/* SOON CARD */
+.sc-soon{background:var(--s2);border-radius:6px;padding:16px 18px;margin-top:4px;text-align:center}
+.sc-soon p{font-size:12px;color:var(--label);margin-bottom:10px}
+.notify{display:flex;gap:7px}
+.notify input{flex:1;background:var(--s3);border:1px solid var(--border);border-radius:3px;padding:8px 12px;font-family:'Poppins',sans-serif;font-size:12px;color:var(--fg);outline:none;transition:border-color 180ms;min-width:0}
+.notify input:focus{border-color:var(--acc)}
+.notify button{background:var(--s1);border:1px solid var(--border-hi);color:var(--fg2);font-family:'Poppins',sans-serif;font-size:11px;font-weight:600;padding:8px 12px;border-radius:3px;cursor:pointer;white-space:nowrap;transition:all 180ms}
+.notify button:hover{border-color:var(--acc);color:var(--acc)}
+
+/* BOTTOM */
+.bottom{max-width:860px;margin:0 auto;background:linear-gradient(135deg,#0d1a0d 0%,#111 100%);border:1px solid rgba(0,255,148,0.2);border-radius:10px;padding:32px 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;position:relative;overflow:hidden}
+.bottom::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc)}
+.bottom h3{font-size:18px;font-weight:800;margin-bottom:6px}
+.bottom h3 span{color:var(--acc)}
+.bottom p{font-size:13px;color:var(--fg2);max-width:420px;line-height:1.65}
+.bottom-actions{flex-shrink:0;display:flex;flex-direction:column;gap:8px;min-width:200px}
+.btn-join{display:flex;align-items:center;justify-content:center;background:var(--acc);color:#0a0a0a;text-decoration:none;font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:13px 22px;border-radius:4px;min-height:44px;transition:background 180ms}
+.btn-join:hover{background:#00e085}
+
+@media(max-width:640px){
+  body{padding:32px 16px 48px}
+  .grid{grid-template-columns:1fr}
+  .bottom{flex-direction:column;padding:24px}
+  .bottom-actions{width:100%}
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="hdr">
+  <div class="hdr-kicker">Fresu Electronics · Course Series</div>
+  <h1>PCB Design Courses<br><span>Built From First Principles</span></h1>
+  <p>Four resources per series — explainer, interactive course, cheat sheet, and decision wizard. Buy standalone or get everything free in the academy.</p>
+  <div class="academy-note">
+    All series free inside the <a href="https://www.skool.com/pcb-design-mastery-9530/about" target="_blank">Fresu EMC Academy →</a>
+  </div>
+</div>
+
+<!-- SERIES GRID -->
+<div class="grid">
+
+  <!-- PDN -->
+  <div class="sc">
+    <div class="sc-img">
+      <img src="https://raw.githubusercontent.com/dariofresu/fresu-artifacts/main/courses/pdn-design-series/assets/cover-pdn.png" alt="PDN Design Series">
+      <div class="sc-img-overlay"></div>
+      <div class="sc-img-badge"><span class="sib live">Available now</span></div>
+    </div>
+    <div class="sc-body">
+      <div class="sc-num">Series 01 · Power Delivery Networks</div>
+      <h3>PDN Design for High-Speed PCBs</h3>
+      <p>Impedance, inductance, decoupling, and stackup design for boards that pass EMC first time.</p>
+      <div class="sc-includes">
+        <div class="si">Visual explainer — 8 illustrated sections</div>
+        <div class="si">Mini-course — 10 chapters + quizzes</div>
+        <div class="si">A4 cheat sheet — print-ready</div>
+        <div class="si">Decision wizard — personalised output</div>
+      </div>
+      <div class="sc-price">
+        <span class="price-val">€29</span>
+        <span class="price-note">one-time · instant access</span>
+      </div>
+      <a href="https://www.fresuelectronics.com/products-pdn-design-series" class="btn-buy">Get PDN Series →</a>
+      <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="btn-free" target="_blank">Or get this free in the <span>Fresu EMC Academy →</span></a>
+    </div>
+  </div>
+
+  <!-- SI -->
+  <div class="sc">
+    <div class="sc-img" style="background:linear-gradient(135deg,#0a0a14 0%,#0d1a14 100%);display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;padding:16px">
+        <path d="M 30,90 L 75,90 L 75,58 L 145,58 L 145,90 L 205,90 L 205,58 L 275,58 L 275,90 L 330,90" fill="none" stroke="#00FF94" stroke-width="2.5"/>
+        <path d="M 30,128 L 72,128 L 72,96 Q 85,76 96,96 Q 107,116 118,94 Q 125,82 138,94 L 138,128 L 222,128 L 222,96 Q 235,76 246,96 Q 257,116 268,94 L 268,128 L 330,128" fill="none" stroke="rgba(255,77,77,0.7)" stroke-width="1.5"/>
+        <text x="32" y="50" fill="rgba(0,255,148,0.7)" font-family="Poppins" font-size="10" font-weight="600">Terminated</text>
+        <text x="32" y="142" fill="rgba(255,77,77,0.6)" font-family="Poppins" font-size="10">Unterminated — ringing</text>
+        <rect x="30" y="150" width="300" height="10" rx="2" fill="#1a1a2a" stroke="rgba(100,100,255,0.3)" stroke-width="1"/>
+        <text x="180" y="158" text-anchor="middle" fill="rgba(150,150,255,0.5)" font-family="Poppins" font-size="7" font-weight="600">RETURN REFERENCE PLANE</text>
+      </svg>
+      <div class="sc-img-overlay"></div>
+      <div class="sc-img-badge"><span class="sib live">Available now</span></div>
+    </div>
+    <div class="sc-body">
+      <div class="sc-num">Series 02 · Signal Integrity</div>
+      <h3>SI Design for High-Speed PCBs</h3>
+      <p>EM field propagation, return paths, termination, crosstalk, and routing — a field-centric SI framework.</p>
+      <div class="sc-includes">
+        <div class="si">Visual explainer — 8 illustrated sections</div>
+        <div class="si">Mini-course — 8 chapters + quizzes</div>
+        <div class="si">A4 cheat sheet — print-ready</div>
+        <div class="si">Decision wizard — personalised output</div>
+      </div>
+      <div class="sc-price">
+        <span class="price-val">€29</span>
+        <span class="price-note">one-time · instant access</span>
+      </div>
+      <a href="https://www.fresuelectronics.com/products-si-design-series" class="btn-buy">Get SI Series →</a>
+      <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="btn-free" target="_blank">Or get this free in the <span>Fresu EMC Academy →</span></a>
+    </div>
+  </div>
+
+  <!-- EMI Filter — coming soon -->
+  <div class="sc">
+    <div class="sc-img" style="background:#111;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:90%;height:90%">
+        <line x1="30" y1="80" x2="100" y2="80" stroke="#2a2a2a" stroke-width="2"/>
+        <rect x="100" y="64" width="44" height="32" rx="3" fill="#1a1a1a" stroke="#333" stroke-width="1.5"/>
+        <text x="122" y="84" text-anchor="middle" fill="#555" font-family="Poppins" font-size="11" font-weight="600">L</text>
+        <line x1="144" y1="80" x2="200" y2="80" stroke="#2a2a2a" stroke-width="2"/>
+        <line x1="200" y1="60" x2="200" y2="100" stroke="#333" stroke-width="2"/>
+        <line x1="213" y1="60" x2="213" y2="100" stroke="#333" stroke-width="2"/>
+        <line x1="200" y1="80" x2="206" y2="80" stroke="#2a2a2a" stroke-width="1.5"/>
+        <line x1="206" y1="80" x2="206" y2="130" stroke="#2a2a2a" stroke-width="1.5"/>
+        <line x1="176" y1="130" x2="236" y2="130" stroke="#2a2a2a" stroke-width="1.5"/>
+        <line x1="213" y1="80" x2="270" y2="80" stroke="#2a2a2a" stroke-width="2"/>
+        <rect x="270" y="64" width="44" height="32" rx="3" fill="#1a1a1a" stroke="#333" stroke-width="1.5"/>
+        <text x="292" y="84" text-anchor="middle" fill="#555" font-family="Poppins" font-size="11" font-weight="600">L</text>
+        <line x1="314" y1="80" x2="340" y2="80" stroke="#2a2a2a" stroke-width="2"/>
+        <text x="180" y="150" text-anchor="middle" fill="#333" font-family="Poppins" font-size="10">π-filter · coming soon</text>
+      </svg>
+      <div class="sc-img-overlay"></div>
+      <div class="sc-img-badge"><span class="sib soon">Coming soon</span></div>
+    </div>
+    <div class="sc-body">
+      <div class="sc-num">Series 03 · EMI Filter Design</div>
+      <h3>EMI Filter Design for PCBs</h3>
+      <p>Filter topologies, component selection, placement, and common-mode vs differential-mode strategies.</p>
+      <div class="sc-soon">
+        <p>Get notified when this series launches</p>
+        <div class="notify">
+          <input type="email" placeholder="your@email.com" id="n3">
+          <button onclick="notify('n3')">Notify me</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Troubleshooting — coming soon -->
+  <div class="sc">
+    <div class="sc-img" style="background:#110a0a;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 360 160" xmlns="http://www.w3.org/2000/svg" style="width:90%;height:90%">
+        <circle cx="180" cy="80" r="55" fill="none" stroke="#2a1a1a" stroke-width="1.5"/>
+        <circle cx="180" cy="80" r="35" fill="none" stroke="#331a1a" stroke-width="1.5"/>
+        <line x1="180" y1="25" x2="180" y2="135" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="125" y1="80" x2="235" y2="80" stroke="#2a2a2a" stroke-width="1" stroke-dasharray="3 3"/>
+        <path d="M 180,35 L 228,65 L 215,115 L 145,115 L 132,65 Z" fill="rgba(255,77,77,0.04)" stroke="rgba(255,77,77,0.25)" stroke-width="1"/>
+        <text x="180" y="85" text-anchor="middle" fill="rgba(255,77,77,0.45)" font-family="Poppins" font-size="10" font-weight="700">EMI source?</text>
+        <text x="180" y="148" text-anchor="middle" fill="#333" font-family="Poppins" font-size="10">Systematic diagnosis · coming soon</text>
+      </svg>
+      <div class="sc-img-overlay"></div>
+      <div class="sc-img-badge"><span class="sib soon">Coming soon</span></div>
+    </div>
+    <div class="sc-body">
+      <div class="sc-num">Series 04 · EMI Troubleshooting</div>
+      <h3>Systematic EMI Troubleshooting</h3>
+      <p>A structured diagnostic framework for finding and fixing EMI problems on real boards — the series nobody else teaches.</p>
+      <div class="sc-soon">
+        <p>Get notified when this series launches</p>
+        <div class="notify">
+          <input type="email" placeholder="your@email.com" id="n4">
+          <button onclick="notify('n4')">Notify me</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ACADEMY -->
+<div class="bottom">
+  <div>
+    <h3>Get Everything Free.<br><span>Fresu EMC Academy.</span></h3>
+    <p>All series — current and future — included with your membership. Plus community, monthly live sessions, and board review threads.</p>
+  </div>
+  <div class="bottom-actions">
+    <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="btn-join" target="_blank">Join the Academy — $33/mo →</a>
+  </div>
+</div>
+
+<script>
+function notify(id){
+  const v=document.getElementById(id).value;
+  if(!v||!v.includes('@'))return;
+  alert('Thanks! We will notify you when this series launches.');
+  document.getElementById(id).value='';
+}
+</script>
+</body>
+</html>
