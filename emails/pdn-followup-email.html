@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How's the PDN series going?</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins','Helvetica Neue',Arial,sans-serif;background:#060606;color:#ffffff;-webkit-font-smoothing:antialiased}
+.wrapper{max-width:600px;margin:0 auto;background:#0a0a0a}
+.header{background:#0a0a0a;border-bottom:1px solid #1e1e1e;padding:24px 40px;display:flex;align-items:center;justify-content:space-between}
+.header img{height:26px;display:block}
+.header-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#00FF94}
+.body{padding:40px}
+.body p{font-size:15px;color:#e8edf5;line-height:1.8;margin-bottom:18px}
+.body p strong{color:#ffffff;font-weight:600}
+.body p:last-of-type{margin-bottom:0}
+.highlight{background:#111111;border-left:3px solid #00FF94;padding:16px 20px;border-radius:0 6px 6px 0;margin:24px 0}
+.highlight p{font-size:14px;color:#e8edf5;line-height:1.7;margin:0;font-weight:500}
+.cta-wrap{text-align:center;margin:32px 0}
+.cta-btn{display:inline-block;background:#00FF94;color:#0a0a0a;text-decoration:none;font-size:13px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:14px 32px;border-radius:5px}
+.cta-sub{font-size:12px;color:#a0aab8;margin-top:10px}
+.divider{border-top:1px solid #1e1e1e;margin:28px 0}
+.resources-quick{margin:24px 0}
+.rq{display:flex;align-items:center;gap:10px;padding:10px 14px;background:#111;border-radius:5px;margin-bottom:6px;text-decoration:none}
+.rq:last-child{margin-bottom:0}
+.rq-icon{font-size:16px;flex-shrink:0}
+.rq-text{font-size:13px;color:#e8edf5;font-weight:500}
+.rq-arrow{margin-left:auto;color:#00FF94;font-size:12px;font-weight:700}
+.footer{padding:28px 40px 40px;text-align:center}
+.footer-logo img{height:20px;display:block;margin:0 auto 12px}
+.footer-text{font-size:11px;color:#3a3a3a;line-height:1.7}
+.footer-links{margin-top:12px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.footer-links a{font-size:11px;color:#555;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+  <div class="header">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+    <span class="header-label">PDN Design Series</span>
+  </div>
+
+  <div class="body">
+
+    <p>Hi {{customer_name}},</p>
+
+    <p>It's been a few days since you picked up the PDN Design Series &mdash; I wanted to check in and make sure everything is working well for you.</p>
+
+    <p>If you haven't started yet, the best entry point is the <strong>Visual Explainer</strong>. It gives you the full mental model in about 25 minutes before you touch the Mini-Course. Most engineers who go through it in that order say the quiz check-ins actually make sense, rather than feeling like guesswork.</p>
+
+    <div class="highlight">
+      <p>&#128161; Tip: Print the Cheat Sheet and keep it at your desk while you go through the Mini-Course. Having the formulas and via rules in front of you makes the quizzes stick faster.</p>
+    </div>
+
+    <p>Your resources are always here:</p>
+
+    <div class="resources-quick">
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-explainer.html" class="rq" target="_blank">
+        <span class="rq-icon">&#128218;</span>
+        <span class="rq-text">Visual Explainer &mdash; start here</span>
+        <span class="rq-arrow">&rarr;</span>
+      </a>
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-minicourse.html" class="rq" target="_blank">
+        <span class="rq-icon">&#127891;</span>
+        <span class="rq-text">Mini-Course &mdash; 10 chapters</span>
+        <span class="rq-arrow">&rarr;</span>
+      </a>
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-cheatsheet.html" class="rq" target="_blank">
+        <span class="rq-icon">&#128203;</span>
+        <span class="rq-text">Cheat Sheet &mdash; print this</span>
+        <span class="rq-arrow">&rarr;</span>
+      </a>
+      <a href="https://lab.fresuelectronics.com/courses/pdn-design-series/pdn-wizard.html" class="rq" target="_blank">
+        <span class="rq-icon">&#129517;</span>
+        <span class="rq-text">Decision Wizard &mdash; use on your next board</span>
+        <span class="rq-arrow">&rarr;</span>
+      </a>
+    </div>
+
+    <div class="divider"></div>
+
+    <p>One more thing &mdash; if you want to go deeper, the <strong>Signal Integrity Series</strong> picks up exactly where PDN leaves off. Return paths, impedance control, termination, crosstalk. The two series are designed to work together.</p>
+
+    <p>Members of the Fresu EMC Academy get both series, plus everything coming next (EMI Filter Design, Troubleshooting, Stackup Design), for $33/month.</p>
+
+    <div class="cta-wrap">
+      <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="cta-btn" target="_blank">Join the Academy &rarr;</a>
+      <div class="cta-sub">PDN + SI + all future series included</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <p>If you have a question about something in the series, or you're applying it to a real board and something isn't clicking &mdash; just reply to this email. I read every one.</p>
+
+    <p>
+    &mdash; Dario<br>
+    <span style="color:#555;font-size:12px">Principal EMC Architect &middot; Fresu Electronics</span>
+    </p>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer-logo">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+    </div>
+    <div class="footer-text">
+      &copy; Fresu Electronics &middot; fresuelectronics.com<br>
+      <span style="color:#2a2a2a">You received this because you purchased the PDN Design Series.</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://www.fresuelectronics.com">Website</a>
+      <a href="https://blog.fresuelectronics.com">Blog</a>
+      <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
