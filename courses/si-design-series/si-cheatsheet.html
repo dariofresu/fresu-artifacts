@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Integrity Reference Card — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#161616;--s3:#1c1c1c;
+  --border:#262626;--fg:#ffffff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.07);
+  --red:#ff4d4d;--amber:#ffb84d;
+  --mono:'JetBrains Mono','Courier New',monospace;
+  --sans:'Poppins','Helvetica Neue',Arial,sans-serif;
+}
+html{background:#060606}
+body{font-family:var(--sans);background:var(--bg);color:var(--fg);font-size:12px;line-height:1.5}
+
+/* Print bar */
+.print-bar{background:#111;border-bottom:1px solid #222;padding:11px 28px;display:flex;align-items:center;justify-content:space-between}
+.print-bar span{font-size:11px;color:var(--label);letter-spacing:0.04em}
+.print-btn{background:var(--acc);color:#0a0a0a;font-family:var(--sans);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;border:none;padding:7px 18px;border-radius:3px;cursor:pointer}
+.print-btn:hover{background:#00e085}
+
+/* Sheet */
+.sheet{width:297mm;min-height:210mm;margin:20px auto;background:var(--bg);border:1px solid #1e1e1e;display:grid;grid-template-columns:50mm 1fr 1fr 1fr;grid-template-rows:auto 1fr auto;position:relative;overflow:hidden}
+.sheet::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--acc)}
+
+/* Header */
+.hdr{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;padding:12px 18px 10px;border-bottom:1px solid var(--border)}
+.hdr-left{display:flex;align-items:center;gap:12px}
+.hdr-left img{height:20px;display:block}
+.hdr-div{width:1px;height:18px;background:var(--border)}
+.hdr-title{font-size:12px;font-weight:700}
+.hdr-sub{font-size:8px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc)}
+.hdr-right{display:flex;align-items:center;gap:20px}
+.hdr-meta{font-size:8px;color:var(--label)}
+.hdr-meta strong{color:var(--fg2);font-weight:600}
+.hdr-copy{font-size:7px;color:#3a3a3a;letter-spacing:0.04em}
+
+/* Spine (col 1) */
+.spine{grid-column:1;grid-row:2;border-right:1px solid var(--border);padding:14px 12px;display:flex;flex-direction:column;gap:16px}
+
+/* Columns */
+.col{padding:14px 14px;border-right:1px solid var(--border)}
+.col:last-child{border-right:none}
+
+/* Footer */
+.ftr{grid-column:1/-1;border-top:1px solid var(--border);padding:8px 18px;display:flex;align-items:center;justify-content:space-between;background:var(--s1)}
+.ftr-brand{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:0.04em}
+.ftr-links{display:flex;gap:14px}
+.ftr-links span{font-size:8px;color:var(--label);font-family:var(--mono)}
+.ftr-copy{font-size:7px;color:#333;letter-spacing:0.04em}
+
+/* Block primitives */
+.blk{margin-bottom:14px}
+.blk:last-child{margin-bottom:0}
+.blk-lbl{font-size:7.5px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;color:var(--acc);margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.blk-lbl::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* Formula */
+.fml{background:var(--s2);border:1px solid var(--border);border-radius:3px;padding:8px 10px;margin-bottom:7px}
+.fml-name{font-size:7.5px;color:var(--label);margin-bottom:3px;letter-spacing:0.05em}
+.fml-expr{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--fg)}
+.fml-expr .a{color:var(--acc)}
+.fml-note{font-size:8px;color:var(--fg2);margin-top:5px;line-height:1.55}
+.fml-note .m{font-family:var(--mono);font-size:8px;color:var(--acc)}
+
+/* Mini table */
+.mt{width:100%;border-collapse:collapse}
+.mt th{font-size:7px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--label);padding:3px 7px;border-bottom:1px solid var(--border);text-align:left;background:var(--s2)}
+.mt td{font-size:9px;padding:3px 7px;border-bottom:1px solid #1a1a1a;color:var(--fg2);vertical-align:top}
+.mt tr:last-child td{border-bottom:none}
+.mt td.acc{color:var(--acc);font-weight:700;font-family:var(--mono);font-size:8.5px}
+.mt td.bad{color:var(--red);font-weight:700}
+.mt td.amber{color:var(--amber);font-weight:600}
+.mt tr:hover td{background:rgba(255,255,255,0.012)}
+
+/* Rule items */
+.rules{display:flex;flex-direction:column;gap:5px}
+.ri{display:flex;align-items:flex-start;gap:6px;padding:5px 8px;background:var(--s2);border-radius:3px;border-left:2px solid var(--border)}
+.ri.ok{border-left-color:var(--acc)}
+.ri.ng{border-left-color:var(--red)}
+.ri-n{font-family:var(--mono);font-size:8px;font-weight:700;color:var(--acc);flex-shrink:0;padding-top:1px;min-width:16px}
+.ri.ng .ri-n{color:var(--red)}
+.ri-t{font-size:8.5px;color:var(--fg2);line-height:1.5}
+.ri-t strong{color:var(--fg);font-weight:600}
+
+/* Do/Don't */
+.dd{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.do-b{padding:6px 8px;border-radius:3px;background:rgba(0,255,148,0.05);border:1px solid rgba(0,255,148,0.18)}
+.ng-b{padding:6px 8px;border-radius:3px;background:rgba(255,77,77,0.04);border:1px solid rgba(255,77,77,0.15)}
+.do-lbl{font-size:7px;font-weight:700;color:var(--acc);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:3px}
+.ng-lbl{font-size:7px;font-weight:700;color:var(--red);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:3px}
+.do-b p,.ng-b p{font-size:8.5px;color:var(--fg2);line-height:1.5;margin:0}
+
+/* Callout strip */
+.cs{background:var(--acc-dim);border-left:2px solid var(--acc);padding:6px 8px;border-radius:0 3px 3px 0;margin-bottom:7px}
+.cs .cl{font-size:7px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--acc);margin-bottom:2px}
+.cs p{font-size:8.5px;color:var(--fg);line-height:1.5;margin:0;font-weight:500}
+
+/* Stackup layers */
+.stk{display:flex;flex-direction:column;gap:2px}
+.sl{display:flex;align-items:center;gap:5px;padding:3px 7px;border-radius:2px;font-size:8px}
+.sl-n{font-family:var(--mono);color:var(--label);min-width:14px;font-size:7.5px}
+.sl-nm{flex:1;font-weight:600}
+.sl-nt{font-size:7px;color:var(--label)}
+.sl.sig{background:#161e16;border-left:2px solid #2a3a2a}
+.sl.gnd{background:#161620;border-left:2px solid #2a2a3a}
+.sl.pwr{background:#1e1616;border-left:2px solid #3a2a2a}
+.sl.pour-g{background:rgba(0,255,148,0.05);border-left:2px solid rgba(0,255,148,0.3)}
+.sl.bad-lbl .sl-nm{color:var(--red)}
+.sl.ok-lbl .sl-nm{color:var(--acc)}
+.stk-lbl{font-size:7.5px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;margin-bottom:4px}
+.stk-lbl.bad{color:var(--red)}.stk-lbl.ok{color:var(--acc)}
+.vs-div{text-align:center;font-size:9px;color:#333;margin:6px 0;font-weight:700}
+
+/* Author */
+.auth{margin-top:auto;padding-top:10px;border-top:1px solid var(--border)}
+.auth-inner{display:flex;align-items:center;gap:7px}
+.auth-inner img{width:28px;height:28px;border-radius:50%;object-fit:cover;border:1.5px solid var(--acc);flex-shrink:0}
+.auth-name{font-size:9px;font-weight:700}
+.auth-role{font-size:7.5px;color:var(--label)}
+.auth-creds{font-size:7px;color:#333;margin-top:6px;line-height:1.5}
+
+/* Print */
+@media print{
+  html{background:#0a0a0a!important}
+  .print-bar{display:none!important}
+  .sheet{margin:0!important;border:none!important;width:297mm!important;min-height:210mm!important}
+  body{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+  @page{size:A4 landscape;margin:0}
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .sheet{width:100%;grid-template-columns:1fr;margin:0}
+  .hdr{flex-wrap:wrap;gap:6px}
+  .spine,.col{border-right:none;border-bottom:1px solid var(--border);padding:16px 14px}
+  .ftr{flex-direction:column;gap:4px;align-items:flex-start}
+  .print-bar{padding:10px 14px}
+}
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <span>Signal Integrity Reference Card · Fresu Electronics · A4 Landscape</span>
+  <button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+</div>
+
+<div class="sheet">
+
+<!-- HEADER -->
+<header class="hdr">
+  <div class="hdr-left">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+    <div class="hdr-div"></div>
+    <div>
+      <div class="hdr-title">Signal Integrity Reference Card</div>
+      <div class="hdr-sub">High-Speed PCB Design · Field-Centric Approach</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="hdr-meta"><strong>8</strong> topics · fresuelectronics.com</div>
+    <div class="hdr-copy">© Fresu Electronics · All rights reserved · Do not reproduce</div>
+  </div>
+</header>
+
+<!-- SPINE (col 1) -->
+<div class="spine">
+  <div class="blk">
+    <div class="blk-lbl">Core Formulas</div>
+    <div class="fml">
+      <div class="fml-name">Signal bandwidth from rise time</div>
+      <div class="fml-expr"><span class="a">BW</span> = 0.35 / t<sub>r</sub></div>
+      <div class="fml-note">t<sub>r</sub> in ns → BW in GHz<br><span class="m">1 ns → 350 MHz</span><br><span class="m">500 ps → 700 MHz</span><br><span class="m">100 ps → 3.5 GHz</span></div>
+    </div>
+    <div class="fml">
+      <div class="fml-name">Critical length — terminate if longer</div>
+      <div class="fml-expr"><span class="a">l<sub>c</sub></span> = (t<sub>r</sub>/6) × v<sub>p</sub></div>
+      <div class="fml-note">v<sub>p</sub> ≈ 6 in/ns in FR4<br><span class="m">1 ns → 1.0 in</span><br><span class="m">500 ps → 0.5 in</span><br><span class="m">250 ps → 0.25 in</span></div>
+    </div>
+    <div class="fml">
+      <div class="fml-name">Reflection coefficient</div>
+      <div class="fml-expr"><span class="a">Γ</span> = (Z<sub>L</sub>−Z₀)/(Z<sub>L</sub>+Z₀)</div>
+      <div class="fml-note">Γ=0 → perfect match (no reflection)<br>Γ=+1 → open circuit<br>Γ=−1 → short circuit</div>
+    </div>
+    <div class="fml">
+      <div class="fml-name">Ground bounce voltage</div>
+      <div class="fml-expr"><span class="a">ΔV</span> = L<sub>pkg</sub> × di/dt</div>
+      <div class="fml-note">L<sub>pkg</sub> = package inductance<br><span class="m">5 nH × 1 A/ns → 5 V spike</span></div>
+    </div>
+    <div class="fml">
+      <div class="fml-name">3W crosstalk rule</div>
+      <div class="fml-expr"><span class="a">s</span> ≥ 3 × w</div>
+      <div class="fml-note">s = edge-to-edge spacing<br>w = trace width<br>Reduces lateral field coupling ~70%</div>
+    </div>
+  </div>
+
+  <div class="auth">
+    <div class="auth-inner">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg" alt="Dario Fresu">
+      <div>
+        <div class="auth-name">Dario Fresu</div>
+        <div class="auth-role">Principal EMC Architect</div>
+      </div>
+    </div>
+    <div class="auth-creds">IPC CID · Former ETH Zurich<br>4,000+ engineers trained</div>
+  </div>
+</div>
+
+<!-- COLUMN 2: Propagation & Return Path -->
+<div class="col">
+  <div class="blk">
+    <div class="blk-lbl">Signal Propagation</div>
+    <div class="cs"><div class="cl">Core principle</div><p>A signal is an EM field in the dielectric between conductors — not electrons in copper. Both the signal trace and return reference plane are equally required to contain and guide it.</p></div>
+    <table class="mt">
+      <tr><th>Parameter</th><th>Governs</th></tr>
+      <tr><td>Rise time (t<sub>r</sub>)</td><td class="acc">Bandwidth, critical length, termination need</td></tr>
+      <tr><td>Clock frequency</td><td>Repetition rate only — not the SI parameter</td></tr>
+      <tr><td>Dielectric εᵣ</td><td>Propagation speed: v<sub>p</sub> = c/√εᵣ</td></tr>
+      <tr><td>Propagation speed</td><td class="acc">≈ 6 in/ns (FR4) · ≈ 8 in/ns (Rogers)</td></tr>
+    </table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Return Path Rules</div>
+    <div class="dd">
+      <div class="do-b"><div class="do-lbl">✓ Do</div><p>Solid reference plane beneath every signal layer. Return via at every layer transition. Zone-based partitioning for analogue/digital.</p></div>
+      <div class="ng-b"><div class="ng-lbl">✗ Avoid</div><p>Routing over gaps or slots. Split planes to "isolate" circuits. Layer transitions without return via. Isolated copper islands.</p></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Return Current by Frequency</div>
+    <table class="mt">
+      <tr><th>Frequency</th><th>Dominant impedance</th><th>Return path</th></tr>
+      <tr><td>&lt; 1 kHz</td><td>Resistance</td><td class="amber">Spreads across full plane area</td></tr>
+      <tr><td>1 kHz – 1 MHz</td><td>Mixed</td><td class="amber">Partially beneath trace</td></tr>
+      <tr><td>&gt; 1 MHz</td><td>Inductance</td><td class="acc">Directly beneath signal trace</td></tr>
+    </table>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Impedance Control</div>
+    <table class="mt">
+      <tr><th>Variable</th><th>Increase</th><th>Effect on Z₀</th></tr>
+      <tr><td>Trace width (w)</td><td>↑</td><td class="bad">Z₀ ↓</td></tr>
+      <tr><td>Dielectric height (h)</td><td>↑</td><td class="acc">Z₀ ↑</td></tr>
+      <tr><td>Dielectric constant (εᵣ)</td><td>↑</td><td class="bad">Z₀ ↓</td></tr>
+    </table>
+    <div style="margin-top:6px;font-size:8px;color:var(--label);line-height:1.5">Standard targets: <strong style="color:var(--acc)">50 Ω</strong> single-ended · <strong style="color:var(--acc)">100 Ω</strong> differential (loosely coupled) · <strong style="color:var(--acc)">90 Ω</strong> differential (USB)</div>
+  </div>
+</div>
+
+<!-- COLUMN 3: Termination & Crosstalk -->
+<div class="col">
+  <div class="blk">
+    <div class="blk-lbl">Termination Strategy</div>
+    <table class="mt">
+      <tr><th>Type</th><th>Placement</th><th>Best for</th><th>Trade-off</th></tr>
+      <tr><td><strong style="color:var(--acc)">Series (Rs)</strong></td><td>At source</td><td>Point-to-point</td><td>No DC draw. Half-amp at load.</td></tr>
+      <tr><td><strong style="color:var(--acc)">Parallel (Rp)</strong></td><td>At load</td><td>Clean waveform needed</td><td>Continuous DC current</td></tr>
+      <tr><td><strong style="color:var(--acc)">AC / Thevenin</strong></td><td>At load</td><td>CMOS, no DC allowed</td><td>Adds capacitance</td></tr>
+      <tr><td style="color:var(--label)">None</td><td>—</td><td>Electrically short lines</td><td>Only valid below l<sub>c</sub></td></tr>
+    </table>
+    <div class="cs" style="margin-top:7px"><div class="cl">Myth buster</div><p>Adding termination to short traces wastes power and slows edges. Calculate l_crit first — if the trace is shorter, do not terminate.</p></div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Crosstalk (NEXT / FEXT)</div>
+    <div class="cs"><div class="cl">Mechanism</div><p>Capacitive + inductive coupling from aggressor to victim. NEXT at near end. FEXT at far end. Grows with parallel coupling length and falls with spacing.</p></div>
+    <div class="rules">
+      <div class="ri ok"><span class="ri-n">✓</span><span class="ri-t"><strong>3W rule:</strong> edge-to-edge ≥ 3× trace width</span></div>
+      <div class="ri ok"><span class="ri-n">✓</span><span class="ri-t"><strong>Route adjacent layers orthogonally</strong> — eliminates layer-to-layer coupling</span></div>
+      <div class="ri ok"><span class="ri-n">✓</span><span class="ri-t"><strong>Stripline</strong> > microstrip for sensitive signals (two planes contain field)</span></div>
+      <div class="ri ng"><span class="ri-n">✗</span><span class="ri-t">Long parallel runs even at 3W accumulate crosstalk — keep parallel length short</span></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">Differential Pairs</div>
+    <table class="mt">
+      <tr><th>Parameter</th><th>Requirement</th></tr>
+      <tr><td>Length matching</td><td class="acc">Within 10% of UI, or per spec</td></tr>
+      <tr><td>Intra-pair spacing</td><td class="acc">Tight coupling — maintain throughout route</td></tr>
+      <tr><td>Diff. impedance</td><td class="acc">100 Ω (LVDS, PCIe) · 90 Ω (USB)</td></tr>
+      <tr><td>Serpentine spacing</td><td class="acc">≥ 3× trace width in meanders</td></tr>
+      <tr><td>Reference plane</td><td class="acc">Continuous under full pair length</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- COLUMN 4: Stackup, Routing, Summary -->
+<div class="col">
+  <div class="blk">
+    <div class="blk-lbl">Stackup Reference</div>
+    <div class="stk-lbl bad">AVOID — No adjacent reference planes</div>
+    <div class="stk" style="margin-bottom:6px">
+      <div class="sl sig bad-lbl"><span class="sl-n">L1</span><span class="sl-nm">Signal</span><span class="sl-nt">uncontained fields</span></div>
+      <div class="sl pwr bad-lbl"><span class="sl-n">L2</span><span class="sl-nm">Power</span><span class="sl-nt">~1mm gap ↓</span></div>
+      <div class="sl gnd bad-lbl"><span class="sl-n">L3</span><span class="sl-nm">Ground</span><span class="sl-nt">~1mm gap ↑</span></div>
+      <div class="sl sig bad-lbl"><span class="sl-n">L4</span><span class="sl-nm">Signal</span><span class="sl-nt">uncontained fields</span></div>
+    </div>
+    <div class="vs-div">── better approach ──</div>
+    <div class="stk-lbl ok">GOOD — Signal adjacent to reference</div>
+    <div class="stk">
+      <div class="sl pour-g ok-lbl"><span class="sl-n">L1</span><span class="sl-nm">Signal + GND pour</span><span class="sl-nt">field boundary</span></div>
+      <div class="sl gnd"><span class="sl-n">L2</span><span class="sl-nm">Ground plane</span><span class="sl-nt">2–4 mil ↕</span></div>
+      <div class="sl sig"><span class="sl-n">L3</span><span class="sl-nm">Signal (stripline)</span></div>
+      <div class="sl sig"><span class="sl-n">L4</span><span class="sl-nm">Signal (stripline)</span></div>
+      <div class="sl pwr"><span class="sl-n">L5</span><span class="sl-nm">Power plane</span></div>
+      <div class="sl pour-g ok-lbl"><span class="sl-n">L6</span><span class="sl-nm">Signal + GND pour</span><span class="sl-nt">field boundary</span></div>
+    </div>
+  </div>
+
+  <div class="blk">
+    <div class="blk-lbl">8 Rules — Apply Before Layout</div>
+    <div class="rules">
+      <div class="ri ok"><span class="ri-n">01</span><span class="ri-t"><strong>Think in fields.</strong> SI is a field containment problem.</span></div>
+      <div class="ri ok"><span class="ri-n">02</span><span class="ri-t"><strong>Rise time governs.</strong> Calculate BW=0.35/tr before routing.</span></div>
+      <div class="ri ok"><span class="ri-n">03</span><span class="ri-t"><strong>Solid reference plane.</strong> No gaps under high-speed signals.</span></div>
+      <div class="ri ok"><span class="ri-n">04</span><span class="ri-t"><strong>Return via at every layer transition.</strong> No exceptions.</span></div>
+      <div class="ri ok"><span class="ri-n">05</span><span class="ri-t"><strong>Control impedance end-to-end.</strong> Every via and connector counts.</span></div>
+      <div class="ri ok"><span class="ri-n">06</span><span class="ri-t"><strong>Terminate only electrically long lines.</strong> l &gt; l_crit.</span></div>
+      <div class="ri ok"><span class="ri-n">07</span><span class="ri-t"><strong>3W rule + orthogonal layer routing.</strong> Eliminate crosstalk.</span></div>
+      <div class="ri ok"><span class="ri-n">08</span><span class="ri-t"><strong>Strong PDN = SI prerequisite.</strong> Ground bounce corrupts signals.</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="ftr">
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="ftr-brand">FRESU ELECTRONICS</div>
+    <div class="ftr-links">
+      <span>fresuelectronics.com</span>
+      <span>EMC Audit: fresuelectronics.com/emc-audit</span>
+      <span>YouTube: @dario_fresu</span>
+    </div>
+  </div>
+  <div class="ftr-copy">© Fresu Electronics · Signal Integrity Reference Card v1.0 · All rights reserved · Do not reproduce without written permission</div>
+</footer>
+
+</div>
+</body>
+</html>
