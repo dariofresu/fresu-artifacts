@@ -18,60 +18,25 @@
 }
 html{scroll-behavior:smooth}
 body{font-family:'Poppins',sans-serif;background:var(--bg);color:var(--fg);font-size:15px;line-height:1.75;overflow-x:hidden}
-
-/* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;background:rgba(10,10,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
 .nav-logo img{height:32px;display:block}
 .nav-label{font-size:11px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc)}
-
-/* HERO — single column, centred, hero card layout */
-.hero{
-  max-width:960px;margin:0 auto;
-  padding:104px 48px 64px;
-  display:grid;grid-template-columns:1fr 380px;
-  gap:56px;align-items:start;
-}
+.hero{max-width:960px;margin:0 auto;padding:104px 48px 64px;display:grid;grid-template-columns:1fr 380px;gap:56px;align-items:start}
 .hero-left{padding-top:8px}
 .hero-kicker{font-size:11px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;color:var(--acc);margin-bottom:16px}
 .hero h1{font-size:clamp(28px,4.5vw,48px);font-weight:800;line-height:1.08;margin-bottom:16px;letter-spacing:-0.02em}
 .hero h1 span{color:var(--acc)}
 .hero-desc{font-size:16px;font-weight:300;color:var(--fg2);line-height:1.75;margin-bottom:32px}
-
-/* TRUST */
 .trust{display:flex;flex-direction:column;gap:9px}
 .trust-item{display:flex;align-items:center;gap:9px;font-size:13px;color:var(--label)}
 .trust-item strong{color:var(--fg2);font-weight:600}
 .trust-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0}
-
-/* PRODUCT CARD — image at top, price/items/buttons below */
-.product-card{
-  background:var(--s1);border:1px solid var(--border);
-  border-radius:12px;overflow:hidden;
-  position:sticky;top:80px;
-}
-
-/* card image */
-.card-img{
-  width:100%;height:200px;overflow:hidden;position:relative;
-  background:#111;
-}
-.card-img img{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:right center;display:block;
-}
-.card-img-overlay{
-  position:absolute;inset:0;
-  background:linear-gradient(to bottom,transparent 40%,rgba(10,10,10,0.7) 100%);
-}
-.card-series{
-  display:inline-block;
-  font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
-  color:var(--acc);background:var(--acc-dim);border:1px solid var(--acc-mid);
-  padding:4px 10px;border-radius:3px;margin-bottom:14px;
-}
-
-/* card body */
+.product-card{background:var(--s1);border:1px solid var(--border);border-radius:12px;overflow:hidden;position:sticky;top:80px}
+.card-img{width:100%;height:200px;overflow:hidden;position:relative;background:#111}
+.card-img img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:right center;display:block}
+.card-img-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(10,10,10,0.7) 100%)}
 .card-body{padding:22px 24px 24px}
+.card-series{display:inline-block;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:var(--acc);background:var(--acc-dim);border:1px solid var(--acc-mid);padding:4px 10px;border-radius:3px;margin-bottom:14px}
 .card-label{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--label);margin-bottom:10px}
 .card-price{font-size:40px;font-weight:800;color:var(--fg);line-height:1;margin-bottom:4px;letter-spacing:-0.02em}
 .card-price sub{font-size:17px;font-weight:400;color:var(--label);vertical-align:baseline;margin-right:1px}
@@ -80,32 +45,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;b
 .card-items{display:flex;flex-direction:column;gap:7px;margin-bottom:22px}
 .ci{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:var(--fg2);line-height:1.4}
 .ci::before{content:'✓';color:var(--acc);font-weight:700;flex-shrink:0;font-size:13px}
-.btn-buy{
-  display:flex;width:100%;align-items:center;justify-content:center;
-  background:var(--acc);color:#0a0a0a;text-decoration:none;
-  font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
-  padding:14px 20px;border-radius:5px;min-height:48px;
-  transition:background 180ms;margin-bottom:12px;
-}
+.btn-buy{display:flex;width:100%;align-items:center;justify-content:center;background:var(--acc);color:#0a0a0a;text-decoration:none;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:14px 20px;border-radius:5px;min-height:48px;transition:background 180ms;margin-bottom:12px}
 .btn-buy:hover{background:#00e085}
-.btn-academy{
-  display:block;text-align:center;font-size:12px;
-  color:var(--label);text-decoration:none;transition:color 180ms;line-height:1.5;
-}
+.btn-academy{display:block;text-align:center;font-size:12px;color:var(--label);text-decoration:none;transition:color 180ms;line-height:1.5}
 .btn-academy:hover{color:var(--acc)}
 .btn-academy span{color:var(--acc);font-weight:600}
-
-/* DIVIDER */
 .divider{border-top:1px solid var(--border)}
-
-/* SECTION */
 .section{max-width:960px;margin:0 auto;padding:60px 48px}
 .sec-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:10px;text-align:center}
 .section h2{font-size:clamp(22px,3.5vw,32px);font-weight:800;text-align:center;margin-bottom:12px;line-height:1.15}
 .section h2 span{color:var(--acc)}
 .sec-sub{font-size:14px;color:var(--label);text-align:center;max-width:480px;margin:0 auto 40px;line-height:1.7}
-
-/* AFTER PURCHASE FLOW */
 .flow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .flow-step{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:20px 22px;position:relative}
 .flow-step::after{content:'→';position:absolute;right:-10px;top:50%;transform:translateY(-50%);font-size:16px;color:var(--border-hi);z-index:1}
@@ -113,8 +63,6 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;b
 .f-num{font-size:20px;font-weight:800;color:var(--acc);opacity:0.4;margin-bottom:6px;line-height:1}
 .f-title{font-size:13px;font-weight:700;color:var(--fg);margin-bottom:4px}
 .f-desc{font-size:12px;color:var(--label);line-height:1.6}
-
-/* RESOURCES GRID */
 .res-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .rc{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:22px 24px;position:relative;overflow:hidden;transition:border-color 250ms,transform 200ms var(--ease)}
 .rc:hover{border-color:var(--border-hi);transform:translateY(-1px)}
@@ -129,22 +77,17 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;b
 .rc-icon{font-size:22px;margin-bottom:8px}
 .rc h3{font-size:16px;font-weight:800;margin-bottom:6px;line-height:1.2}
 .rc p{font-size:12px;color:var(--label);line-height:1.65;margin-bottom:12px}
-.rc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:14px}
+.rc-tags{display:flex;flex-wrap:wrap;gap:4px}
 .rctag{font-size:8px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:2px 7px;border-radius:2px;background:var(--s3);border:1px solid var(--border);color:var(--label)}
-
 .rc-r h4{font-size:11px;font-weight:700;color:var(--fg);margin-bottom:10px;letter-spacing:0.04em}
 .rc-list{display:flex;flex-direction:column;gap:6px}
 .rli{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--fg2);line-height:1.5}
 .rli::before{content:'✓';color:var(--acc);font-weight:700;flex-shrink:0;margin-top:1px}
-
-/* TOPICS */
 .topics{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
 .topic{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:14px 16px}
 .t-num{font-size:9px;font-weight:700;color:var(--acc);letter-spacing:0.12em;margin-bottom:4px}
 .topic h4{font-size:12px;font-weight:700;color:var(--fg);margin-bottom:2px}
 .topic p{font-size:11px;color:var(--label);line-height:1.4}
-
-/* AUTHOR */
 .author{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:32px;display:flex;align-items:flex-start;gap:24px}
 .author img{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2px solid var(--acc);flex-shrink:0;display:block}
 .author h3{font-size:17px;font-weight:800;margin-bottom:3px}
@@ -152,21 +95,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:900;height:64px;padding:0 48px;b
 .author p{font-size:13px;color:var(--fg2);line-height:1.75;margin-bottom:12px}
 .a-creds{display:flex;flex-wrap:wrap;gap:6px}
 .cred{font-size:9px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--acc-dim);border:1px solid rgba(0,255,148,0.2);color:var(--acc)}
-
-/* FOOTER */
 footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:56px 48px 72px}
 .footer-brand{color:var(--acc);font-weight:700;font-size:14px}
 .footer-text{font-size:13px;color:var(--label);margin-top:8px;line-height:1.6}
 .footer-links{display:flex;gap:22px;margin-top:20px;flex-wrap:wrap}
 .footer-links a{font-size:12px;color:var(--fg2);text-decoration:none}
 .footer-links a:hover{color:var(--acc)}
-
-/* ANIM */
 .reveal{opacity:0;transform:translateY(16px);transition:opacity 500ms var(--ease),transform 500ms var(--ease)}
 .reveal.visible{opacity:1;transform:translateY(0)}
 .d1{transition-delay:70ms}.d2{transition-delay:140ms}.d3{transition-delay:210ms}
-
-/* MOBILE */
 @media(max-width:768px){
   nav{padding:0 20px}
   .hero{grid-template-columns:1fr;padding:88px 20px 40px;gap:36px}
@@ -193,23 +130,18 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
   <span class="nav-label">PDN Design Series</span>
 </nav>
 
-<!-- ══ HERO ═══════════════════════════════════════════ -->
 <div class="hero">
-
-  <!-- Left: headline + trust -->
   <div class="hero-left">
-    <div class="hero-kicker">Fresu Electronics · Power Delivery Networks</div>
+    <div class="hero-kicker">Fresu Electronics &middot; Power Delivery Networks</div>
     <h1>Stop Guessing. Design Your<br><span>Power Delivery Right</span><br>the First Time.</h1>
-    <p class="hero-desc">Four precision-designed resources covering every aspect of PDN design for high-speed PCBs — from target impedance to stackup selection to multi-gigabit delivery.</p>
+    <p class="hero-desc">Four precision-designed resources covering every aspect of PDN design for high-speed PCBs &mdash; from target impedance to stackup selection to multi-gigabit delivery.</p>
     <div class="trust">
       <div class="trust-item"><div class="trust-dot"></div><strong>80,000+</strong> People Following</div>
       <div class="trust-item"><div class="trust-dot"></div>4th Generation Electrical Professional</div>
-      <div class="trust-item"><div class="trust-dot"></div>Principal Engineer · Fresu Electronics</div>
+      <div class="trust-item"><div class="trust-dot"></div>Principal Engineer &middot; Fresu Electronics</div>
       <div class="trust-item"><div class="trust-dot"></div>IPC Certified Interconnect Designer</div>
     </div>
   </div>
-
-  <!-- Right: product card with image at top -->
   <div class="product-card reveal">
     <div class="card-img">
       <img src="https://raw.githubusercontent.com/dariofresu/fresu-artifacts/main/courses/pdn-design-series/assets/cover-pdn.png" alt="PDN Design for High-Speed PCBs">
@@ -218,7 +150,7 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
     <div class="card-body">
       <div class="card-series">PDN Design Series</div>
       <div class="card-label">This Series Only</div>
-      <div class="card-price"><sub>€</sub>29</div>
+      <div class="card-price"><sub>&euro;</sub>29</div>
       <div class="card-note">One-time &middot; Instant access via email</div>
       <div class="card-divider"></div>
       <div class="card-items">
@@ -231,10 +163,8 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
       <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="btn-academy" target="_blank">Or get this for free in the <span>Fresu EMC Academy &rarr;</span></a>
     </div>
   </div>
-
 </div>
 
-<!-- ══ AFTER PURCHASE ════════════════════════════════ -->
 <div class="divider"></div>
 <div class="section">
   <div class="sec-kicker reveal">After you buy</div>
@@ -259,19 +189,18 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
   </div>
 </div>
 
-<!-- ══ RESOURCES ════════════════════════════════════ -->
 <div class="divider"></div>
 <div class="section">
   <div class="sec-kicker reveal">What's inside</div>
   <h2 class="reveal d1">Four Resources. <span>One Complete Framework.</span></h2>
-  <p class="sec-sub reveal d2">Designed to work as a set — read it, study it, apply it to your next board.</p>
+  <p class="sec-sub reveal d2">Designed to work as a set &mdash; read it, study it, apply it to your next board.</p>
   <div class="res-grid">
     <div class="rc full reveal">
       <div class="rc-l">
         <div class="rc-num">Resource 01 &middot; Reading</div>
-        <div class="rc-icon">📖</div>
+        <div class="rc-icon">&#128218;</div>
         <h3>PDN Design Mastery:<br>The Complete Guide</h3>
-        <p>8 illustrated sections — complete PDN design process from first principles to multi-gigabit stackup.</p>
+        <p>8 illustrated sections &mdash; complete PDN design process from first principles to multi-gigabit stackup.</p>
         <div class="rc-tags"><span class="rctag">8 Sections</span><span class="rctag">SVG Diagrams</span><span class="rctag">~25 min</span></div>
       </div>
       <div class="rc-r">
@@ -279,7 +208,7 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
         <div class="rc-list">
           <div class="rli">Where energy actually lives in a PCB</div>
           <div class="rli">Target PDN impedance from your noise budget</div>
-          <div class="rli">Why via spacing dominates inductance — the 60% rule</div>
+          <div class="rli">Why via spacing dominates inductance &mdash; the 60% rule</div>
           <div class="rli">Capacitor mounting: end vs side vias, polarity rules</div>
           <div class="rli">When capacitors work alone vs when planes carry the load</div>
           <div class="rli">Plane inductance: per-square measurement</div>
@@ -290,21 +219,21 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
     </div>
     <div class="rc reveal">
       <div class="rc-num">Resource 02 &middot; Course</div>
-      <div class="rc-icon">🎓</div>
+      <div class="rc-icon">&#127891;</div>
       <h3>PDN Design Mini-Course</h3>
       <p>10 chapters with diagrams and a quiz after each. Progress tracked throughout.</p>
       <div class="rc-tags"><span class="rctag">10 Chapters</span><span class="rctag">10 Quizzes</span><span class="rctag">~60 min</span></div>
     </div>
     <div class="rc reveal d1">
       <div class="rc-num">Resource 03 &middot; Reference</div>
-      <div class="rc-icon">📋</div>
+      <div class="rc-icon">&#128203;</div>
       <h3>PDN Design Cheat Sheet</h3>
-      <p>A4 landscape, print-ready. All formulas, via rules, stackup guide — one page.</p>
+      <p>A4 landscape, print-ready. All formulas, via rules, stackup guide &mdash; one page.</p>
       <div class="rc-tags"><span class="rctag">A4 Landscape</span><span class="rctag">Print-ready</span><span class="rctag">PDF export</span></div>
     </div>
     <div class="rc reveal d2">
       <div class="rc-num">Resource 04 &middot; Tool</div>
-      <div class="rc-icon">🧭</div>
+      <div class="rc-icon">&#129517;</div>
       <h3>PDN Decision Wizard</h3>
       <p>5 questions about your board. Personalised stackup, via strategy, cap mounting, OPD recommendations.</p>
       <div class="rc-tags"><span class="rctag">5 Questions</span><span class="rctag">Personalised</span><span class="rctag">EMI risk flags</span></div>
@@ -312,7 +241,6 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
   </div>
 </div>
 
-<!-- ══ TOPICS ════════════════════════════════════════ -->
 <div class="divider"></div>
 <div class="section">
   <div class="sec-kicker reveal">Curriculum</div>
@@ -330,7 +258,6 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
   </div>
 </div>
 
-<!-- ══ AUTHOR ════════════════════════════════════════ -->
 <div class="divider"></div>
 <div class="section">
   <div class="author reveal">
@@ -338,7 +265,7 @@ footer{border-top:1px solid var(--border);max-width:860px;margin:0 auto;padding:
     <div>
       <h3>Dario Fresu</h3>
       <div class="a-role">Principal EMC Architect &middot; Fresu Electronics</div>
-      <p>These resources distil a decade of applied EMC engineering into structured, usable material. Every rule, formula, and diagram comes from real board designs — not theory. Engineers who go through this material make fewer PDN mistakes, pass EMC testing on the first attempt, and spend less time debugging boards that should have worked.</p>
+      <p>These resources distil a decade of applied EMC engineering into structured, usable material. Every rule, formula, and diagram comes from real board designs &mdash; not theory. Engineers who go through this material make fewer PDN mistakes, pass EMC testing on the first attempt, and spend less time debugging boards that should have worked.</p>
       <div class="a-creds">
         <span class="cred">IPC CID</span>
         <span class="cred">Principal Engineer</span>
