@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDN Design Bundle — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0a0a;--s1:#111111;--s2:#161616;--s3:#1c1c1c;
+  --border:#2a2a2a;--border-hi:#383838;
+  --fg:#ffffff;--fg2:#e8edf5;--label:#a0aab8;
+  --acc:#00FF94;--acc-dim:rgba(0,255,148,0.08);--acc-mid:rgba(0,255,148,0.15);
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins','Helvetica Neue',Arial,sans-serif;background:var(--bg);color:var(--fg);font-size:16px;line-height:1.75;overflow-x:hidden}
+
+/* ─── NAV ───────────────────────────────────────── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:900;
+  height:60px;padding:0 48px;
+  background:rgba(10,10,10,0.94);backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo img{height:28px;width:auto;display:block}
+.nav-cta{
+  background:var(--acc);color:#0a0a0a;
+  font-family:'Poppins',sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;
+  padding:9px 20px;border-radius:4px;text-decoration:none;
+  transition:background 180ms;
+}
+.nav-cta:hover{background:#00e085}
+
+/* ─── HERO ──────────────────────────────────────── */
+.hero{
+  padding:130px 48px 100px;
+  max-width:1000px;margin:0 auto;
+  text-align:center;
+}
+.hero-kicker{
+  font-size:11px;font-weight:700;letter-spacing:0.20em;text-transform:uppercase;
+  color:var(--acc);margin-bottom:20px;
+  opacity:0;animation:rise-in 600ms var(--ease) 100ms forwards;
+}
+.hero h1{
+  font-size:clamp(34px,5.5vw,64px);font-weight:800;line-height:1.08;
+  margin-bottom:24px;letter-spacing:-0.02em;
+  opacity:0;animation:rise-in 700ms var(--ease) 250ms forwards;
+}
+.hero h1 span{color:var(--acc)}
+.hero-desc{
+  font-size:18px;font-weight:300;color:var(--fg2);
+  max-width:580px;margin:0 auto 48px;line-height:1.7;
+  opacity:0;animation:rise-in 700ms var(--ease) 400ms forwards;
+}
+.hero-actions{
+  display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap;
+  opacity:0;animation:rise-in 700ms var(--ease) 550ms forwards;
+}
+.btn-hero{
+  background:var(--acc);color:#0a0a0a;text-decoration:none;
+  font-family:'Poppins',sans-serif;font-size:14px;font-weight:700;
+  letter-spacing:0.06em;text-transform:uppercase;
+  padding:15px 32px;border-radius:5px;min-height:48px;
+  display:inline-flex;align-items:center;
+  transition:background 180ms;
+}
+.btn-hero:hover{background:#00e085}
+.btn-ghost{
+  color:var(--fg2);text-decoration:none;
+  font-size:14px;font-weight:500;
+  padding:14px 24px;border:1px solid var(--border-hi);
+  border-radius:5px;min-height:48px;
+  display:inline-flex;align-items:center;
+  transition:all 180ms;
+}
+.btn-ghost:hover{border-color:var(--acc);color:var(--acc)}
+
+/* trust bar */
+.trust-bar{
+  max-width:800px;margin:60px auto 0;
+  display:flex;align-items:center;justify-content:center;
+  gap:32px;flex-wrap:wrap;
+  opacity:0;animation:rise-in 700ms var(--ease) 700ms forwards;
+}
+.trust-item{font-size:12px;color:var(--label);display:flex;align-items:center;gap:6px}
+.trust-item strong{color:var(--fg2);font-weight:600}
+
+/* ─── SECTION WRAPPER ───────────────────────────── */
+.section{max-width:1000px;margin:0 auto;padding:80px 48px}
+.section-kicker{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);margin-bottom:12px;text-align:center}
+.section h2{font-size:clamp(24px,4vw,38px);font-weight:800;text-align:center;margin-bottom:14px;line-height:1.15}
+.section h2 span{color:var(--acc)}
+.section-sub{font-size:16px;color:var(--label);text-align:center;max-width:520px;margin:0 auto 52px;line-height:1.7}
+
+/* ─── PRODUCT CARDS ─────────────────────────────── */
+.products-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);
+  gap:20px;
+}
+.product-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:10px;padding:28px;
+  position:relative;overflow:hidden;
+  transition:border-color 300ms, transform 300ms var(--ease);
+}
+.product-card:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+.product-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:var(--border);transition:background 300ms;
+}
+.product-card:hover::before{background:var(--acc)}
+.product-card.featured{border-color:rgba(0,255,148,0.3);grid-column:span 2}
+.product-card.featured::before{background:var(--acc)}
+.product-num{
+  font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--label);margin-bottom:12px;
+}
+.product-card.featured .product-num{color:var(--acc)}
+.product-icon{font-size:28px;margin-bottom:12px}
+.product-card h3{font-size:19px;font-weight:800;margin-bottom:8px;line-height:1.2}
+.product-card p{font-size:14px;color:var(--fg2);line-height:1.7;margin-bottom:18px}
+.product-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.tag{
+  font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;
+  padding:3px 9px;border-radius:3px;
+  background:var(--s3);border:1px solid var(--border);
+  color:var(--label);
+}
+.product-link{
+  display:inline-flex;align-items:center;gap:8px;
+  color:var(--acc);font-size:13px;font-weight:600;text-decoration:none;
+  transition:gap 200ms;
+}
+.product-link:hover{gap:12px}
+
+/* featured card layout */
+.product-card.featured{display:grid;grid-template-columns:1fr 1fr;gap:0;padding:0}
+.featured-left{padding:32px 36px;border-right:1px solid var(--border)}
+.featured-right{padding:32px 36px;background:var(--s2);border-radius:0 10px 10px 0}
+.featured-right h4{font-size:13px;font-weight:700;color:var(--fg);margin-bottom:14px;letter-spacing:0.04em}
+.feature-list{display:flex;flex-direction:column;gap:8px}
+.feature-item{display:flex;align-items:flex-start;gap:10px;font-size:13px;color:var(--fg2);line-height:1.5}
+.feature-item::before{content:'✓';color:var(--acc);font-weight:700;flex-shrink:0;margin-top:1px}
+
+/* ─── TOPIC COVERAGE ─────────────────────────────── */
+.topics-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:16px;
+}
+.topic-card{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:6px;padding:18px 20px;
+}
+.topic-num{font-size:10px;font-weight:700;color:var(--acc);letter-spacing:0.12em;margin-bottom:6px}
+.topic-card h4{font-size:14px;font-weight:700;color:var(--fg);margin-bottom:4px}
+.topic-card p{font-size:12px;color:var(--label);line-height:1.5}
+
+/* ─── AUTHOR SECTION ─────────────────────────────── */
+.author-section{
+  background:var(--s1);border:1px solid var(--border);
+  border-radius:10px;padding:40px;
+  display:flex;align-items:flex-start;gap:32px;
+}
+.author-photo img{
+  width:80px;height:80px;border-radius:50%;
+  object-fit:cover;border:2px solid var(--acc);
+  display:block;
+}
+.author-content h3{font-size:20px;font-weight:800;margin-bottom:4px}
+.author-role{font-size:13px;color:var(--acc);font-weight:600;margin-bottom:14px;letter-spacing:0.04em}
+.author-content p{font-size:14px;color:var(--fg2);line-height:1.7;margin-bottom:16px}
+.author-creds{display:flex;flex-wrap:wrap;gap:8px}
+.cred{
+  font-size:11px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;
+  padding:4px 10px;border-radius:3px;
+  background:var(--acc-dim);border:1px solid rgba(0,255,148,0.2);
+  color:var(--acc);
+}
+
+/* ─── BUNDLE CTA ─────────────────────────────────── */
+.bundle-cta{
+  background:var(--s1);border:1px solid rgba(0,255,148,0.2);
+  border-radius:10px;padding:48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.bundle-cta::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--acc);
+}
+.bundle-cta h2{font-size:clamp(24px,4vw,38px);font-weight:800;margin-bottom:12px}
+.bundle-cta h2 span{color:var(--acc)}
+.bundle-cta p{font-size:16px;color:var(--fg2);max-width:520px;margin:0 auto 36px;line-height:1.7}
+.bundle-cta .btn-hero{margin:0 auto}
+
+/* ─── FOOTER ─────────────────────────────────────── */
+footer{
+  border-top:1px solid var(--border);
+  max-width:1000px;margin:0 auto;
+  padding:48px 48px 64px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  gap:32px;flex-wrap:wrap;
+}
+.footer-brand{color:var(--acc);font-weight:700;font-size:14px;margin-bottom:6px}
+.footer-text{font-size:12px;color:var(--label);line-height:1.6;max-width:280px}
+.footer-links{display:flex;flex-direction:column;gap:6px}
+.footer-links a{font-size:12px;color:var(--fg2);text-decoration:none}
+.footer-links a:hover{color:var(--acc)}
+.footer-legal{font-size:11px;color:#3a3a3a;margin-top:24px}
+
+/* ─── ANIMATIONS ─────────────────────────────────── */
+@keyframes rise-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(20px);transition:opacity 600ms var(--ease),transform 600ms var(--ease)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-2{transition-delay:100ms}
+.reveal-3{transition-delay:200ms}
+
+/* ─── MOBILE ─────────────────────────────────────── */
+@media(max-width:768px){
+  nav{padding:0 20px}
+  .hero{padding:100px 20px 64px}
+  .section{padding:56px 20px}
+  .products-grid{grid-template-columns:1fr}
+  .product-card.featured{grid-column:span 1;display:flex;flex-direction:column}
+  .featured-left,.featured-right{border-right:none;border-radius:0;padding:24px}
+  .featured-right{border-top:1px solid var(--border)}
+  .topics-grid{grid-template-columns:1fr}
+  .author-section{flex-direction:column;gap:20px;padding:28px}
+  .bundle-cta{padding:32px 24px}
+  footer{padding:40px 20px 64px;flex-direction:column;gap:24px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://www.fresuelectronics.com" class="nav-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <a href="https://www.fresuelectronics.com/emc-audit" class="nav-cta">EMC Design Audit →</a>
+</nav>
+
+<!-- ══ HERO ════════════════════════════════════════ -->
+<div class="hero">
+  <div class="hero-kicker">Fresu Electronics · PDN Design Series</div>
+  <h1>Stop Guessing.<br>Design Your <span>Power Delivery</span><br>Right the First Time.</h1>
+  <p class="hero-desc">
+    Four precision-designed resources covering every aspect of PDN design for high-speed PCBs — from target impedance to stackup selection to multi-gigabit delivery.
+  </p>
+  <div class="hero-actions">
+    <a href="#products" class="btn-hero">See All Resources →</a>
+    <a href="#topics" class="btn-ghost">What's Covered</a>
+  </div>
+  <div class="trust-bar">
+    <div class="trust-item"><strong>80,000+</strong> engineers in the community</div>
+    <div class="trust-item"><strong>4,000+</strong> engineers trained</div>
+    <div class="trust-item">IPC Certified Interconnect Designer</div>
+    <div class="trust-item">Former ETH Zurich Lead Hardware Engineer</div>
+  </div>
+</div>
+
+<!-- ══ PRODUCTS ════════════════════════════════════ -->
+<div class="section" id="products">
+  <div class="section-kicker reveal">The Resources</div>
+  <h2 class="reveal reveal-2">Four Tools. <span>One Subject.</span></h2>
+  <p class="section-sub reveal reveal-3">Each resource covers PDN design from a different angle — read it, study it, use it in the lab. They work as a set.</p>
+
+  <div class="products-grid">
+
+    <!-- FEATURED: Scroll Explainer -->
+    <div class="product-card featured reveal">
+      <div class="featured-left">
+        <div class="product-num">Resource 01 · Reading Experience</div>
+        <div class="product-icon">📖</div>
+        <h3>PDN Design Mastery:<br>The Complete Guide</h3>
+        <p>A scroll-based editorial experience — 8 illustrated sections covering the complete PDN design process from first principles to multi-gigabit stackup configuration. Every concept gets a diagram, a formula, and a concrete example.</p>
+        <div class="product-tags">
+          <span class="tag">8 Sections</span>
+          <span class="tag">SVG Diagrams</span>
+          <span class="tag">~25 min read</span>
+          <span class="tag">Printable</span>
+        </div>
+        <a href="pdn-explainer.html" class="product-link">Open the Guide →</a>
+      </div>
+      <div class="featured-right">
+        <h4>What you'll learn</h4>
+        <div class="feature-list">
+          <div class="feature-item">Where energy actually lives in a PCB — and why it matters for power delivery</div>
+          <div class="feature-item">How to calculate target PDN impedance from your noise budget</div>
+          <div class="feature-item">Why via spacing dominates inductance — the 60% rule</div>
+          <div class="feature-item">Capacitor mounting strategy: end vs side vias, polarity rules</div>
+          <div class="feature-item">When capacitors work alone vs when planes must carry the load</div>
+          <div class="feature-item">Plane inductance: per-square measurement and IC placement impact</div>
+          <div class="feature-item">Board stackup: 4-layer traps and the copper pour fix</div>
+          <div class="feature-item">8 rules you can apply before your next layout review</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mini-Course -->
+    <div class="product-card reveal">
+      <div class="product-num">Resource 02 · Interactive Course</div>
+      <div class="product-icon">🎓</div>
+      <h3>PDN Design<br>Mini-Course</h3>
+      <p>8 chapters with inline diagrams and a check-in quiz after each one. Progress tracked throughout. Learn, verify, move forward. Completion screen with audit CTA.</p>
+      <div class="product-tags">
+        <span class="tag">8 Chapters</span>
+        <span class="tag">8 Quizzes</span>
+        <span class="tag">Progress tracking</span>
+      </div>
+      <a href="pdn-minicourse.html" class="product-link">Start the Course →</a>
+    </div>
+
+    <!-- Cheat Sheet -->
+    <div class="product-card reveal reveal-2">
+      <div class="product-num">Resource 03 · Reference Card</div>
+      <div class="product-icon">📋</div>
+      <h3>PDN Design<br>Cheat Sheet</h3>
+      <p>A4 landscape print-ready reference. All formulas, via inductance rules, capacitor package comparison, stackup guide, and 8 design rules — on one page. Print it, pin it above your desk.</p>
+      <div class="product-tags">
+        <span class="tag">A4 Landscape</span>
+        <span class="tag">Print-ready</span>
+        <span class="tag">PDF export</span>
+      </div>
+      <a href="pdn-cheatsheet.html" class="product-link">Open the Cheat Sheet →</a>
+    </div>
+
+    <!-- Decision Wizard -->
+    <div class="product-card reveal reveal-3">
+      <div class="product-num">Resource 04 · Design Tool</div>
+      <div class="product-icon">🧭</div>
+      <h3>PDN Design<br>Decision Wizard</h3>
+      <p>5 questions about your board. Personalized recommendations covering your specific stackup, via strategy, cap mounting, and OPD requirements — with real impedance targets.</p>
+      <div class="product-tags">
+        <span class="tag">5 Questions</span>
+        <span class="tag">Personalized output</span>
+        <span class="tag">EMI risk flags</span>
+      </div>
+      <a href="pdn-wizard.html" class="product-link">Run the Wizard →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ TOPICS COVERED ══════════════════════════════ -->
+<div class="section" id="topics" style="border-top:1px solid var(--border)">
+  <div class="section-kicker reveal">Curriculum</div>
+  <h2 class="reveal reveal-2">8 Topics. <span>Complete Coverage.</span></h2>
+  <p class="section-sub reveal reveal-3">Every concept across all four resources maps to these eight core topics.</p>
+
+  <div class="topics-grid">
+    <div class="topic-card reveal">
+      <div class="topic-num">TOPIC 01</div>
+      <h4>Field Theory for PDN</h4>
+      <p>Energy in the dielectric, not the copper. Why power is delivered between planes, not from them.</p>
+    </div>
+    <div class="topic-card reveal reveal-2">
+      <div class="topic-num">TOPIC 02</div>
+      <h4>Target Impedance</h4>
+      <p>f_max = 0.5/t_rise. Z_target = V_noise / I_inst. Setting the design constraint before component selection.</p>
+    </div>
+    <div class="topic-card reveal reveal-3">
+      <div class="topic-num">TOPIC 03</div>
+      <h4>Via Inductance</h4>
+      <p>The 60% spacing rule. Why partial inductance is meaningless. Loop inductance of power-ground pairs.</p>
+    </div>
+    <div class="topic-card reveal">
+      <div class="topic-num">TOPIC 04</div>
+      <h4>Capacitor Mounting</h4>
+      <p>End vs side vias. Polarity cancellation. Same-side mounting. Alternating orientation around BGAs.</p>
+    </div>
+    <div class="topic-card reveal reveal-2">
+      <div class="topic-num">TOPIC 05</div>
+      <h4>Decoupling by Speed</h4>
+      <p>Energy circles. Low-speed intentional inductance. High-speed plane dominance. OPD and ODC at gigabit speeds.</p>
+    </div>
+    <div class="topic-card reveal reveal-3">
+      <div class="topic-num">TOPIC 06</div>
+      <h4>Plane Inductance</h4>
+      <p>Per-square measurement. IC placement and field geometry. Why 4-layer planes are nearly useless above 100 MHz.</p>
+    </div>
+    <div class="topic-card reveal">
+      <div class="topic-num">TOPIC 07</div>
+      <h4>Board Stackup</h4>
+      <p>Copper pour technique. 10× inductance improvement. Near-surface planes and the 40% cap improvement.</p>
+    </div>
+    <div class="topic-card reveal reveal-2">
+      <div class="topic-num">TOPIC 08</div>
+      <h4>EMI & Compliance</h4>
+      <p>How poor PDN creates EMI. Stitching via rules. Layer transition field coupling. The EMI test failure pattern.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ AUTHOR ══════════════════════════════════════ -->
+<div class="section" style="border-top:1px solid var(--border)">
+  <div class="author-section reveal">
+    <div class="author-photo">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg" alt="Dario Fresu">
+    </div>
+    <div class="author-content">
+      <h3>Dario Fresu</h3>
+      <div class="author-role">Principal EMC Architect · Fresu Electronics</div>
+      <p>These resources distil a decade of applied EMC and signal integrity engineering into structured, usable material. Every rule, formula, and diagram comes from real board designs — not theory. The objective is simple: engineers who go through this material make fewer PDN mistakes, pass EMC testing on the first attempt, and spend less time debugging boards that should have worked.</p>
+      <div class="author-creds">
+        <span class="cred">IPC CID</span>
+        <span class="cred">Former ETH Zurich</span>
+        <span class="cred">4,000+ engineers trained</span>
+        <span class="cred">80,000+ community</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BUNDLE CTA ══════════════════════════════════ -->
+<div class="section" style="border-top:1px solid var(--border)">
+  <div class="bundle-cta reveal">
+    <h2>Ready to Go Further?<br><span>Book an EMC Design Audit.</span></h2>
+    <p>A full review of your actual board — stackup, signal integrity, power delivery, and EMC compliance — delivered in 10 business days. Real problems found before they become test failures.</p>
+    <a href="https://www.fresuelectronics.com/emc-audit" class="btn-hero">EMC Design Audit — €8,000 →</a>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════ -->
+<footer>
+  <div>
+    <div class="footer-brand">Fresu Electronics</div>
+    <div class="footer-text">Professional EMC and signal integrity resources for hardware teams.</div>
+    <div class="footer-legal">© Fresu Electronics · All course materials copyright protected · Do not reproduce without written permission</div>
+  </div>
+  <div>
+    <div class="footer-links">
+      <a href="https://www.fresuelectronics.com">fresuelectronics.com</a>
+      <a href="https://blog.fresuelectronics.com">Engineering Blog</a>
+      <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+      <a href="https://open.spotify.com/show/7w18uAkpQKrGzHMccacQEN">EMI Control Podcast</a>
+      <a href="https://www.fresuelectronics.com/emc-audit">EMC Design Audit</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('visible'); obs.unobserve(e.target); }});
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
