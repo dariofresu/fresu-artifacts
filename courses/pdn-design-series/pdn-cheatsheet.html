@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDN Design Cheat Sheet — Fresu Electronics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── SCREEN RESET ──────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0a0a0a;
+  --s1:      #111111;
+  --s2:      #161616;
+  --s3:      #1c1c1c;
+  --border:  #2a2a2a;
+  --fg:      #ffffff;
+  --fg2:     #e8edf5;
+  --label:   #a0aab8;
+  --acc:     #00FF94;
+  --acc-dim: rgba(0,255,148,0.08);
+  --red:     #ff4d4d;
+  --mono:    'JetBrains Mono', 'Courier New', monospace;
+  --sans:    'Poppins', 'Helvetica Neue', Arial, sans-serif;
+}
+
+html { background: #050505; }
+
+body {
+  font-family: var(--sans);
+  background: var(--bg);
+  color: var(--fg);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ── PRINT BUTTON (screen only) ─────────────────── */
+.print-bar {
+  background: #111;
+  border-bottom: 1px solid #222;
+  padding: 12px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.print-bar span { font-size: 12px; color: var(--label); letter-spacing: 0.04em; }
+.print-btn {
+  background: var(--acc); color: #0a0a0a;
+  font-family: var(--sans); font-size: 12px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  border: none; padding: 8px 20px; border-radius: 3px; cursor: pointer;
+}
+.print-btn:hover { background: #00e085; }
+
+/* ── SHEET ───────────────────────────────────────── */
+.sheet {
+  width: 297mm;          /* A4 landscape */
+  min-height: 210mm;
+  margin: 24px auto;
+  background: var(--bg);
+  border: 1px solid #1e1e1e;
+  display: grid;
+  grid-template-columns: 48mm 1fr 1fr 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+/* decorative top accent bar */
+.sheet::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: var(--acc);
+}
+
+/* ── HEADER BAR ──────────────────────────────────── */
+.header {
+  grid-column: 1 / -1;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px 12px;
+  border-bottom: 1px solid var(--border);
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header-left img { height: 22px; width: auto; display: block; }
+.header-divider { width: 1px; height: 20px; background: var(--border); }
+.header-title { font-size: 13px; font-weight: 700; color: var(--fg); letter-spacing: 0.02em; }
+.header-subtitle { font-size: 9px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--acc); }
+.header-right { display: flex; align-items: center; gap: 24px; }
+.header-meta { font-size: 9px; color: var(--label); letter-spacing: 0.06em; }
+.header-meta strong { color: var(--fg2); font-weight: 600; }
+.copyright { font-size: 8px; color: #444; letter-spacing: 0.04em; }
+
+/* ── SPINE (left column) ─────────────────────────── */
+.spine {
+  grid-column: 1;
+  grid-row: 2;
+  border-right: 1px solid var(--border);
+  padding: 16px 14px;
+  display: flex; flex-direction: column; gap: 20px;
+}
+
+/* ── COLUMNS 2-4 ─────────────────────────────────── */
+.col { padding: 16px 16px; border-right: 1px solid var(--border); }
+.col:last-child { border-right: none; }
+
+/* ── FOOTER ──────────────────────────────────────── */
+.footer {
+  grid-column: 1 / -1;
+  border-top: 1px solid var(--border);
+  padding: 9px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--s1);
+}
+.footer-left { display: flex; align-items: center; gap: 16px; }
+.footer-logo { font-size: 10px; font-weight: 700; color: var(--acc); letter-spacing: 0.04em; }
+.footer-url { font-size: 9px; color: var(--label); font-family: var(--mono); }
+.footer-right { font-size: 8px; color: #3a3a3a; letter-spacing: 0.04em; }
+
+/* ── BLOCK PRIMITIVES ────────────────────────────── */
+.block { margin-bottom: 16px; }
+.block:last-child { margin-bottom: 0; }
+
+.block-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.20em;
+  text-transform: uppercase; color: var(--acc);
+  margin-bottom: 7px;
+  display: flex; align-items: center; gap: 6px;
+}
+.block-label::after {
+  content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+/* formula */
+.formula-wrap {
+  background: var(--s2); border: 1px solid var(--border);
+  border-radius: 4px; padding: 10px 12px; margin-bottom: 8px;
+}
+.formula-name { font-size: 8px; color: var(--label); margin-bottom: 4px; letter-spacing: 0.06em; }
+.formula-expr {
+  font-family: var(--mono); font-size: 14px; font-weight: 700;
+  color: var(--fg); letter-spacing: 0.02em;
+}
+.formula-expr .a { color: var(--acc); }
+.formula-notes { font-size: 9px; color: var(--fg2); line-height: 1.55; margin-top: 6px; }
+.formula-notes .mono { font-family: var(--mono); font-size: 9px; color: var(--acc); }
+
+/* mini table */
+.mini-table { width: 100%; border-collapse: collapse; }
+.mini-table th {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.10em;
+  text-transform: uppercase; color: var(--label);
+  padding: 4px 8px; border-bottom: 1px solid var(--border);
+  text-align: left; background: var(--s2);
+}
+.mini-table td {
+  font-size: 10px; padding: 4px 8px;
+  border-bottom: 1px solid #1c1c1c; color: var(--fg2);
+  vertical-align: top;
+}
+.mini-table tr:last-child td { border-bottom: none; }
+.mini-table td.good { color: var(--acc); font-weight: 600; font-family: var(--mono); }
+.mini-table td.bad  { color: var(--red); font-weight: 600; font-family: var(--mono); }
+.mini-table td.mono { font-family: var(--mono); font-size: 9px; }
+.mini-table tr:hover td { background: rgba(255,255,255,0.015); }
+
+/* rule pill */
+.rules-list { display: flex; flex-direction: column; gap: 6px; }
+.rule {
+  display: flex; align-items: flex-start; gap: 8px;
+  padding: 7px 10px;
+  background: var(--s2); border-radius: 3px;
+  border-left: 2px solid var(--border);
+}
+.rule.green { border-left-color: var(--acc); }
+.rule.red   { border-left-color: var(--red); }
+.rule-num {
+  font-family: var(--mono); font-size: 9px; font-weight: 700;
+  color: var(--acc); flex-shrink: 0; padding-top: 1px; min-width: 18px;
+}
+.rule-text { font-size: 10px; color: var(--fg2); line-height: 1.5; }
+.rule-text strong { color: var(--fg); font-weight: 600; }
+.rule-text .mono { font-family: var(--mono); font-size: 9px; color: var(--acc); }
+
+/* tag pairs (do / don't) */
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.do-block, .dont-block {
+  padding: 8px 10px; border-radius: 3px;
+}
+.do-block {
+  background: rgba(0,255,148,0.06);
+  border: 1px solid rgba(0,255,148,0.2);
+}
+.dont-block {
+  background: rgba(255,77,77,0.05);
+  border: 1px solid rgba(255,77,77,0.18);
+}
+.do-label   { font-size: 8px; font-weight: 700; color: var(--acc); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.dont-label { font-size: 8px; font-weight: 700; color: var(--red);  letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 4px; }
+.do-block p, .dont-block p { font-size: 10px; color: var(--fg2); line-height: 1.5; margin: 0; }
+
+/* callout strip */
+.callout-strip {
+  background: var(--acc-dim);
+  border-left: 2px solid var(--acc);
+  padding: 7px 10px; border-radius: 0 3px 3px 0;
+  margin-bottom: 8px;
+}
+.callout-strip p { font-size: 10px; color: var(--fg); line-height: 1.5; margin: 0; font-weight: 500; }
+.callout-strip .lbl {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--acc); margin-bottom: 3px;
+}
+
+/* frequency band pill row */
+.freq-bands { display: flex; flex-direction: column; gap: 4px; }
+.freq-band {
+  display: flex; align-items: center; gap: 8px;
+  padding: 5px 8px; border-radius: 3px;
+  background: var(--s2); border: 1px solid var(--border);
+}
+.freq-range { font-family: var(--mono); font-size: 9px; font-weight: 700; color: var(--acc); min-width: 56px; }
+.freq-tool  { font-size: 10px; color: var(--fg2); }
+
+/* stackup visual */
+.stackup { display: flex; flex-direction: column; gap: 2px; }
+.sl {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 8px; border-radius: 2px; font-size: 9px;
+}
+.sl-num { font-family: var(--mono); color: var(--label); min-width: 16px; }
+.sl-name { flex: 1; font-weight: 600; }
+.sl-note { font-size: 8px; color: var(--label); }
+.sl.sig  { background: #161e16; border-left: 2px solid #2a3a2a; }
+.sl.pwr  { background: #1e1616; border-left: 2px solid #3a2a2a; }
+.sl.gnd  { background: #161620; border-left: 2px solid #2a2a3a; }
+.sl.pour-gnd { background: rgba(0,255,148,0.06); border-left: 2px solid rgba(0,255,148,0.35); }
+.sl.pour-pwr { background: rgba(255,120,50,0.06); border-left: 2px solid rgba(255,120,50,0.3); }
+.sl-bad .sl-name { color: var(--red); }
+.sl-good .sl-name { color: var(--acc); }
+.stackup-label {
+  font-size: 8px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; margin-bottom: 5px;
+}
+.stackup-label.bad  { color: var(--red); }
+.stackup-label.good { color: var(--acc); }
+.vs-divider { text-align: center; font-size: 10px; color: #333; margin: 8px 0; font-weight: 700; }
+
+/* inductance comparison bar */
+.ind-bar-wrap { margin-top: 8px; }
+.ind-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
+.ind-bar-label { font-size: 9px; color: var(--fg2); min-width: 92px; }
+.ind-bar-track { flex: 1; height: 8px; background: var(--s3); border-radius: 2px; overflow: hidden; }
+.ind-bar-fill  { height: 100%; border-radius: 2px; background: var(--acc); }
+.ind-bar-val   { font-family: var(--mono); font-size: 9px; color: var(--acc); min-width: 44px; text-align: right; }
+
+/* ── PRINT STYLES ────────────────────────────────── */
+@media print {
+  html { background: #0a0a0a !important; }
+  .print-bar { display: none !important; }
+  .sheet {
+    margin: 0 !important;
+    border: none !important;
+    width: 297mm !important;
+    min-height: 210mm !important;
+  }
+  body { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  @page { size: A4 landscape; margin: 0; }
+}
+
+/* ── MOBILE FALLBACK ─────────────────────────────── */
+@media (max-width: 900px) {
+  .sheet {
+    width: 100%;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin: 0;
+    border: none;
+  }
+  .header { flex-wrap: wrap; gap: 8px; }
+  .spine, .col { border-right: none; border-bottom: 1px solid var(--border); padding: 20px 16px; }
+  .footer { flex-direction: column; gap: 6px; align-items: flex-start; }
+  .print-bar { padding: 12px 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="print-bar">
+  <span>PDN Design Reference Card · Fresu Electronics · A4 Landscape</span>
+  <button class="print-btn" onclick="window.print()">⬇ Print / Save PDF</button>
+</div>
+
+<div class="sheet">
+
+  <!-- ══ HEADER ══════════════════════════════════ -->
+  <header class="header">
+    <div class="header-left">
+      <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+      <div class="header-divider"></div>
+      <div>
+        <div class="header-title">PDN Design Reference Card</div>
+        <div class="header-subtitle">Power Delivery Network · High-Speed PCBs</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="header-meta"><strong>8</strong> topics&nbsp; · &nbsp;<strong>fresuelectronics.com</strong></div>
+      <div class="copyright">© Fresu Electronics · All rights reserved · Do not reproduce</div>
+    </div>
+  </header>
+
+  <!-- ══ SPINE (col 1) ═══════════════════════════ -->
+  <div class="spine">
+
+    <!-- Formulas -->
+    <div class="block">
+      <div class="block-label">Core Formulas</div>
+      <div class="formula-wrap">
+        <div class="formula-name">Max frequency of power bus</div>
+        <div class="formula-expr"><span class="a">f<sub>max</sub></span> = 0.5 / t<sub>r</sub></div>
+        <div class="formula-notes">t<sub>r</sub> in ns · result in GHz<br><span class="mono">0.5 ns → 1 GHz</span><br><span class="mono">250 ps → 2 GHz</span><br><span class="mono">50 ps → 10 GHz</span></div>
+      </div>
+      <div class="formula-wrap">
+        <div class="formula-name">Target PDN impedance</div>
+        <div class="formula-expr"><span class="a">Z<sub>t</sub></span> = V<sub>noise</sub> / I<sub>inst</sub></div>
+        <div class="formula-notes">V<sub>noise</sub> = max tolerable noise (V)<br>I<sub>inst</sub> = outputs × mA per output<br><span class="mono">50 out × 40 mA = 2 A<br>100 mV / 2 A = 50 mΩ</span></div>
+      </div>
+      <div class="formula-wrap">
+        <div class="formula-name">Energy circle radius</div>
+        <div class="formula-expr"><span class="a">r</span> = t<sub>r</sub> × 6 in/ns</div>
+        <div class="formula-notes">Place caps within this radius<br><span class="mono">250 ps → 0.75 in reach<br>500 ps → 1.50 in reach</span></div>
+      </div>
+    </div>
+
+    <!-- Author strip -->
+    <div style="margin-top:auto;padding-top:12px;border-top:1px solid var(--border)">
+      <div style="display:flex;align-items:center;gap:8px">
+        <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/dario-fresu.jpg"
+          alt="Dario Fresu" style="width:30px;height:30px;border-radius:50%;object-fit:cover;border:1.5px solid var(--acc);flex-shrink:0">
+        <div>
+          <div style="font-size:10px;font-weight:700;color:var(--fg)">Dario Fresu</div>
+          <div style="font-size:8px;color:var(--label)">Principal EMC Architect</div>
+        </div>
+      </div>
+      <div style="font-size:8px;color:#333;margin-top:8px;line-height:1.5">
+        IPC CID · Former ETH Zurich<br>4,000+ engineers trained
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ COLUMN 2 ═════════════════════════════════ -->
+  <div class="col">
+
+    <!-- Via Inductance -->
+    <div class="block">
+      <div class="block-label">Via Inductance Rules</div>
+      <div class="callout-strip">
+        <div class="lbl">Key principle</div>
+        <p>Inductance belongs to the <strong>pair</strong>, not a single via. <strong>Spacing dominates</strong> — not diameter, not length.</p>
+      </div>
+      <div class="ind-bar-wrap">
+        <div style="font-size:8px;color:var(--label);margin-bottom:6px;letter-spacing:0.06em">SAME VIAS — DIFFERENT SPACING</div>
+        <div class="ind-bar-row">
+          <div class="ind-bar-label">6.35 mm apart</div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:100%;background:var(--red)"></div></div>
+          <div class="ind-bar-val" style="color:var(--red)">1.2 nH</div>
+        </div>
+        <div class="ind-bar-row">
+          <div class="ind-bar-label">2× larger drill</div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:84%;background:#ff8c42"></div></div>
+          <div class="ind-bar-val" style="color:#ff8c42">~1.0 nH</div>
+        </div>
+        <div class="ind-bar-row">
+          <div class="ind-bar-label">Moved close</div>
+          <div class="ind-bar-track"><div class="ind-bar-fill" style="width:40%"></div></div>
+          <div class="ind-bar-val">~0.5 nH</div>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--acc);font-weight:600;margin-top:6px">
+        ↓ 60% reduction · no size change · spacing only
+      </div>
+    </div>
+
+    <!-- Capacitor package table -->
+    <div class="block">
+      <div class="block-label">Capacitor Package Inductance</div>
+      <table class="mini-table">
+        <tr><th>Package</th><th>Typical L</th><th>Note</th></tr>
+        <tr><td>1206 (end via)</td><td class="bad">~1250 pH</td><td>Avoid for HF</td></tr>
+        <tr><td>0805 (end via)</td><td class="bad">~1050 pH</td><td>—</td></tr>
+        <tr><td>0603 (end via)</td><td class="bad">~900 pH</td><td>—</td></tr>
+        <tr><td>0402</td><td class="mono" style="color:#e8edf5">~560 pH</td><td>—</td></tr>
+        <tr><td>0201</td><td class="good">~450 pH</td><td>—</td></tr>
+        <tr><td>1206 side via</td><td class="good">~450 pH</td><td>= 0201 if correct</td></tr>
+        <tr><td>0603 side 2× vias</td><td class="good">~250 pH</td><td>Best for size</td></tr>
+      </table>
+    </div>
+
+    <!-- Frequency/tool mapping -->
+    <div class="block">
+      <div class="block-label">Frequency → Delivery Tool</div>
+      <div class="freq-bands">
+        <div class="freq-band">
+          <span class="freq-range">&lt; 1 MHz</span>
+          <span class="freq-tool">VRM / bulk capacitors</span>
+        </div>
+        <div class="freq-band">
+          <span class="freq-range">1–100 MHz</span>
+          <span class="freq-tool">Mid-value ceramics (10–100 µF)</span>
+        </div>
+        <div class="freq-band">
+          <span class="freq-range">100–400 MHz</span>
+          <span class="freq-tool">0.1 µF / 0.01 µF ceramics</span>
+        </div>
+        <div class="freq-band">
+          <span class="freq-range">&gt; 400 MHz</span>
+          <span class="freq-tool" style="color:var(--acc);font-weight:600">Low inductance only — planes + via pairs</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ COLUMN 3 ═════════════════════════════════ -->
+  <div class="col">
+
+    <!-- Capacitor Mounting Rules -->
+    <div class="block">
+      <div class="block-label">Capacitor Mounting Rules</div>
+      <div class="do-dont">
+        <div class="do-block">
+          <div class="do-label">✓ Do</div>
+          <p>Side-mount vias · opposite polarity adjacent · same side as IC · within energy circle</p>
+        </div>
+        <div class="dont-block">
+          <div class="dont-label">✗ Don't</div>
+          <p>End-mount on high-speed · same polarity adjacent · opposite board side · crowd under BGA</p>
+        </div>
+      </div>
+
+      <!-- small SVG diagram for cap mounting -->
+      <div style="margin-top:10px">
+        <svg viewBox="0 0 320 110" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block">
+          <!-- LEFT: end vias BAD -->
+          <text x="72" y="12" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="8" font-weight="700">END VIAS — BAD</text>
+          <rect x="28" y="22" width="88" height="32" rx="3" fill="#1c1c1c" stroke="#333" stroke-width="1"/>
+          <text x="72" y="42" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">0603</text>
+          <circle cx="36" cy="74" r="8" fill="#181818" stroke="#ff4d4d" stroke-width="1.5"/>
+          <text x="36" y="78" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="9" font-weight="800">+</text>
+          <circle cx="108" cy="74" r="8" fill="#181818" stroke="#777" stroke-width="1.5"/>
+          <text x="108" y="78" text-anchor="middle" fill="#777" font-family="Poppins,sans-serif" font-size="9" font-weight="800">−</text>
+          <line x1="36" y1="54" x2="36" y2="66" stroke="#444" stroke-width="1" stroke-dasharray="2 2"/>
+          <line x1="108" y1="54" x2="108" y2="66" stroke="#444" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="72" y="100" text-anchor="middle" fill="#ff4d4d" font-family="Poppins,sans-serif" font-size="9" font-weight="700">~900 pH</text>
+
+          <!-- divider -->
+          <line x1="160" y1="8" x2="160" y2="108" stroke="#222" stroke-width="1" stroke-dasharray="3 3"/>
+
+          <!-- RIGHT: side vias GOOD -->
+          <text x="248" y="12" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="8" font-weight="700">SIDE VIAS — GOOD</text>
+          <rect x="204" y="22" width="88" height="32" rx="3" fill="#1c1c1c" stroke="#333" stroke-width="1"/>
+          <text x="248" y="42" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="8">0603</text>
+          <!-- vias side by side below centre -->
+          <circle cx="238" cy="74" r="8" fill="#181818" stroke="#00FF94" stroke-width="1.5"/>
+          <text x="238" y="78" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="800">+</text>
+          <circle cx="258" cy="74" r="8" fill="#181818" stroke="#888" stroke-width="1.5"/>
+          <text x="258" y="78" text-anchor="middle" fill="#888" font-family="Poppins,sans-serif" font-size="9" font-weight="800">−</text>
+          <line x1="238" y1="54" x2="238" y2="66" stroke="#00FF94" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/>
+          <line x1="258" y1="54" x2="258" y2="66" stroke="#888" stroke-width="1" stroke-dasharray="2 2" opacity="0.5"/>
+          <text x="248" y="100" text-anchor="middle" fill="#00FF94" font-family="Poppins,sans-serif" font-size="9" font-weight="700">~450 pH · 2× lower</text>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Plane spacing rules -->
+    <div class="block">
+      <div class="block-label">Plane Spacing Impact</div>
+      <table class="mini-table">
+        <tr><th>Plane separation</th><th>Classification</th><th>PDN use</th></tr>
+        <tr><td class="mono">&gt; 11 mil (0.28 mm)</td><td class="bad">Wide</td><td>DC only — caps do all HF work</td></tr>
+        <tr><td class="mono">6–11 mil</td><td style="color:#e8edf5;font-weight:600">Medium</td><td>Some HF benefit</td></tr>
+        <tr><td class="mono">&lt; 6 mil</td><td class="good">Close</td><td>Dominates HF delivery</td></tr>
+        <tr><td class="mono">2–4 mil (HDI)</td><td class="good">Optimal</td><td>Planes beat caps above 400 MHz</td></tr>
+      </table>
+      <div style="font-size:9px;color:var(--label);margin-top:7px;line-height:1.5">
+        Inductance is a <strong style="color:var(--fg2)">per-square</strong> measurement — depends on <em>separation</em>, not area. A 1-inch square and 10-inch square at equal spacing have equal inductance.
+      </div>
+    </div>
+
+    <!-- IC placement -->
+    <div class="block">
+      <div class="block-label">IC Placement vs Inductance</div>
+      <div class="rules-list">
+        <div class="rule green">
+          <span class="rule-num">✓</span>
+          <span class="rule-text"><strong>Board center</strong> — full circular energy field, minimum inductance</span>
+        </div>
+        <div class="rule">
+          <span class="rule-num">△</span>
+          <span class="rule-text"><strong>Board edge</strong> — semicircle, moderate inductance increase</span>
+        </div>
+        <div class="rule red">
+          <span class="rule-num">✗</span>
+          <span class="rule-text"><strong>Board corner</strong> — quarter circle, significant inductance increase · avoid for high-current ICs</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ COLUMN 4 ═════════════════════════════════ -->
+  <div class="col">
+
+    <!-- Stackup Guide -->
+    <div class="block">
+      <div class="block-label">Stackup Design Guide</div>
+
+      <div class="stackup-label bad">4-LAYER STANDARD — AVOID</div>
+      <div class="stackup">
+        <div class="sl sig sl-bad"><span class="sl-num">L1</span><span class="sl-name">Signal</span><span class="sl-note">microstrip</span></div>
+        <div class="sl pwr sl-bad"><span class="sl-num">L2</span><span class="sl-name">Power</span><span class="sl-note">~1 mm gap ↓</span></div>
+        <div class="sl gnd sl-bad"><span class="sl-num">L3</span><span class="sl-name">Ground</span><span class="sl-note">~1 mm gap ↑</span></div>
+        <div class="sl sig sl-bad"><span class="sl-num">L4</span><span class="sl-name">Signal</span><span class="sl-note">microstrip</span></div>
+      </div>
+      <div style="font-size:9px;color:var(--red);margin:5px 0 10px;font-weight:600">Plane cap ≈ useless · 1 cap beats both planes</div>
+
+      <div class="vs-divider">── improved approach ──</div>
+
+      <div class="stackup-label good">6-LAYER + COPPER POURS — RECOMMENDED</div>
+      <div class="stackup">
+        <div class="sl pour-gnd sl-good"><span class="sl-num">L1</span><span class="sl-name">Signal + GND pour</span><span class="sl-note">↑ field boundary</span></div>
+        <div class="sl pour-pwr"><span class="sl-num">L2</span><span class="sl-name">Power pour</span><span class="sl-note">thin dielectric</span></div>
+        <div class="sl sig"><span class="sl-num">L3</span><span class="sl-name">Signal + Pwr pour</span></div>
+        <div class="sl sig"><span class="sl-num">L4</span><span class="sl-name">Signal + Pwr pour</span></div>
+        <div class="sl pour-gnd"><span class="sl-num">L5</span><span class="sl-name">Ground pour</span><span class="sl-note">thin dielectric</span></div>
+        <div class="sl pour-gnd sl-good"><span class="sl-num">L6</span><span class="sl-name">Signal + GND pour</span><span class="sl-note">↓ field boundary</span></div>
+      </div>
+      <div style="font-size:9px;color:var(--acc);margin-top:5px;font-weight:700">10× lower inductance vs standard 6-layer</div>
+    </div>
+
+    <!-- 8 rules summary -->
+    <div class="block">
+      <div class="block-label">8 Rules · Apply Before Layout</div>
+      <div class="rules-list">
+        <div class="rule green"><span class="rule-num">01</span><span class="rule-text">Calculate <strong>Z<sub>target</sub></strong> before placing any component</span></div>
+        <div class="rule green"><span class="rule-num">02</span><span class="rule-text">Always <strong>pair power + ground vias</strong> — minimize spacing</span></div>
+        <div class="rule green"><span class="rule-num">03</span><span class="rule-text"><strong>Side-mount vias</strong> on decoupling caps · opposite polarity adjacent</span></div>
+        <div class="rule green"><span class="rule-num">04</span><span class="rule-text">Caps <strong>same side</strong> as the IC — always, no exceptions</span></div>
+        <div class="rule green"><span class="rule-num">05</span><span class="rule-text">High-current ICs at <strong>board center</strong></span></div>
+        <div class="rule green"><span class="rule-num">06</span><span class="rule-text"><strong>Close-coupled planes</strong> (&lt;6 mil) beat caps above 400 MHz</span></div>
+        <div class="rule green"><span class="rule-num">07</span><span class="rule-text">Copper pours + stitch every <span class="mono">λ/10</span> · min 2 vias per island</span></div>
+        <div class="rule green"><span class="rule-num">08</span><span class="rule-text">Below 400 MHz: add <strong>capacitance</strong> · Above: reduce <strong>inductance</strong></span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══ FOOTER ════════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-left">
+      <div class="footer-logo">FRESU ELECTRONICS</div>
+      <div class="footer-url">fresuelectronics.com</div>
+      <div style="font-size:9px;color:#444">|</div>
+      <div class="footer-url">EMC Design Audit: fresuelectronics.com/emc-audit</div>
+      <div style="font-size:9px;color:#444">|</div>
+      <div class="footer-url">YouTube: @dario_fresu</div>
+    </div>
+    <div class="footer-right">© Fresu Electronics · All rights reserved · PDN Design Reference Card v1.0 · Do not reproduce without written permission</div>
+  </footer>
+
+</div><!-- /sheet -->
+
+</body>
+</html>
