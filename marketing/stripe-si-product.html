@@ -6,141 +6,293 @@
 <title>SI Series — Stripe Product Image</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    width: 600px;
-    height: 600px;
-    background: #080808;
+    width: 600px; height: 600px;
+    background: #0a0a0a;
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
     position: relative;
   }
-  .glow {
-    position: absolute;
-    bottom: -100px; right: -100px;
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(0,255,148,0.09) 0%, transparent 70%);
-    pointer-events: none;
-  }
+
+  /* subtle grid */
   .grid {
     position: absolute; inset: 0;
     background-image:
-      linear-gradient(rgba(0,255,148,0.035) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,255,148,0.035) 1px, transparent 1px);
-    background-size: 40px 40px;
+      linear-gradient(rgba(0,255,148,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,148,0.025) 1px, transparent 1px);
+    background-size: 36px 36px;
     pointer-events: none;
   }
+
   .wrap {
     position: relative; z-index: 1;
     width: 100%; height: 100%;
-    padding: 44px 48px;
+    display: flex;
+  }
+
+  /* ── LEFT PANEL ── */
+  .left {
+    width: 320px; flex-shrink: 0;
+    padding: 36px 32px 32px;
     display: flex; flex-direction: column;
+    border-right: 1px solid #1e1e1e;
   }
-  /* top */
-  .top {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    margin-bottom: 44px;
+
+  .series-label {
+    font-size: 9px; font-weight: 700; letter-spacing: 0.22em;
+    text-transform: uppercase; color: #00FF94; margin-bottom: 4px;
   }
-  .logo img { height: 20px; display: block; }
-  .badge {
-    display: flex; align-items: center; gap: 6px;
-    border: 1px solid rgba(0,255,148,0.25);
-    background: rgba(0,255,148,0.06);
-    padding: 5px 12px; border-radius: 2px;
+
+  .category {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.18em;
+    text-transform: uppercase; color: rgba(255,255,255,0.25);
+    margin-bottom: 20px;
   }
-  .badge .dot { width: 5px; height: 5px; border-radius: 50%; background: #00FF94; }
-  .badge span { font-size: 9px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: #00FF94; }
-  /* main */
-  .main { flex: 1; display: flex; flex-direction: column; justify-content: center; }
-  .eyebrow {
-    font-size: 10px; font-weight: 600; letter-spacing: 0.22em;
-    text-transform: uppercase; color: rgba(255,255,255,0.3); margin-bottom: 18px;
-  }
-  .headline {
-    font-size: 40px; font-weight: 900; line-height: 1.05;
+
+  .logo img { height: 18px; display: block; margin-bottom: 20px; }
+
+  h1 {
+    font-size: 22px; font-weight: 900; line-height: 1.15;
     color: #fff; letter-spacing: -0.02em; margin-bottom: 10px;
   }
-  .headline .acc { color: #00FF94; display: block; }
-  .rule { width: 48px; height: 2px; background: #00FF94; margin: 20px 0; }
-  .sub {
-    font-size: 13px; font-weight: 300;
-    color: rgba(255,255,255,0.5); line-height: 1.6; max-width: 360px;
+  h1 span { color: #00FF94; display: block; }
+
+  .desc {
+    font-size: 10.5px; font-weight: 300;
+    color: rgba(255,255,255,0.45); line-height: 1.65;
+    margin-bottom: 20px;
   }
-  .sub strong { color: rgba(255,255,255,0.8); font-weight: 600; }
-  /* items */
-  .pills { display: flex; gap: 8px; margin-top: 28px; flex-wrap: wrap; }
-  .pill {
+
+  /* bullet list */
+  .items { display: flex; flex-direction: column; gap: 7px; margin-bottom: auto; }
+  .item { display: flex; align-items: flex-start; gap: 8px; }
+  .item-dot {
+    width: 5px; height: 5px; border-radius: 50%;
+    background: #00FF94; flex-shrink: 0; margin-top: 5px;
+  }
+  .item-text { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.75); line-height: 1.4; }
+  .item-text span { color: rgba(255,255,255,0.35); font-weight: 400; }
+
+  /* price block */
+  .price-block { margin-top: 22px; border-top: 1px solid #1e1e1e; padding-top: 16px; }
+  .price {
+    font-size: 44px; font-weight: 900; color: #fff;
+    letter-spacing: -0.03em; line-height: 1;
+  }
+  .price .cur { font-size: 22px; font-weight: 600; vertical-align: super; color: #00FF94; }
+  .price-note {
+    font-size: 10px; color: rgba(255,255,255,0.25);
+    margin-top: 4px; line-height: 1.5;
+  }
+  .price-note a { color: #00FF94; text-decoration: none; }
+
+  .domain {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.16em;
+    text-transform: uppercase; color: rgba(255,255,255,0.18);
+    margin-top: 14px;
+  }
+
+  /* ── RIGHT PANEL — TECHNICAL DIAGRAM ── */
+  .right {
+    flex: 1;
+    padding: 28px 24px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    position: relative;
+  }
+
+  .diag-label {
+    font-size: 8px; font-weight: 700; letter-spacing: 0.2em;
+    text-transform: uppercase; color: rgba(0,255,148,0.6);
+    margin-bottom: 18px; text-align: center;
+  }
+
+  /* Transmission line cross-section diagram */
+  .diag {
+    width: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+  }
+
+  /* Layer rows */
+  .layer {
+    width: 190px; position: relative;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .layer-bar {
+    width: 100%; height: 20px;
+    border-radius: 2px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .layer-label {
+    font-size: 7.5px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .l-signal { background: rgba(0,255,148,0.18); border: 1px solid rgba(0,255,148,0.35); }
+  .l-signal .layer-label { color: #00FF94; }
+
+  .l-diel { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); height: 14px !important; }
+  .l-diel .layer-label { color: rgba(255,255,255,0.2); font-size: 6.5px; }
+
+  .l-ref { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); }
+  .l-ref .layer-label { color: rgba(255,255,255,0.5); }
+
+  /* trace on signal layer */
+  .trace-wrap {
+    width: 190px; position: relative; height: 28px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .trace {
+    width: 36px; height: 12px;
+    background: #00FF94;
+    border-radius: 1px;
+    position: relative;
+  }
+
+  .trace-label {
+    position: absolute; top: -18px; left: 50%; transform: translateX(-50%);
+    font-size: 7px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #00FF94; white-space: nowrap;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* Field lines */
+  .fields {
+    width: 190px; height: 50px; position: relative; overflow: visible;
+  }
+
+  /* Z0 annotation */
+  .z0-box {
+    position: absolute; right: -8px; top: 50%; transform: translateY(-50%);
+    border: 1px solid rgba(0,255,148,0.3);
+    background: rgba(0,255,148,0.06);
+    padding: 4px 8px; border-radius: 2px;
+  }
+  .z0-val {
+    font-size: 13px; font-weight: 900; color: #00FF94;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: -0.02em;
+  }
+  .z0-lbl { font-size: 7px; color: rgba(255,255,255,0.35); letter-spacing: 0.08em; }
+
+  /* width annotation */
+  .width-ann {
+    width: 190px; display: flex; align-items: center;
+    justify-content: center; gap: 4px; margin-top: 10px;
+  }
+  .ann-line { flex: 1; height: 1px; background: rgba(255,255,255,0.12); }
+  .ann-text {
+    font-size: 7px; color: rgba(255,255,255,0.3);
+    font-family: 'JetBrains Mono', monospace;
+    white-space: nowrap;
+  }
+
+  /* bottom tags */
+  .diag-tags {
+    display: flex; flex-direction: column; gap: 5px;
+    margin-top: 18px; width: 100%;
+  }
+  .dtag {
     display: flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.08);
-    padding: 6px 12px; border-radius: 2px;
+    font-size: 8.5px; color: rgba(255,255,255,0.4);
+    font-family: 'JetBrains Mono', monospace;
   }
-  .pill .n { font-size: 8px; font-weight: 700; letter-spacing: 0.1em; color: #00FF94; }
-  .pill .t { font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.65); }
-  /* bottom */
-  .bottom {
-    border-top: 1px solid rgba(255,255,255,0.08);
-    padding-top: 24px;
-    display: flex; align-items: flex-end; justify-content: space-between;
-  }
-  .price { font-size: 52px; font-weight: 900; color: #fff; letter-spacing: -0.03em; line-height: 1; }
-  .price .cur { font-size: 26px; font-weight: 600; vertical-align: super; color: #00FF94; }
-  .price-sub { font-size: 11px; color: rgba(255,255,255,0.25); margin-top: 5px; letter-spacing: 0.04em; }
-  .cta {
-    background: #00FF94; color: #080808;
-    font-family: 'Poppins', sans-serif;
-    font-size: 11px; font-weight: 800;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    padding: 14px 28px; border-radius: 2px;
-  }
-  /* corner */
-  .corner {
-    position: absolute; top: 44px; right: 48px;
-    width: 50px; height: 50px;
-    border-right: 1.5px solid rgba(0,255,148,0.12);
-    border-top: 1.5px solid rgba(0,255,148,0.12);
-  }
+  .dtag-dot { width: 4px; height: 4px; border-radius: 50%; flex-shrink: 0; }
 </style>
 </head>
 <body>
-<div class="glow"></div>
 <div class="grid"></div>
-<div class="corner"></div>
 <div class="wrap">
-  <div class="top">
+
+  <!-- LEFT: content -->
+  <div class="left">
+    <div class="series-label">Series 02</div>
+    <div class="category">Signal Integrity</div>
     <div class="logo">
       <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
     </div>
-    <div class="badge"><div class="dot"></div><span>Series 02</span></div>
-  </div>
-  <div class="main">
-    <div class="eyebrow">Signal Integrity</div>
-    <div class="headline">
-      High-speed PCB design.<br>
-      <span class="acc">Done right.</span>
+
+    <h1>Signal Integrity for<br><span>High-Speed PCBs</span></h1>
+
+    <p class="desc">Transmission lines, impedance control, termination and crosstalk — everything to design interconnects that work at speed.</p>
+
+    <div class="items">
+      <div class="item"><div class="item-dot"></div><div class="item-text">Visual explainer <span>— 8 illustrated sections</span></div></div>
+      <div class="item"><div class="item-dot"></div><div class="item-text">Interactive mini-course <span>— 10 chapters + quizzes</span></div></div>
+      <div class="item"><div class="item-dot"></div><div class="item-text">A4 reference cheat sheet <span>— print-ready</span></div></div>
+      <div class="item"><div class="item-dot"></div><div class="item-text">SI design wizard <span>— personalised output</span></div></div>
     </div>
-    <div class="rule"></div>
-    <div class="sub">
-      Transmission lines, impedance control,<br>
-      termination &amp; crosstalk — <strong>from first principles.</strong>
-    </div>
-    <div class="pills">
-      <div class="pill"><span class="n">01</span><span class="t">Complete Guide</span></div>
-      <div class="pill"><span class="n">02</span><span class="t">Mini-Course</span></div>
-      <div class="pill"><span class="n">03</span><span class="t">Cheat Sheet</span></div>
-      <div class="pill"><span class="n">04</span><span class="t">SI Wizard</span></div>
-    </div>
-  </div>
-  <div class="bottom">
-    <div>
+
+    <div class="price-block">
       <div class="price"><span class="cur">€</span>29</div>
-      <div class="price-sub">one-time · no subscription</div>
+      <div class="price-note">One-time. Instant access<br>Or free inside <a>Skool Academy →</a></div>
     </div>
-    <div class="cta">Get the Series</div>
+
+    <div class="domain">fresuelectronics.com</div>
   </div>
+
+  <!-- RIGHT: transmission line diagram -->
+  <div class="right">
+    <div class="diag-label">Transmission Line</div>
+
+    <div class="diag">
+
+      <!-- Reference plane top -->
+      <div class="layer" style="margin-bottom:0">
+        <div class="layer-bar l-ref"><span class="layer-label">Reference Plane (RRP)</span></div>
+      </div>
+
+      <!-- Dielectric -->
+      <div class="layer">
+        <div class="layer-bar l-diel"><span class="layer-label">Dielectric (εr)</span></div>
+      </div>
+
+      <!-- Signal trace on layer -->
+      <div class="trace-wrap">
+        <div class="trace">
+          <span class="trace-label">Signal Trace (W)</span>
+        </div>
+        <!-- Z0 box -->
+        <div class="z0-box" style="position:absolute;right:-58px;top:50%;transform:translateY(-50%)">
+          <div class="z0-val">Z₀</div>
+          <div class="z0-lbl">50 Ω</div>
+        </div>
+      </div>
+
+      <!-- Dielectric bottom -->
+      <div class="layer">
+        <div class="layer-bar l-diel"><span class="layer-label">Dielectric (εr)</span></div>
+      </div>
+
+      <!-- Reference plane bottom -->
+      <div class="layer">
+        <div class="layer-bar l-ref"><span class="layer-label">Return Reference (RRP)</span></div>
+      </div>
+
+      <!-- Width annotation -->
+      <div class="width-ann" style="margin-top:8px">
+        <div class="ann-line"></div>
+        <span class="ann-text">W controls Z₀</span>
+        <div class="ann-line"></div>
+      </div>
+
+      <!-- Tags -->
+      <div class="diag-tags">
+        <div class="dtag"><div class="dtag-dot" style="background:#00FF94"></div>Controlled impedance</div>
+        <div class="dtag"><div class="dtag-dot" style="background:rgba(255,255,255,0.3)"></div>Return path integrity</div>
+        <div class="dtag"><div class="dtag-dot" style="background:rgba(255,100,100,0.6)"></div>Crosstalk isolation</div>
+      </div>
+
+    </div>
+  </div>
+
 </div>
 </body>
 </html>
