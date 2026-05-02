@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Your PCB + EMC Bundle access</title><style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Poppins','Helvetica Neue',Arial,sans-serif;background:#060606;color:#ffffff;-webkit-font-smoothing:antialiased;margin:0;padding:0}
+.wrap{max-width:600px;margin:0 auto;background:#0a0a0a}
+.nav{background:#0a0a0a;border-bottom:2px solid #00FF94;padding:18px 32px;display:flex;align-items:center;justify-content:space-between}
+.nav img{height:24px;display:block}
+.nav-tag{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#00FF94}
+.hero{padding:40px 32px 32px;border-bottom:1px solid #1a1a1a}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(0,255,148,0.08);border:1px solid rgba(0,255,148,0.25);color:#00FF94;font-size:9px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;padding:4px 12px;border-radius:3px;margin-bottom:18px}
+.hero h1{font-size:26px;font-weight:800;line-height:1.15;color:#ffffff;margin-bottom:10px;letter-spacing:-0.01em}
+.hero h1 span{color:#00FF94}
+.hero p{font-size:14px;color:#a0aab8;line-height:1.7;max-width:460px}
+.body{padding:32px}
+.intro{font-size:15px;color:#e8edf5;line-height:1.8;margin-bottom:28px}
+.intro strong{color:#ffffff;font-weight:600}
+.section-label{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#00FF94;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.section-label::after{content:'';flex:1;height:1px;background:#1e1e1e}
+.resource-list{margin-bottom:28px}
+.resource{background:#111111;border:1px solid #242424;border-radius:6px;padding:16px 18px;margin-bottom:8px;display:flex;align-items:flex-start;gap:14px;text-decoration:none}
+.resource:last-child{margin-bottom:0}
+.r-icon{font-size:20px;flex-shrink:0;width:32px;text-align:center;padding-top:2px}
+.r-body{flex:1}
+.r-label{font-size:8px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#00FF94;margin-bottom:3px}
+.r-title{font-size:13px;font-weight:700;color:#ffffff;margin-bottom:2px}
+.r-desc{font-size:11px;color:#a0aab8;line-height:1.5;margin-bottom:6px}
+.r-cta{font-size:10px;font-weight:700;color:#00FF94;text-decoration:none;letter-spacing:0.04em}
+.steps-box{background:#111111;border:1px solid #242424;border-radius:6px;padding:18px;margin-bottom:28px}
+.steps-title{font-size:12px;font-weight:700;color:#ffffff;margin-bottom:14px}
+.step{display:flex;align-items:flex-start;gap:12px;margin-bottom:10px}
+.step:last-child{margin-bottom:0}
+.step-n{width:20px;height:20px;border-radius:50%;background:#00FF94;color:#0a0a0a;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.step-t{font-size:13px;color:#e8edf5;line-height:1.6}
+.cta-block{text-align:center;margin-bottom:28px}
+.btn{display:inline-block;background:#00FF94;color:#0a0a0a;text-decoration:none;font-size:12px;font-weight:800;letter-spacing:0.08em;text-transform:uppercase;padding:14px 32px;border-radius:4px}
+.btn-sub{font-size:11px;color:#a0aab8;margin-top:8px}
+.divider{border-top:1px solid #1e1e1e;margin:24px 0}
+.upsell{background:#0d1a0d;border:1px solid rgba(0,255,148,0.18);border-radius:6px;padding:20px;margin-bottom:24px}
+.upsell-tag{display:inline-block;background:rgba(0,255,148,0.08);border:1px solid rgba(0,255,148,0.2);color:#00FF94;font-size:8px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;padding:3px 9px;border-radius:2px;margin-bottom:10px}
+.upsell h3{font-size:15px;font-weight:800;color:#ffffff;margin-bottom:6px}
+.upsell p{font-size:12px;color:#a0aab8;line-height:1.65;margin-bottom:14px}
+.upsell-btn{display:inline-block;border:1px solid rgba(0,255,148,0.35);color:#00FF94;text-decoration:none;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:9px 20px;border-radius:3px}
+.sig{font-size:13px;color:#a0aab8;line-height:1.8}
+.sig strong{color:#e8edf5;font-weight:600}
+.sig span{font-size:11px;color:#555}
+.footer{padding:20px 32px 32px;text-align:center;border-top:1px solid #1a1a1a}
+.footer img{height:18px;display:block;margin:0 auto 10px}
+.footer p{font-size:10px;color:#333;line-height:1.6}
+.footer-links{margin-top:10px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.footer-links a{font-size:10px;color:#444;text-decoration:none}
+</style></head>
+<body><div class="wrap">
+<div class="nav"><img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics"><span class="nav-tag">Enrolment Confirmed</span></div>
+<div class="hero">
+  <div class="hero-badge">&#10003; Both courses enrolled</div>
+  <h1>You're in <span>both courses</span>.<br>Let's get started.</h1>
+  <p>PCB Design Mastery + EMC/EMI Design Course. Your Skool invite is on its way.</p>
+</div>
+<div class="body">
+  <p class="intro">Hi {{1.object.customer_details.name}},<br><br>
+  You've enrolled in the <strong>PCB Design Mastery + EMC/EMI Design Course Bundle</strong>. One Skool invite covers both &mdash; it's heading to your inbox now.</p>
+
+  <div class="section-label">Three steps to get started</div>
+  <div class="steps-box">
+    <div class="step"><div class="step-n">1</div><div class="step-t">Check your inbox for the Skool invite (sent from Skool directly).</div></div>
+    <div class="step"><div class="step-n">2</div><div class="step-t">Accept and set up your Skool account if you don't have one yet.</div></div>
+    <div class="step"><div class="step-n">3</div><div class="step-t">Both courses are in the Classroom section. Start with PCB Design Mastery.</div></div>
+  </div>
+
+  <div class="cta-block">
+    <a href="https://www.skool.com/pcb-design-mastery-9530" class="btn" target="_blank">Go to the Community &rarr;</a>
+    <div class="btn-sub">Invite usually arrives within a few minutes</div>
+  </div>
+
+  <div class="divider"></div>
+  <p class="sig">No invite after an hour? Just reply to this email and I'll sort it.<br><br>
+  &mdash; <strong>Dario Fresu</strong><br>
+  <span>Principal EMC Architect &middot; Fresu Electronics</span></p>
+</div>
+
+<div class="footer">
+  <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  <p>&copy; Fresu Electronics &middot; IPC CID &middot; Principal Engineer &middot; 4th Generation Electrical Professional<br>
+  <span style="color:#2a2a2a">You received this because you made a purchase from Fresu Electronics.</span></p>
+  <div class="footer-links">
+    <a href="https://www.fresuelectronics.com">Website</a>
+    <a href="https://blog.fresuelectronics.com">Blog</a>
+    <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+    <a href="https://www.skool.com/pcb-design-mastery-9530/about">Academy</a>
+  </div>
+</div>
+</div></body></html>
