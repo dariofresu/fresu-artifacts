@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=600">
+<title>PDN Series — Stripe Product Image</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { width:600px; height:600px; background:#080808; font-family:'Poppins',sans-serif; overflow:hidden; position:relative; }
+  .glow { position:absolute; top:-80px; left:-80px; width:380px; height:380px; background:radial-gradient(circle,rgba(0,255,148,0.09) 0%,transparent 70%); pointer-events:none; }
+  .grid { position:absolute; inset:0; background-image:linear-gradient(rgba(0,255,148,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,148,0.035) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; }
+  .wrap { position:relative; z-index:1; width:100%; height:100%; padding:44px 48px; display:flex; flex-direction:column; }
+  .top { display:flex; align-items:center; justify-content:space-between; margin-bottom:44px; }
+  .logo img { height:20px; display:block; }
+  .badge { display:flex; align-items:center; gap:6px; border:1px solid rgba(0,255,148,0.25); background:rgba(0,255,148,0.06); padding:5px 12px; border-radius:2px; }
+  .badge .dot { width:5px; height:5px; border-radius:50%; background:#00FF94; }
+  .badge span { font-size:9px; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:#00FF94; }
+  .main { flex:1; display:flex; flex-direction:column; justify-content:center; }
+  .eyebrow { font-size:10px; font-weight:600; letter-spacing:0.22em; text-transform:uppercase; color:rgba(255,255,255,0.3); margin-bottom:18px; }
+  .headline { font-size:40px; font-weight:900; line-height:1.05; color:#fff; letter-spacing:-0.02em; margin-bottom:10px; }
+  .headline .acc { color:#00FF94; display:block; }
+  .rule { width:48px; height:2px; background:#00FF94; margin:20px 0; }
+  .sub { font-size:13px; font-weight:300; color:rgba(255,255,255,0.5); line-height:1.6; max-width:360px; }
+  .sub strong { color:rgba(255,255,255,0.8); font-weight:600; }
+  .pills { display:flex; gap:8px; margin-top:28px; flex-wrap:wrap; }
+  .pill { display:flex; align-items:center; gap:6px; background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08); padding:6px 12px; border-radius:2px; }
+  .pill .n { font-size:8px; font-weight:700; letter-spacing:0.1em; color:#00FF94; }
+  .pill .t { font-size:11px; font-weight:500; color:rgba(255,255,255,0.65); }
+  .bottom { border-top:1px solid rgba(255,255,255,0.08); padding-top:24px; display:flex; align-items:flex-end; justify-content:space-between; }
+  .price { font-size:52px; font-weight:900; color:#fff; letter-spacing:-0.03em; line-height:1; }
+  .price .cur { font-size:26px; font-weight:600; vertical-align:super; color:#00FF94; }
+  .price-sub { font-size:11px; color:rgba(255,255,255,0.25); margin-top:5px; letter-spacing:0.04em; }
+  .cta { background:#00FF94; color:#080808; font-family:'Poppins',sans-serif; font-size:11px; font-weight:800; letter-spacing:0.1em; text-transform:uppercase; padding:14px 28px; border-radius:2px; }
+  .corner { position:absolute; bottom:44px; right:48px; width:50px; height:50px; border-right:1.5px solid rgba(0,255,148,0.12); border-bottom:1.5px solid rgba(0,255,148,0.12); }
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="grid"></div>
+<div class="corner"></div>
+<div class="wrap">
+  <div class="top">
+    <div class="logo"><img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics"></div>
+    <div class="badge"><div class="dot"></div><span>Series 01</span></div>
+  </div>
+  <div class="main">
+    <div class="eyebrow">Power Delivery Network</div>
+    <div class="headline">PDN Design.<br><span class="acc">From impedance<br>up.</span></div>
+    <div class="rule"></div>
+    <div class="sub">Target impedance, decoupling strategy,<br>stackup selection — <strong>from first principles.</strong></div>
+    <div class="pills">
+      <div class="pill"><span class="n">01</span><span class="t">Complete Guide</span></div>
+      <div class="pill"><span class="n">02</span><span class="t">Mini-Course</span></div>
+      <div class="pill"><span class="n">03</span><span class="t">Cheat Sheet</span></div>
+      <div class="pill"><span class="n">04</span><span class="t">PDN Wizard</span></div>
+    </div>
+  </div>
+  <div class="bottom">
+    <div>
+      <div class="price"><span class="cur">€</span>29</div>
+      <div class="price-sub">one-time · no subscription</div>
+    </div>
+    <div class="cta">Get the Series</div>
+  </div>
+</div>
+</body>
+</html>
