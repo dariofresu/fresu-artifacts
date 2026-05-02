@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Signal Integrity Series — Resource Hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#0a0a0a;
+  --s1:#111111;
+  --s2:#151515;
+  --s3:#1a1a1a;
+  --border:#242424;
+  --border-l:#1e1e1e;
+  --fg:#ffffff;
+  --fg2:#e8edf5;
+  --label:#a0aab8;
+  --label-dim:#6b7d8f;
+  --acc:#00FF94;
+  --acc-dim:rgba(0,255,148,0.08);
+  --acc-border:rgba(0,255,148,0.22);
+  --wrong:#ff4d4d;
+  --font:'Poppins',sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);-webkit-font-smoothing:antialiased;min-height:100vh}
+
+/* ── NAV ── */
+nav{
+  position:sticky;top:0;z-index:100;
+  background:rgba(10,10,10,0.95);backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:0 32px;height:56px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav-logo img{height:22px;display:block;filter:brightness(1)}
+.nav-right{display:flex;align-items:center;gap:20px}
+.nav-back{font-size:12px;color:var(--label);text-decoration:none;letter-spacing:0.03em;transition:color 0.15s}
+.nav-back:hover{color:var(--acc)}
+.nav-label{font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--acc);background:var(--acc-dim);border:1px solid var(--acc-border);padding:4px 10px;border-radius:3px}
+
+/* ── HERO STRIP ── */
+.hero-strip{
+  border-bottom:1px solid var(--border);
+  padding:56px 32px 48px;
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:flex-start;justify-content:space-between;gap:40px;
+}
+.hs-left{flex:1;max-width:620px}
+.hs-kicker{font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:var(--acc);margin-bottom:14px}
+.hs-left h1{font-size:42px;font-weight:900;line-height:1.1;letter-spacing:-0.02em;margin-bottom:16px}
+.hs-left h1 span{color:var(--acc)}
+.hs-desc{font-size:15px;color:var(--label);line-height:1.7;margin-bottom:24px;max-width:520px}
+.series-meta{display:flex;flex-wrap:wrap;gap:16px}
+.sm-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--label)}
+.sm-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);flex-shrink:0}
+.sm-item strong{color:var(--fg);font-weight:700}
+.hs-right{flex-shrink:0}
+.hs-right img{width:200px;height:200px;object-fit:cover;border-radius:8px;border:1px solid var(--border);display:block}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{
+  background:var(--s1);border-bottom:1px solid var(--border);
+  padding:12px 32px;
+  display:flex;align-items:center;gap:14px;
+  max-width:1100px;margin:0 auto;
+}
+.pb-label{font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--label);flex-shrink:0}
+.pb-track{flex:1;max-width:220px;height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.pb-fill{height:100%;background:var(--acc);border-radius:2px;transition:width 0.4s ease;width:0%}
+.pb-pct{font-size:11px;color:var(--label);font-family:var(--mono);flex-shrink:0}
+.pb-note{font-size:10px;color:var(--label-dim);margin-left:auto}
+
+/* ── MAIN ── */
+.main{max-width:1100px;margin:0 auto;padding:40px 32px 80px}
+
+/* stats row */
+.stats-row{display:flex;gap:12px;margin-bottom:32px;flex-wrap:wrap}
+.stat{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:16px 24px;flex:1;min-width:100px;text-align:center}
+.stat-val{font-size:28px;font-weight:900;color:var(--fg);letter-spacing:-0.02em}
+.stat-lbl{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--label);margin-top:3px}
+
+/* order note */
+.order-note{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--s1);border:1px solid var(--border);border-left:3px solid var(--acc);
+  border-radius:0 6px 6px 0;padding:14px 18px;
+  margin-bottom:32px;font-size:13px;color:var(--label);line-height:1.6;
+}
+.on-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+.on-label{font-weight:700;color:var(--fg);margin-right:6px}
+
+/* ── RESOURCE CARDS ── */
+.resources{display:flex;flex-direction:column;gap:12px}
+
+.rc{
+  background:var(--s1);border:1px solid var(--border);border-radius:8px;
+  display:flex;align-items:stretch;
+  overflow:hidden;transition:border-color 0.2s;
+}
+.rc:hover{border-color:rgba(0,255,148,0.2)}
+.rc.unlocked{border-left:3px solid var(--acc)}
+
+/* step indicator */
+.rc-step{
+  width:52px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  border-right:1px solid var(--border);
+  background:var(--s2);
+}
+.step-num{font-size:11px;font-weight:800;color:var(--label);font-family:var(--mono);letter-spacing:0.04em}
+.rc.unlocked .step-num{color:var(--acc);opacity:0.7}
+
+/* content */
+.rc-body{padding:22px 26px;flex:1}
+.rc-type{font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--label);margin-bottom:8px}
+.rc.unlocked .rc-type{color:var(--acc)}
+.rc h3{font-size:18px;font-weight:800;margin-bottom:6px;line-height:1.2}
+.rc p{font-size:13px;color:var(--label);line-height:1.65;margin-bottom:14px;max-width:560px}
+.rc-tags{display:flex;flex-wrap:wrap;gap:5px}
+.rctag{font-size:9px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;padding:3px 8px;border-radius:3px;background:var(--s3);border:1px solid var(--border);color:var(--label)}
+
+/* action area */
+.rc-action{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:24px 28px;border-left:1px solid var(--border);gap:10px;flex-shrink:0;min-width:160px;
+}
+.btn-open{
+  display:inline-flex;align-items:center;gap:7px;
+  background:var(--acc);color:#0a0a0a;
+  font-family:var(--font);font-size:12px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;
+  padding:12px 20px;border-radius:4px;text-decoration:none;
+  transition:background 0.15s,transform 0.1s;white-space:nowrap;
+}
+.btn-open:hover{background:#00e085;transform:translateY(-1px)}
+.btn-open:active{transform:translateY(0)}
+.rc-time{font-size:11px;color:var(--label);text-align:center;font-family:var(--mono)}
+.rc-time strong{color:var(--fg);font-weight:700}
+
+/* ── UPSELL ── */
+.upsell-card{
+  margin-top:40px;
+  background:linear-gradient(135deg,rgba(0,255,148,0.04) 0%,transparent 60%);
+  border:1px solid var(--acc-border);border-radius:8px;
+  padding:32px;display:flex;align-items:center;justify-content:space-between;gap:32px;
+}
+.uc-left h3{font-size:20px;font-weight:800;margin-bottom:8px}
+.uc-left p{font-size:13px;color:var(--label);line-height:1.65;max-width:500px}
+.btn-upsell{
+  display:inline-block;flex-shrink:0;
+  border:1px solid var(--acc-border);color:var(--acc);
+  font-family:var(--font);font-size:12px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;
+  padding:13px 24px;border-radius:4px;text-decoration:none;white-space:nowrap;
+  transition:background 0.15s,color 0.15s;
+}
+.btn-upsell:hover{background:var(--acc);color:#0a0a0a}
+
+/* ── FOOTER ── */
+footer{
+  border-top:1px solid var(--border-l);padding:28px 32px;
+  max-width:1100px;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;
+}
+.footer-logo img{height:16px;display:block;opacity:0.5;filter:grayscale(1)}
+.footer-links{display:flex;gap:20px;flex-wrap:wrap}
+.footer-links a{font-size:11px;color:var(--label-dim);text-decoration:none;transition:color 0.15s}
+.footer-links a:hover{color:var(--label)}
+.footer-legal{font-size:10px;color:var(--label-dim);text-align:right}
+
+/* ── ANIMATIONS ── */
+.reveal{opacity:0;transform:translateY(14px);transition:opacity 0.5s ease,transform 0.5s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.d1{transition-delay:0.08s}
+.d2{transition-delay:0.16s}
+.d3{transition-delay:0.24s}
+.d4{transition-delay:0.32s}
+
+@media(max-width:700px){
+  .hero-strip{flex-direction:column;padding:36px 20px 32px}
+  .hs-right{display:none}
+  .main{padding:28px 20px 60px}
+  .rc{flex-direction:column}
+  .rc-step{width:100%;height:36px;border-right:none;border-bottom:1px solid var(--border)}
+  .rc-action{border-left:none;border-top:1px solid var(--border);min-width:unset;padding:18px}
+  .upsell-card{flex-direction:column}
+  footer{flex-direction:column;text-align:center}
+  .footer-legal{text-align:center}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="https://www.fresuelectronics.com" class="nav-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </a>
+  <div class="nav-right">
+    <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="nav-back">← Back to Academy</a>
+    <span class="nav-label">SI Series</span>
+  </div>
+</nav>
+
+<!-- ══ HERO STRIP ═══════════════════════════════════ -->
+<div class="hero-strip">
+  <div class="hs-left">
+    <div class="hs-kicker">Fresu Electronics · Series 02</div>
+    <h1>Signal Integrity for<br><span>High-Speed PCBs</span></h1>
+    <p class="hs-desc">Four resources covering signal integrity from first principles — transmission line theory, impedance control, crosstalk, termination strategies, and differential pairs. Built around the field-containment model.</p>
+    <div class="series-meta">
+      <div class="sm-item"><div class="sm-dot"></div><strong>4</strong> resources</div>
+      <div class="sm-item"><div class="sm-dot"></div><strong>10</strong> chapters</div>
+      <div class="sm-item"><div class="sm-dot"></div><strong>8</strong> quiz check-ins</div>
+      <div class="sm-item"><div class="sm-dot"></div><strong>~2.5 hrs</strong> total</div>
+    </div>
+  </div>
+  <div class="hs-right">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Signal Integrity Series">
+  </div>
+</div>
+
+<!-- ══ PROGRESS ════════════════════════════════════════ -->
+<div class="progress-bar">
+  <span class="pb-label">Your progress</span>
+  <div class="pb-track"><div class="pb-fill" id="pbFill"></div></div>
+  <span class="pb-pct" id="pbPct">0 / 4 started</span>
+  <span class="pb-note">Progress tracked locally in your browser</span>
+</div>
+
+<!-- ══ MAIN ══════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- Stats -->
+  <div class="stats-row reveal">
+    <div class="stat"><div class="stat-val">4</div><div class="stat-lbl">Resources</div></div>
+    <div class="stat"><div class="stat-val">10</div><div class="stat-lbl">Chapters</div></div>
+    <div class="stat"><div class="stat-val">8</div><div class="stat-lbl">Topics</div></div>
+    <div class="stat"><div class="stat-val">~2.5h</div><div class="stat-lbl">Total time</div></div>
+  </div>
+
+  <!-- Order note -->
+  <div class="order-note reveal d1">
+    <span class="on-icon">💡</span>
+    <span><span class="on-label">Recommended order</span> Start with the Explainer to build the transmission-line mental model. Take the Mini-Course to pressure-test your understanding chapter by chapter. Keep the Cheat Sheet at your desk during layout. Use the Wizard when you're designing a specific interconnect and need target numbers.</span>
+  </div>
+
+  <!-- Resources -->
+  <div class="resources">
+
+    <!-- 01 Explainer -->
+    <div class="rc unlocked reveal">
+      <div class="rc-step"><span class="step-num">01</span></div>
+      <div class="rc-body">
+        <div class="rc-type">📖 Visual Explainer · ~30 min read</div>
+        <h3>Signal Integrity Mastery: The Complete Guide</h3>
+        <p>8 illustrated sections covering the full SI framework — from why a PCB trace becomes a transmission line, through controlled impedance, reflections and termination, crosstalk mechanics, via stub effects, and differential pair routing. Built on the field-containment model, not the textbook current-flow model.</p>
+        <div class="rc-tags">
+          <span class="rctag">8 Sections</span>
+          <span class="rctag">SVG Diagrams</span>
+          <span class="rctag">Transmission Lines</span>
+          <span class="rctag">Start here</span>
+        </div>
+      </div>
+      <div class="rc-action">
+        <a href="https://www.fresuelectronics.com/si-explainer" class="btn-open" target="_blank" onclick="markStarted(0)">
+          Open Guide
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <div class="rc-time"><strong>~30 min</strong> read</div>
+      </div>
+    </div>
+
+    <!-- 02 Mini-Course -->
+    <div class="rc unlocked reveal d1">
+      <div class="rc-step"><span class="step-num">02</span></div>
+      <div class="rc-body">
+        <div class="rc-type">🎓 Interactive Course · ~75 min</div>
+        <h3>Signal Integrity Mini-Course</h3>
+        <p>10 chapters with inline diagrams and a quiz after each chapter. Covers everything from the explainer plus two additional chapters: eye diagram interpretation and stackup selection for SI. Progress is tracked throughout so you can pick up where you left off.</p>
+        <div class="rc-tags">
+          <span class="rctag">10 Chapters</span>
+          <span class="rctag">10 Quizzes</span>
+          <span class="rctag">Eye Diagrams</span>
+          <span class="rctag">Stackup Design</span>
+        </div>
+      </div>
+      <div class="rc-action">
+        <a href="https://www.fresuelectronics.com/si-minicourse" class="btn-open" target="_blank" onclick="markStarted(1)">
+          Start Course
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <div class="rc-time"><strong>~75 min</strong></div>
+      </div>
+    </div>
+
+    <!-- 03 Cheat Sheet -->
+    <div class="rc unlocked reveal d2">
+      <div class="rc-step"><span class="step-num">03</span></div>
+      <div class="rc-body">
+        <div class="rc-type">📋 Reference Sheet · Print-ready</div>
+        <h3>Signal Integrity Design Cheat Sheet</h3>
+        <p>A4 landscape, print-ready cheat sheet. Every formula you actually use during SI-aware PCB design: trace impedance equations, critical length calculation, termination resistor values, via stub resonance, crosstalk coupling coefficients, and differential pair rules. One page, nothing missing.</p>
+        <div class="rc-tags">
+          <span class="rctag">A4 Landscape</span>
+          <span class="rctag">Print-ready</span>
+          <span class="rctag">All Formulas</span>
+          <span class="rctag">Desk Reference</span>
+        </div>
+      </div>
+      <div class="rc-action">
+        <a href="https://www.fresuelectronics.com/si-cheatsheet" class="btn-open" target="_blank" onclick="markStarted(2)">
+          Open Sheet
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <div class="rc-time"><strong>Reference</strong> only</div>
+      </div>
+    </div>
+
+    <!-- 04 Wizard -->
+    <div class="rc unlocked reveal d3">
+      <div class="rc-step"><span class="step-num">04</span></div>
+      <div class="rc-body">
+        <div class="rc-type">🔧 Design Tool · ~5 min</div>
+        <h3>SI Design Wizard</h3>
+        <p>Answer 5 questions about your signal — data rate, trace length, driver characteristics, topology, and layer stack — and the wizard returns a personalised set of recommendations: whether your trace needs controlled impedance, which termination strategy fits, whether you have a crosstalk risk, and what your critical length is.</p>
+        <div class="rc-tags">
+          <span class="rctag">5 Questions</span>
+          <span class="rctag">Termination Logic</span>
+          <span class="rctag">Critical Length</span>
+          <span class="rctag">Crosstalk Risk</span>
+        </div>
+      </div>
+      <div class="rc-action">
+        <a href="https://www.fresuelectronics.com/si-wizard" class="btn-open" target="_blank" onclick="markStarted(3)">
+          Run Wizard
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 10L10 2M10 2H4M10 2V8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </a>
+        <div class="rc-time"><strong>~5 min</strong></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Upsell -->
+  <div class="upsell-card reveal d4">
+    <div class="uc-left">
+      <h3>Want the full Academy?</h3>
+      <p>The Fresu EMC Academy includes every series — PDN Design, Signal Integrity, EMI Filter Design, and more. Plus private community, direct access to Dario, and monthly live sessions. One subscription covers everything.</p>
+    </div>
+    <a href="https://www.skool.com/pcb-design-mastery-9530/about" class="btn-upsell" target="_blank">Join the Academy — $33/mo →</a>
+  </div>
+
+</div>
+
+<!-- ══ FOOTER ════════════════════════════════════════ -->
+<footer>
+  <div class="footer-logo">
+    <img src="https://raw.githubusercontent.com/dariofresu/Fresu-Electronics-Blog/main/assets/logo.png" alt="Fresu Electronics">
+  </div>
+  <div class="footer-links">
+    <a href="https://www.fresuelectronics.com">Website</a>
+    <a href="https://blog.fresuelectronics.com">Blog</a>
+    <a href="https://www.youtube.com/@dario_fresu">YouTube</a>
+    <a href="https://open.spotify.com/show/7w18uAkpQKrGzHMccacQEN">Podcast</a>
+  </div>
+  <div class="footer-legal">© Fresu Electronics · Signal Integrity Series · All rights reserved</div>
+</footer>
+
+<script>
+const KEYS = ['si-exp','si-mc','si-cs','si-wiz'];
+
+function loadProgress(){
+  try{ return JSON.parse(localStorage.getItem('si-progress')||'{}') }
+  catch(e){ return {} }
+}
+
+function saveProgress(p){
+  try{ localStorage.setItem('si-progress', JSON.stringify(p)) }catch(e){}
+}
+
+function markStarted(i){
+  const p = loadProgress();
+  p[KEYS[i]] = true;
+  saveProgress(p);
+  updateUI(p);
+}
+
+function updateUI(p){
+  const count = Object.values(p).filter(Boolean).length;
+  const pct = Math.round(count/4*100);
+  const fill = document.getElementById('pbFill');
+  const pctEl = document.getElementById('pbPct');
+  if(fill) fill.style.width = pct+'%';
+  if(pctEl) pctEl.textContent = count+' / 4 started';
+}
+
+// Reveal on scroll
+const observer = new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible') });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+// Init
+updateUI(loadProgress());
+</script>
+</body>
+</html>
